@@ -9,7 +9,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Zelo BJJ - Jiu-Jitsu Brasileiro | Cursos Online e Presencial",
   description:
-    "Aprenda Jiu-Jitsu Brasileiro com os melhores instrutores. Cursos online completos, do iniciante ao avancado. Fundamentos, tecnicas e muito mais.",
+    "Aprenda Jiu-Jitsu Brasileiro com os melhores instrutores. Cursos online completos, do iniciante ao avançado. Fundamentos, técnicas e muito mais.",
   keywords: "jiu-jitsu, bjj, jiu-jitsu brasileiro, curso online, arte marcial, zelo bjj",
   openGraph: {
     title: "Zelo BJJ - Jiu-Jitsu Brasileiro",

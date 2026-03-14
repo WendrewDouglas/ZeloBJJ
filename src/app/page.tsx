@@ -5,55 +5,55 @@ const modules = [
     number: "01",
     title: "Base e Postura",
     description:
-      "O alicerce do Jiu-Jitsu. Aprenda postura correta em pe e no chao, distribuicao de peso e protecao corporal.",
+      "O alicerce do Jiu-Jitsu. Aprenda postura correta em pé e no chão, distribuição de peso e proteção corporal.",
   },
   {
     number: "02",
-    title: "Movimentacao Corporal",
+    title: "Movimentação Corporal",
     description:
-      "Ponte, fuga de quadril, giro, levantada tecnica e ajustes de base. Os movimentos essenciais para defesas e escapes.",
+      "Ponte, fuga de quadril, giro, levantada técnica e ajustes de base. Os movimentos essenciais para defesas e escapes.",
   },
   {
     number: "03",
-    title: "Hierarquia das Posicoes",
+    title: "Hierarquia das Posições",
     description:
-      "Costas, montada, controle lateral, passagem de guarda. Entenda a ordem de dominancia e como progredir.",
+      "Costas, montada, controle lateral, passagem de guarda. Entenda a ordem de dominância e como progredir.",
   },
   {
     number: "04",
-    title: "Guarda: Conceito e Funcao",
+    title: "Guarda: Conceito e Função",
     description:
-      "Transforme a posicao inferior em ataque. Guarda fechada e aberta, controle de distancia e criacao de oportunidades.",
+      "Transforme a posição inferior em ataque. Guarda fechada e aberta, controle de distância e criação de oportunidades.",
   },
   {
     number: "05",
-    title: "Raspagens Basicas",
+    title: "Raspagens Básicas",
     description:
-      "Inverta posicoes com tecnica. Raspagem de tesoura, gancho e os principios de desequilibrio e timing.",
+      "Inverta posições com técnica. Raspagem de tesoura, gancho e os princípios de desequilíbrio e timing.",
   },
   {
     number: "06",
-    title: "Finalizacoes Fundamentais",
+    title: "Finalizações Fundamentais",
     description:
-      "Mata-leao, americana, armlock e triangulo. As submissoes essenciais com controle e posicionamento.",
+      "Mata-leão, americana, armlock e triângulo. As submissões essenciais com controle e posicionamento.",
   },
   {
     number: "07",
-    title: "Defesa e Sobrevivencia",
+    title: "Defesa e Sobrevivência",
     description:
-      "Protecao de pescoco, fechamento de espaco, defesa de bracos e inteligencia para saber quando resistir ou reposicionar.",
+      "Proteção de pescoço, fechamento de espaço, defesa de braços e inteligência para saber quando resistir ou reposicionar.",
   },
   {
     number: "08",
-    title: "Respiracao e Controle Emocional",
+    title: "Respiração e Controle Emocional",
     description:
-      "Controle a pressao com respiracao, calma e economia de energia. Transforme o combate em jogo de inteligencia.",
+      "Controle a pressão com respiração, calma e economia de energia. Transforme o combate em jogo de inteligência.",
   },
   {
     number: "09",
     title: "Conduta e Mentalidade",
     description:
-      "Respeito, constancia, humildade e disciplina. Os valores que aceleram sua evolucao no Jiu-Jitsu.",
+      "Respeito, constância, humildade e disciplina. Os valores que aceleram sua evolução no Jiu-Jitsu.",
   },
 ];
 
@@ -61,10 +61,10 @@ const plans = [
   {
     name: "Iniciante",
     price: "97",
-    period: "/mes",
+    period: "/mês",
     features: [
-      "Acesso aos modulos 1-4",
-      "Videos em HD",
+      "Acesso aos módulos 1-4",
+      "Vídeos em HD",
       "Material de apoio em PDF",
       "Suporte via WhatsApp",
     ],
@@ -73,12 +73,12 @@ const plans = [
   {
     name: "Completo",
     price: "197",
-    period: "/mes",
+    period: "/mês",
     features: [
-      "Todos os 9 modulos",
-      "Videos em HD",
+      "Todos os 9 módulos",
+      "Vídeos em HD",
       "Material de apoio em PDF",
-      "Suporte prioritario",
+      "Suporte prioritário",
       "Aulas ao vivo semanais",
       "Comunidade exclusiva",
     ],
@@ -87,13 +87,13 @@ const plans = [
   {
     name: "Presencial + Online",
     price: "297",
-    period: "/mes",
+    period: "/mês",
     features: [
       "Acesso completo online",
       "Aulas presenciais 3x/semana",
       "Acompanhamento individual",
       "Suporte VIP",
-      "Acesso vitalicio ao conteudo",
+      "Acesso vitalício ao conteúdo",
     ],
     featured: false,
   },
@@ -116,7 +116,7 @@ export default function Home() {
               Sobre
             </a>
             <a href="#modulos" className="text-sm text-gray-text transition-colors hover:text-gold">
-              Modulos
+              Módulos
             </a>
             <a href="#planos" className="text-sm text-gray-text transition-colors hover:text-gold">
               Planos
@@ -153,7 +153,7 @@ export default function Home() {
             com quem entende de verdade
           </h1>
           <p className="mx-auto mb-10 max-w-2xl text-lg text-gray-text md:text-xl">
-            Cursos online completos, do fundamento a tecnica avancada. Aprenda no seu ritmo com
+            Cursos online completos, do fundamento à técnica avançada. Aprenda no seu ritmo com
             metodologia comprovada e suporte de instrutores experientes.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -167,7 +167,7 @@ export default function Home() {
               href="#modulos"
               className="w-full rounded-full border border-white/20 px-8 py-4 text-lg font-semibold text-white transition-colors hover:border-gold hover:text-gold sm:w-auto"
             >
-              Ver Conteudo
+              Ver Conteúdo
             </a>
           </div>
         </div>
@@ -179,29 +179,29 @@ export default function Home() {
           <div className="grid items-center gap-12 md:grid-cols-2">
             <div>
               <h2 className="mb-6 text-3xl font-bold md:text-4xl">
-                O que e a <span className="gradient-gold">Zelo BJJ</span>?
+                O que é a <span className="gradient-gold">Zelo BJJ</span>?
               </h2>
               <p className="mb-4 text-gray-text leading-relaxed">
-                O Jiu-Jitsu Brasileiro e uma arte marcial, esporte e sistema de defesa pessoal
-                baseado em principios tecnicos e estrategicos. Na Zelo BJJ, ensinamos os fundamentos
-                essenciais que todo praticante precisa desenvolver para construir uma base solida e
-                evoluir com seguranca e eficiencia.
+                O Jiu-Jitsu Brasileiro é uma arte marcial, esporte e sistema de defesa pessoal
+                baseado em princípios técnicos e estratégicos. Na Zelo BJJ, ensinamos os fundamentos
+                essenciais que todo praticante precisa desenvolver para construir uma base sólida e
+                evoluir com segurança e eficiência.
               </p>
               <p className="mb-4 text-gray-text leading-relaxed">
                 Alunos que dominam os fundamentos evoluem de forma mais consistente, independentemente
                 de seus objetivos &mdash; recreativos, competitivos ou de defesa pessoal.
               </p>
               <p className="text-gray-text leading-relaxed">
-                O verdadeiro progresso no Jiu-Jitsu e construido no longo prazo, com paciencia e
-                dedicacao aos principios basicos.
+                O verdadeiro progresso no Jiu-Jitsu é construído no longo prazo, com paciência e
+                dedicação aos princípios básicos.
               </p>
             </div>
             <div className="grid grid-cols-2 gap-4">
               {[
-                { value: "9", label: "Modulos Completos" },
-                { value: "50+", label: "Tecnicas Ensinadas" },
-                { value: "HD", label: "Videos Detalhados" },
-                { value: "24/7", label: "Acesso ao Conteudo" },
+                { value: "9", label: "Módulos Completos" },
+                { value: "50+", label: "Técnicas Ensinadas" },
+                { value: "HD", label: "Vídeos Detalhados" },
+                { value: "24/7", label: "Acesso ao Conteúdo" },
               ].map((stat) => (
                 <div
                   key={stat.label}
@@ -221,11 +221,11 @@ export default function Home() {
         <div className="mx-auto max-w-6xl">
           <div className="mb-16 text-center">
             <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-              Conteudo do <span className="gradient-gold">Curso</span>
+              Conteúdo do <span className="gradient-gold">Curso</span>
             </h2>
             <p className="mx-auto max-w-xl text-gray-text">
-              9 modulos completos cobrindo todos os fundamentos basicos do Jiu-Jitsu Brasileiro.
-              Do conceito de base ate a mentalidade do lutador.
+              9 módulos completos cobrindo todos os fundamentos básicos do Jiu-Jitsu Brasileiro.
+              Do conceito de base até a mentalidade do lutador.
             </p>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -235,7 +235,7 @@ export default function Home() {
                 className="card-hover rounded-2xl border border-white/5 bg-dark-lighter p-6"
               >
                 <span className="mb-3 inline-block text-sm font-bold text-gold">
-                  MODULO {mod.number}
+                  MÓDULO {mod.number}
                 </span>
                 <h3 className="mb-3 text-xl font-bold text-white">{mod.title}</h3>
                 <p className="text-sm leading-relaxed text-gray-text">{mod.description}</p>
@@ -250,7 +250,7 @@ export default function Home() {
         <div className="mx-auto max-w-6xl">
           <div className="mb-16 text-center">
             <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-              Principios <span className="gradient-gold">Fundamentais</span>
+              Princípios <span className="gradient-gold">Fundamentais</span>
             </h2>
           </div>
           <div className="grid gap-8 md:grid-cols-3">
@@ -261,8 +261,8 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 ),
-                title: "Posicao antes da Finalizacao",
-                desc: "Sem controle posicional, tentativas de finalizacao falham e expoem voce. Domine a posicao primeiro.",
+                title: "Posição antes da Finalização",
+                desc: "Sem controle posicional, tentativas de finalização falham e expõem você. Domine a posição primeiro.",
               },
               {
                 icon: (
@@ -270,8 +270,8 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 ),
-                title: "Tecnica sobre Forca",
-                desc: "Jiu-Jitsu eficiente e economia de energia. Tecnica bem aplicada requer pouca forca.",
+                title: "Técnica sobre Força",
+                desc: "Jiu-Jitsu eficiente é economia de energia. Técnica bem aplicada requer pouca força.",
               },
               {
                 icon: (
@@ -279,8 +279,8 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 ),
-                title: "Constancia e Paciencia",
-                desc: "Melhor treinar 3x por semana com consistencia do que 6x em uma semana e faltar um mes.",
+                title: "Constância e Paciência",
+                desc: "Melhor treinar 3x por semana com consistência do que 6x em uma semana e faltar um mês.",
               },
             ].map((item) => (
               <div key={item.title} className="text-center">
@@ -303,7 +303,7 @@ export default function Home() {
               Escolha seu <span className="gradient-gold">Plano</span>
             </h2>
             <p className="mx-auto max-w-xl text-gray-text">
-              Invista na sua evolucao. Todos os planos incluem acesso imediato ao conteudo.
+              Invista na sua evolução. Todos os planos incluem acesso imediato ao conteúdo.
             </p>
           </div>
           <div className="grid gap-8 md:grid-cols-3">
@@ -365,11 +365,11 @@ export default function Home() {
       <section id="contato" className="px-6 py-24">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-            Pronto para <span className="gradient-gold">comecar</span>?
+            Pronto para <span className="gradient-gold">começar</span>?
           </h2>
           <p className="mb-10 text-gray-text">
-            Entre em contato pelo WhatsApp e tire todas as suas duvidas. Nossa equipe esta pronta
-            para ajudar voce a iniciar sua jornada no Jiu-Jitsu.
+            Entre em contato pelo WhatsApp e tire todas as suas dúvidas. Nossa equipe está pronta
+            para ajudar você a iniciar sua jornada no Jiu-Jitsu.
           </p>
           <a
             href="https://wa.me/5542998003140?text=Olá! Quero saber mais sobre a Zelo BJJ"
