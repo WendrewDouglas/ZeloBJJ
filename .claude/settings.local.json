@@ -18,7 +18,8 @@
       "Bash(cd:*)",
       "Bash(ssh-keygen:*)",
       "Bash(ssh:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(find:*)"
     ]
   }
 }
