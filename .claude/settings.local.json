@@ -9,7 +9,16 @@
       "Bash(npx create-next-app@latest:*)",
       "Bash(cp:*)",
       "Bash(npx next:*)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(npx vercel:*)",
+      "Bash(nslookup:*)",
+      "WebFetch(domain:zelobjj.vercel.app)",
+      "Read(//c/.ssh//**)",
+      "Read(//c/Users/**)",
+      "Bash(cd:*)",
+      "Bash(ssh-keygen:*)",
+      "Bash(ssh:*)",
+      "Bash(curl:*)"
     ]
   }
 }
