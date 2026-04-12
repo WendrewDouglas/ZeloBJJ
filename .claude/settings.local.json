@@ -57,7 +57,12 @@
       "Bash(grep -n \"Expected workStore\" .next/server/chunks/ssr/*.js)",
       "Bash(mv src/app/not-found.tsx src/app/not-found.tsx.bak)",
       "Bash(mv src/app/not-found.tsx.bak src/app/not-found.tsx)",
-      "Bash(rm src/app/global-error.tsx)"
+      "Bash(rm src/app/global-error.tsx)",
+      "Bash(xargs grep:*)",
+      "Bash(grep -E \"^.*next\\(/dist\\)?/[^/]+\\\\.d\\\\.ts$|server\\\\.d\\\\.ts\")",
+      "WebFetch(domain:supabase.com)",
+      "Bash(npx @next/codemod@canary --version)",
+      "Bash(npx @next/codemod@canary middleware-to-proxy --help)"
     ]
   }
 }
