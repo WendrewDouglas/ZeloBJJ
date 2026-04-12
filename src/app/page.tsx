@@ -126,7 +126,7 @@ export default function Home() {
             </a>
           </nav>
           <a
-            href="https://wa.me/5542998003140?text=Olá! Tenho interesse nos cursos da Zelo BJJ"
+            href="https://wa.me/5518981328589?text=Olá! Tenho interesse nos cursos da Zelo BJJ"
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-full bg-gold px-5 py-2 text-sm font-semibold text-dark transition-colors hover:bg-gold-light"
@@ -344,7 +344,7 @@ export default function Home() {
                   ))}
                 </ul>
                 <a
-                  href={`https://wa.me/5542998003140?text=Olá! Tenho interesse no plano ${plan.name} da Zelo BJJ`}
+                  href={`https://wa.me/5518981328589?text=Olá! Tenho interesse no plano ${plan.name} da Zelo BJJ`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`block w-full rounded-full py-3 text-center font-semibold transition-colors ${
@@ -372,7 +372,7 @@ export default function Home() {
             para ajudar você a iniciar sua jornada no Jiu-Jitsu.
           </p>
           <a
-            href="https://wa.me/5542998003140?text=Olá! Quero saber mais sobre a Zelo BJJ"
+            href="https://wa.me/5518981328589?text=Olá! Quero saber mais sobre a Zelo BJJ"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-3 rounded-full bg-green-600 px-8 py-4 text-lg font-bold text-white transition-colors hover:bg-green-700"
@@ -407,7 +407,7 @@ export default function Home() {
               Instagram
             </a>
             <a
-              href="https://wa.me/5542998003140"
+              href="https://wa.me/5518981328589"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-text transition-colors hover:text-gold"
@@ -420,7 +420,7 @@ export default function Home() {
 
       {/* WhatsApp Float */}
       <a
-        href="https://wa.me/5542998003140?text=Olá! Quero saber mais sobre a Zelo BJJ"
+        href="https://wa.me/5518981328589?text=Olá! Quero saber mais sobre a Zelo BJJ"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 shadow-lg transition-transform hover:scale-110"

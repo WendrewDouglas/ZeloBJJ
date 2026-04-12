@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { redirect } from "next/navigation";
 import { getProfile } from "@/lib/auth";
 import { Sidebar } from "@/components/shared/sidebar";

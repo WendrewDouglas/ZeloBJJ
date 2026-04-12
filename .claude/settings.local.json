@@ -19,7 +19,31 @@
       "Bash(ssh-keygen:*)",
       "Bash(ssh:*)",
       "Bash(curl:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "mcp__claude_ai_Supabase__get_project",
+      "mcp__claude_ai_Supabase__list_tables",
+      "mcp__claude_ai_Supabase__list_projects",
+      "mcp__claude_ai_Supabase__get_cost",
+      "mcp__claude_ai_Supabase__confirm_cost",
+      "mcp__claude_ai_Supabase__create_project",
+      "mcp__claude_ai_Supabase__apply_migration",
+      "mcp__claude_ai_Supabase__get_project_url",
+      "mcp__claude_ai_Supabase__get_publishable_keys",
+      "mcp__claude_ai_Supabase__execute_sql",
+      "Bash(npm run:*)",
+      "Bash(npm view:*)",
+      "Bash(node -e \"const d=[];process.stdin.on\\(''''data'''',c=>d.push\\(c\\)\\);process.stdin.on\\(''''end'''',\\(\\)=>{const v=JSON.parse\\(d.join\\(''''''''\\)\\);v.filter\\(x=>x.startsWith\\(''''16.''''\\)\\).forEach\\(x=>console.log\\(x\\)\\)}\\)\")",
+      "Bash(npm install:*)",
+      "Bash(NEXT_DISABLE_TURBOPACK=1 npm run build)",
+      "Bash(node -e \":*)",
+      "WebSearch",
+      "Bash(gh issue:*)",
+      "Bash(next --version)",
+      "Bash(node -e \"console.log\\(require\\(''D:/Meus_Projetos/ZeloBjj/node_modules/next/package.json''\\).version\\)\")",
+      "Bash(npm ls:*)",
+      "Bash(npm --version)",
+      "Bash(sed s//)",
+      "Bash(cp /tmp/page_test.tsx src/app/page.tsx)"
     ]
   }
 }

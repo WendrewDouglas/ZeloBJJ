@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { createClient } from "@/lib/supabase/server";
 import { requireAuth } from "@/lib/auth";
 import Link from "next/link";

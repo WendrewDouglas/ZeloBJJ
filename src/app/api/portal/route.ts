@@ -3,6 +3,13 @@ import { createClient } from "@/lib/supabase/server";
 import { stripe } from "@/lib/stripe";
 
 export async function POST() {
+  if (!stripe) {
+    return NextResponse.json(
+      { error: "Stripe ainda não configurado" },
+      { status: 503 }
+    );
+  }
+
   try {
     const supabase = await createClient();
     const {

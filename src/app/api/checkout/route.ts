@@ -3,6 +3,13 @@ import { createClient } from "@/lib/supabase/server";
 import { stripe, PLAN_PRICE_MAP } from "@/lib/stripe";
 
 export async function POST(request: Request) {
+  if (!stripe) {
+    return NextResponse.json(
+      { error: "Stripe ainda não configurado" },
+      { status: 503 }
+    );
+  }
+
   try {
     const supabase = await createClient();
     const {

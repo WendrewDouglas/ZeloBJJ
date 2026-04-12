@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -160,12 +161,12 @@ export default function PerfilPage() {
               <p className="mb-4 text-gray-text">
                 Você não possui uma assinatura ativa.
               </p>
-              <a
+              <Link
                 href="/#planos"
                 className="inline-block rounded-full bg-gold px-6 py-2 text-sm font-semibold text-dark hover:bg-gold-light"
               >
                 Ver Planos
-              </a>
+              </Link>
             </div>
           )}
         </div>
