@@ -43,7 +43,21 @@
       "Bash(npm ls:*)",
       "Bash(npm --version)",
       "Bash(sed s//)",
-      "Bash(cp /tmp/page_test.tsx src/app/page.tsx)"
+      "Bash(cp /tmp/page_test.tsx src/app/page.tsx)",
+      "Bash(cat .env.local)",
+      "Bash(cat .env.example)",
+      "Bash(cat .env)",
+      "mcp__claude_ai_Supabase__list_migrations",
+      "Bash(ls src/app/global-error.tsx)",
+      "Bash(echo \"exists: $?\")",
+      "Bash(rm -rf .next)",
+      "Bash(NEXT_PRIVATE_TURBOPACK=0 npm run build)",
+      "WebFetch(domain:github.com)",
+      "Bash(mv src/middleware.ts src/middleware.ts.bak)",
+      "Bash(grep -n \"Expected workStore\" .next/server/chunks/ssr/*.js)",
+      "Bash(mv src/app/not-found.tsx src/app/not-found.tsx.bak)",
+      "Bash(mv src/app/not-found.tsx.bak src/app/not-found.tsx)",
+      "Bash(rm src/app/global-error.tsx)"
     ]
   }
 }
