@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zelo BJJ - Plano de Finalizacao</title>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --bg-card: #1a1a1a;
+      --bg-card-alt: #222;
+      --gold: #f0ad4e;
+      --gold-dim: #c8912e;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #eab308;
+      --blue: #3b82f6;
+      --purple: #a855f7;
+      --text: #e5e5e5;
+      --text-dim: #999;
+      --border: #333;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1a1a1a 0%, #111 100%);
+      border-bottom: 2px solid var(--gold);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 2.2rem;
+      color: var(--gold);
+      margin-bottom: 0.3rem;
+      letter-spacing: 1px;
+    }
+    .header p { color: var(--text-dim); font-size: 1rem; }
+    .header .date {
+      display: inline-block;
+      margin-top: 0.8rem;
+      background: var(--bg);
+      color: var(--gold);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      border: 1px solid var(--border);
+    }
+
+    .nav {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 0.8rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav a {
+      color: var(--text-dim);
+      text-decoration: none;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .nav a:hover { background: var(--bg-card-alt); color: var(--gold); }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+    .section { margin-bottom: 3rem; }
+    .section-title {
+      font-size: 1.5rem;
+      color: var(--gold);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .card h3 { color: var(--gold); font-size: 1.1rem; margin-bottom: 0.8rem; }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-ok { background: #16a34a22; color: var(--green); border: 1px solid #16a34a44; }
+    .badge-warn { background: #eab30822; color: var(--yellow); border: 1px solid #eab30844; }
+    .badge-error { background: #ef444422; color: var(--red); border: 1px solid #ef444444; }
+    .badge-info { background: #3b82f622; color: var(--blue); border: 1px solid #3b82f644; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+
+    code {
+      background: #000;
+      color: var(--gold);
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+    }
+    pre {
+      background: #000;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      color: #ccc;
+      margin: 0.8rem 0;
+    }
+    pre .comment { color: #666; }
+    pre .key { color: var(--gold); }
+    pre .val { color: var(--green); }
+
+    ul { padding-left: 1.3rem; }
+    li { margin-bottom: 0.4rem; font-size: 0.92rem; }
+
+    .step {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem 1.5rem 1.2rem 3.5rem;
+      margin-bottom: 1rem;
+      border-left: 3px solid var(--gold);
+      position: relative;
+    }
+    .step.done { border-left-color: var(--green); }
+    .step.blocked { border-left-color: var(--red); }
+    .step.optional { border-left-color: var(--purple); }
+    .step .step-num {
+      position: absolute;
+      left: 1rem;
+      top: 1.3rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      background: var(--gold);
+      color: #000;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .step.done .step-num { background: var(--green); color: #000; }
+    .step.blocked .step-num { background: var(--red); color: #fff; }
+    .step.optional .step-num { background: var(--purple); color: #fff; }
+    .step h3 {
+      color: var(--gold);
+      font-size: 1.05rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .step .meta {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-bottom: 0.6rem;
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .step .meta span { display: inline-flex; align-items: center; gap: 0.3rem; }
+    .step p, .step li { font-size: 0.88rem; }
+    .step ul { margin-top: 0.4rem; }
+
+    .checklist { list-style: none; padding: 0; margin-top: 0.6rem; }
+    .checklist li {
+      padding: 0.35rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      font-size: 0.88rem;
+    }
+    .checklist li::before {
+      content: "\2610";
+      color: var(--gold);
+      font-weight: 700;
+      min-width: 1rem;
+      font-size: 1rem;
+      line-height: 1.1;
+    }
+    .checklist li.done::before { content: "\2611"; color: var(--green); }
+
+    .phase-header {
+      margin: 2rem 0 1rem;
+      padding: 1rem 1.2rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+    .phase-header.a { border-left: 4px solid var(--red); }
+    .phase-header.b { border-left: 4px solid var(--yellow); }
+    .phase-header.c { border-left: 4px solid var(--blue); }
+    .phase-header.d { border-left: 4px solid var(--green); }
+    .phase-header.e { border-left: 4px solid var(--purple); }
+    .phase-header h2 { font-size: 1.25rem; margin-bottom: 0.3rem; }
+    .phase-header.a h2 { color: var(--red); }
+    .phase-header.b h2 { color: var(--yellow); }
+    .phase-header.c h2 { color: var(--blue); }
+    .phase-header.d h2 { color: var(--green); }
+    .phase-header.e h2 { color: var(--purple); }
+    .phase-header p { font-size: 0.9rem; color: var(--text-dim); }
+
+    .summary-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    .summary-table th, .summary-table td {
+      padding: 0.6rem 0.8rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+    .summary-table th { color: var(--gold); text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.75rem; }
+    .summary-table tr:hover td { background: #ffffff05; }
+
+    .callout {
+      border-radius: 8px;
+      padding: 0.9rem 1.1rem;
+      margin: 1rem 0;
+      font-size: 0.88rem;
+      border: 1px solid;
+    }
+    .callout.warn { background: #eab30811; border-color: #eab30855; color: #fcd34d; }
+    .callout.info { background: #3b82f611; border-color: #3b82f655; color: #93c5fd; }
+    .callout.danger { background: #ef444411; border-color: #ef444455; color: #fca5a5; }
+    .callout.success { background: #22c55e11; border-color: #22c55e55; color: #86efac; }
+    .callout strong { color: inherit; }
+
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-top: 3rem;
+    }
+
+    a { color: var(--gold); }
+    a:hover { color: var(--gold-dim); }
+    hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+    .kbd {
+      display: inline-block;
+      padding: 0.1rem 0.45rem;
+      font-size: 0.75rem;
+      background: #000;
+      border: 1px solid var(--border);
+      border-bottom-width: 2px;
+      border-radius: 4px;
+      color: var(--gold);
+      font-family: 'Cascadia Code', monospace;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--bg-card-alt);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 0.4rem;
+    }
+    .progress-bar > div {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dim));
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>ZELO BJJ &mdash; Plano de Finalizacao</h1>
+  <p>Roteiro passo a passo para levar a plataforma ate o go-live</p>
+  <div class="date">Gerado em 19/04/2026</div>
+</div>
+
+<div class="nav">
+  <a href="#resumo">Resumo</a>
+  <a href="#fase-a">Fase A &middot; Servicos</a>
+  <a href="#fase-b">Fase B &middot; Conteudo &amp; Testes</a>
+  <a href="#fase-c">Fase C &middot; Polimento</a>
+  <a href="#fase-d">Fase D &middot; Go-Live</a>
+  <a href="#fase-e">Fase E &middot; Pos-Lancamento</a>
+  <a href="#aceite">Criterios de Aceite</a>
+  <a href="#riscos">Riscos</a>
+</div>
+
+<div class="container">
+
+  <!-- RESUMO -->
+  <div class="section" id="resumo">
+    <h2 class="section-title">Resumo Executivo</h2>
+    <div class="card">
+      <p>
+        O MVP da plataforma esta <strong>pronto em codigo</strong> (Next.js 16 + Supabase + PagBank + Bunny + Resend).
+        <strong>Modelo atual:</strong> oferta unica de R$ 29,90 (pagamento avulso, acesso vitalicio) via link hospedado do PagBank.
+        Supabase migrado (<code>002_pagbank</code>, <code>003_single_product</code>), webhook PagBank com Basic Auth cadastrado. Faltam Bunny, Resend, conteudo e testes.
+      </p>
+      <div class="progress-bar" title="Progresso estimado do MVP ate producao"><div style="width:70%"></div></div>
+      <p style="margin-top:0.4rem;font-size:0.78rem;color:var(--text-dim);">Progresso estimado: ~70% &middot; bloqueio principal em Bunny, Resend e conteudo.</p>
+    </div>
+
+    <div class="grid" style="margin-top:1rem;">
+      <div class="card">
+        <h3>Visao rapida das fases</h3>
+        <table class="summary-table">
+          <tr><th>Fase</th><th>Foco</th><th>Estimativa</th></tr>
+          <tr><td><span class="badge badge-error">A</span></td><td>Servicos externos (PagBank, Bunny, Resend, Vercel)</td><td>1 dia</td></tr>
+          <tr><td><span class="badge badge-warn">B</span></td><td>Conteudo + testes ponta-a-ponta</td><td>2 dias</td></tr>
+          <tr><td><span class="badge badge-info">C</span></td><td>Polimento (services, emails, admin CRUD, SEO)</td><td>3-4 dias</td></tr>
+          <tr><td><span class="badge badge-ok">D</span></td><td>Go-live (PagBank prod, legal, monitoria)</td><td>1 dia</td></tr>
+          <tr><td><span class="badge badge-info">E</span></td><td>Pos-lancamento / melhorias</td><td>continuo</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>Status dos servicos externos</h3>
+        <table class="summary-table">
+          <tr><th>Servico</th><th>Status</th><th>O que falta</th></tr>
+          <tr><td>Supabase</td><td><span class="badge badge-ok">OK</span></td><td>&mdash;</td></tr>
+          <tr><td>PagBank</td><td><span class="badge badge-ok">OK</span></td><td>Link <code>pag.ae/81HAeDbNJ</code>, webhook com Basic Auth, token API salvo</td></tr>
+          <tr><td>Bunny Stream</td><td><span class="badge badge-error">Pendente</span></td><td>Conta, library, API key</td></tr>
+          <tr><td>Resend</td><td><span class="badge badge-error">Pendente</span></td><td>Conta, dominio verificado, API key</td></tr>
+          <tr><td>Vercel</td><td><span class="badge badge-warn">Parcial</span></td><td>Env vars em producao</td></tr>
+          <tr><td>Hostinger DNS</td><td><span class="badge badge-ok">OK</span></td><td>&mdash;</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <strong>Como usar este plano:</strong> cada step tem um checklist acionavel. Trate cada checkbox como &ldquo;definition of done&rdquo; daquele passo.
+      Nao avance entre fases sem validar os criterios de aceite no final deste documento.
+    </div>
+  </div>
+
+  <!-- FASE A -->
+  <div class="section" id="fase-a">
+    <div class="phase-header a">
+      <h2>Fase A &middot; Servicos Externos (Bloqueadores)</h2>
+      <p>Sem essas 4 integracoes, nada roda em producao. Todas exigem acao manual fora do codigo.</p>
+    </div>
+
+    <div class="step done">
+      <span class="step-num">1</span>
+      <h3>PagBank &mdash; link unico R$ 29,90 vitalicio <span class="badge badge-ok">Concluido</span></h3>
+      <div class="meta">
+        <span>Concluido em 20/04/2026</span>
+      </div>
+      <p>Modelo simplificado: um unico produto avulso (nao e assinatura recorrente) no PagBank. Pagamento unico &rarr; acesso vitalicio.</p>
+      <ul class="checklist">
+        <li class="done">Conta PagBank criada e ativa</li>
+        <li class="done">Link de pagamento <code>https://pag.ae/81HAeDbNJ</code> publicado</li>
+        <li class="done">URL de redirecionamento: <code>https://zelobjj.com.br/dashboard</code> com param <code>pagbank_order_id</code></li>
+        <li class="done">Webhook cadastrado via Basic Auth apontando para <code>/api/webhooks/pagbank</code></li>
+        <li class="done">Token API salvo como <code>PAGBANK_API_TOKEN</code> (para consultas futuras)</li>
+        <li class="done">Migration <code>003_single_product</code> aplicada: plano unico <code>curso_digital</code> com <code>is_lifetime=true</code></li>
+      </ul>
+    </div>
+
+    <div class="step blocked">
+      <span class="step-num">2</span>
+      <h3>Configurar Bunny Stream <span class="badge badge-error">Bloqueador</span></h3>
+      <div class="meta">
+        <span>Duracao: ~30 min</span>
+        <span>Resp.: Wendrew</span>
+        <span>Pre-req: cartao para cadastro</span>
+      </div>
+      <p>Hospedagem protegida dos videos das aulas (com tokens e CDN).</p>
+      <ul class="checklist">
+        <li>Criar conta em <a href="https://dash.bunny.net" target="_blank">dash.bunny.net</a></li>
+        <li>Em <strong>Stream</strong>, criar Video Library com regiao America do Sul</li>
+        <li>Copiar <code>Library ID</code>, <code>API Key</code> e <code>CDN Hostname</code></li>
+        <li>Fazer upload de 1 video de teste (5-10 min) para validar player</li>
+        <li>Preencher <code>BUNNY_STREAM_*</code> no <code>.env.local</code></li>
+        <li>Validar o <code>VideoPlayer</code> localmente acessando uma aula dummy</li>
+      </ul>
+    </div>
+
+    <div class="step blocked">
+      <span class="step-num">3</span>
+      <h3>Configurar Resend + verificar dominio <span class="badge badge-error">Bloqueador</span></h3>
+      <div class="meta">
+        <span>Duracao: ~45 min (+ propagacao DNS)</span>
+        <span>Resp.: Wendrew</span>
+        <span>Pre-req: acesso DNS Hostinger</span>
+      </div>
+      <p>Disparo de emails transacionais a partir de <code>contato@zelobjj.com.br</code>.</p>
+      <ul class="checklist">
+        <li>Criar conta em <a href="https://resend.com" target="_blank">resend.com</a></li>
+        <li>Adicionar dominio <code>zelobjj.com.br</code> em Domains</li>
+        <li>Copiar registros DKIM/SPF/DMARC e aplicar na Hostinger (DNS)</li>
+        <li>Aguardar verificacao (pode levar ate 24h, normalmente &lt; 1h)</li>
+        <li>Criar API Key <code>re_...</code> com escopo de envio</li>
+        <li>Preencher <code>RESEND_API_KEY</code> e <code>RESEND_FROM_EMAIL</code> no <code>.env.local</code></li>
+        <li>Enviar email de teste via Resend CLI ou Dashboard</li>
+      </ul>
+    </div>
+
+    <div class="step blocked">
+      <span class="step-num">4</span>
+      <h3>Reconectar Vercel + GitHub e replicar env vars <span class="badge badge-error">Bloqueador</span></h3>
+      <div class="meta">
+        <span>Duracao: ~20 min</span>
+        <span>Resp.: Wendrew</span>
+        <span>Pre-req: Steps 1-3 concluidos</span>
+      </div>
+      <p>Auto-deploy por push e paridade de env vars.</p>
+      <ul class="checklist">
+        <li>Em Vercel &rarr; Settings &rarr; Git, reconectar repo <code>WendrewDouglas/ZeloBJJ</code> branch <code>master</code></li>
+        <li>Em Settings &rarr; Environment Variables, copiar <strong>todas</strong> as 15 variaveis do <code>.env.local</code> para <code>Production</code> e <code>Preview</code></li>
+        <li>Ajustar <code>NEXT_PUBLIC_APP_URL</code> para <code>https://zelobjj.com.br</code> em Production</li>
+        <li>Fazer um commit vazio e push para triggerar deploy</li>
+        <li>Confirmar build verde na Vercel e site funcionando em producao</li>
+      </ul>
+      <div class="callout warn" style="margin-top:0.8rem;">
+        <strong>Atencao:</strong> a URL <code>NEXT_PUBLIC_APP_URL</code> precisa bater com a URL real. Em Production, cadastrar <code>PAGBANK_WEBHOOK_USERNAME</code>, <code>PAGBANK_WEBHOOK_PASSWORD</code> e <code>PAGBANK_API_TOKEN</code> com os mesmos valores do painel PagBank.
+      </div>
+    </div>
+  </div>
+
+  <!-- FASE B -->
+  <div class="section" id="fase-b">
+    <div class="phase-header b">
+      <h2>Fase B &middot; Conteudo &amp; Testes Ponta-a-Ponta</h2>
+      <p>Com servicos ativos, popular o banco e validar o fluxo completo antes de qualquer polimento.</p>
+    </div>
+
+    <div class="step done">
+      <span class="step-num">5</span>
+      <h3>Migrations Supabase aplicadas <span class="badge badge-ok">Concluido</span></h3>
+      <div class="meta">
+        <span>Concluido em 20/04/2026</span>
+      </div>
+      <ul class="checklist">
+        <li class="done"><code>002_pagbank_rename</code>: renomeia <code>stripe_*</code> para <code>pagbank_*</code></li>
+        <li class="done"><code>003_single_product</code>: cria plano unico <code>curso_digital</code> (R$ 29,90, vitalicio)</li>
+        <li class="done"><code>payment_link</code> = <code>https://pag.ae/81HAeDbNJ</code> inserido via INSERT</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <span class="step-num">6</span>
+      <h3>Popular 1 curso completo para teste</h3>
+      <div class="meta">
+        <span>Duracao: ~1h30</span>
+        <span>Resp.: Wendrew + Cliente (conteudo)</span>
+        <span>Pre-req: Step 2</span>
+      </div>
+      <p>Estrutura minima para validar o fluxo: 1 curso &rarr; 2-3 modulos &rarr; 3-5 aulas com video.</p>
+      <ul class="checklist">
+        <li>Subir 3-5 videos no Bunny Stream e anotar cada <code>bunny_video_id</code></li>
+        <li>Inserir <code>courses</code> com <code>status = 'published'</code></li>
+        <li>Inserir <code>modules</code> vinculados ao curso (com <code>order_index</code>)</li>
+        <li>Inserir <code>lessons</code> com <code>bunny_video_id</code> e <code>duration_seconds</code></li>
+        <li>Validar renderizacao em <code>/cursos</code> e <code>/cursos/[courseId]</code></li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <span class="step-num">7</span>
+      <h3>Teste E2E manual do fluxo completo</h3>
+      <div class="meta">
+        <span>Duracao: ~1h</span>
+        <span>Resp.: Wendrew</span>
+        <span>Pre-req: Steps 1-6</span>
+      </div>
+      <p>Rodar em preview da Vercel (ou <code>npm run dev</code> + <code>ngrok</code>/<code>cloudflared</code> para expor o webhook).</p>
+      <ul class="checklist">
+        <li>Cadastro de novo usuario &rarr; profile criado automaticamente (trigger)</li>
+        <li>Login + redirect para <code>/dashboard</code></li>
+        <li>Clicar em &ldquo;Assinar Agora&rdquo; &rarr; redirect para o link PagBank (com <code>reference_id</code>)</li>
+        <li>Pagar no ambiente PagBank (cartao real ou cartao de teste, conforme sandbox)</li>
+        <li>Webhook PagBank recebido &rarr; <code>subscription.status = active</code> e enrollments criados</li>
+        <li>Aluno acessa curso e consegue assistir (Bunny)</li>
+        <li>Marcar aula como concluida &rarr; <code>lesson_progress</code> atualizado</li>
+        <li>Criar post e comentario no forum</li>
+        <li>Cancelar assinatura pelo painel PagBank (via email que o aluno recebe) &rarr; webhook <code>CANCELED</code> desativa enrollments</li>
+        <li>Login com conta admin &rarr; acesso a <code>/admin/*</code></li>
+        <li>Validar que usuario nao-admin e redirecionado de <code>/admin</code> para <code>/dashboard</code></li>
+      </ul>
+      <div class="callout info">
+        <strong>Dica:</strong> para testar o webhook em dev, exponha a rota com <code>cloudflared tunnel --url http://localhost:3000</code> e cadastre a URL publica no painel do PagBank temporariamente.
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">8</span>
+      <h3>Matriz de bugs encontrados</h3>
+      <div class="meta">
+        <span>Duracao: variavel</span>
+        <span>Resp.: Wendrew</span>
+        <span>Pre-req: Step 7</span>
+      </div>
+      <p>Consolidar e corrigir. Nao avancar para Fase C antes de todos bloqueantes zerados.</p>
+      <ul class="checklist">
+        <li>Lista de bugs priorizada (bloqueante / alto / medio / baixo)</li>
+        <li>Bloqueantes resolvidos</li>
+        <li>Altos: decidir ship-or-wait</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- FASE C -->
+  <div class="section" id="fase-c">
+    <div class="phase-header c">
+      <h2>Fase C &middot; Polimento para Entrega</h2>
+      <p>Preparar a plataforma para uso real: qualidade de codigo, emails, SEO, admin completo.</p>
+    </div>
+
+    <div class="step">
+      <span class="step-num">9</span>
+      <h3>Extrair queries para <code>src/services/</code></h3>
+      <div class="meta">
+        <span>Duracao: ~4h</span>
+        <span>Resp.: Wendrew</span>
+      </div>
+      <p>As 5 subpastas em <code>src/services/</code> estao vazias. Mover queries Supabase das pages para services e criar tipos de retorno.</p>
+      <ul class="checklist">
+        <li><code>services/enrollments</code> &mdash; listar, criar, desativar enrollments</li>
+        <li><code>services/subscriptions</code> &mdash; buscar assinatura do usuario, normalizar status do PagBank</li>
+        <li><code>services/progress</code> &mdash; marcar aula concluida, calcular % curso</li>
+        <li><code>services/forum</code> &mdash; listar posts, criar post, comentar</li>
+        <li><code>services/emails</code> &mdash; wrappers de envio via Resend</li>
+        <li>Remover queries inline das pages correspondentes</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <span class="step-num">10</span>
+      <h3>Emails transacionais (Resend)</h3>
+      <div class="meta">
+        <span>Duracao: ~4h</span>
+        <span>Resp.: Wendrew</span>
+        <span>Pre-req: Step 3 + 9</span>
+      </div>
+      <p>Templates em React Email (ou HTML simples) disparados nos gatilhos certos.</p>
+      <ul class="checklist">
+        <li>Boas-vindas no cadastro (trigger Supabase ou webhook)</li>
+        <li>Confirmacao de assinatura (apos webhook com <code>status = ACTIVE</code>)</li>
+        <li>Falha de pagamento (webhook <code>invoice.payment_failed</code>)</li>
+        <li>Cancelamento (webhook <code>customer.subscription.deleted</code>)</li>
+        <li>Recuperacao de senha (ja usa Supabase, mas customizar template)</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <span class="step-num">11</span>
+      <h3>Admin CRUD de cursos/modulos/aulas</h3>
+      <div class="meta">
+        <span>Duracao: ~1-2 dias</span>
+        <span>Resp.: Wendrew</span>
+      </div>
+      <p>Hoje o painel admin lista, mas nao permite criar/editar. O cliente precisa autonomia para gestao.</p>
+      <ul class="checklist">
+        <li>Form de criacao de curso (titulo, slug, descricao, capa, status)</li>
+        <li>Editor de modulos (drag-drop reordenar <code>order_index</code>)</li>
+        <li>Form de aula com selecao/upload de video Bunny e duracao automatica</li>
+        <li>Tela de preview da aula antes de publicar</li>
+        <li>Soft delete e historico</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <span class="step-num">12</span>
+      <h3>SEO, metadata, og-image, sitemap, robots</h3>
+      <div class="meta">
+        <span>Duracao: ~3h</span>
+        <span>Resp.: Wendrew</span>
+      </div>
+      <ul class="checklist">
+        <li><code>metadata</code> por rota (titulo, descricao, OG, Twitter card)</li>
+        <li><code>app/sitemap.ts</code> com rotas publicas + cursos publicados</li>
+        <li><code>app/robots.ts</code> bloqueando <code>/admin</code>, <code>/dashboard</code>, <code>/api</code></li>
+        <li>Imagem OG 1200x630 com branding Zelo BJJ</li>
+        <li>Schema.org Course (JSON-LD) nas paginas de curso</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <span class="step-num">13</span>
+      <h3>Performance &amp; acessibilidade</h3>
+      <div class="meta">
+        <span>Duracao: ~2h</span>
+        <span>Resp.: Wendrew</span>
+      </div>
+      <ul class="checklist">
+        <li>Auditoria Lighthouse em Home, Dashboard, pagina de aula</li>
+        <li>Imagens otimizadas via <code>next/image</code></li>
+        <li><code>loading.tsx</code> e <code>error.tsx</code> nas rotas principais</li>
+        <li>Teste navegacao por teclado e screen reader basico</li>
+        <li>Contraste em dark mode validado</li>
+      </ul>
+    </div>
+
+    <div class="step optional">
+      <span class="step-num">14</span>
+      <h3>Remover debt do MVP <span class="badge badge-info">Opcional</span></h3>
+      <div class="meta">
+        <span>Duracao: ~1h</span>
+        <span>Resp.: Wendrew</span>
+      </div>
+      <ul class="checklist">
+        <li>Atualizar <code>README.md</code> com instrucoes reais do projeto (atualmente e o template default do Next.js)</li>
+        <li>Revisar <code>not-found.tsx</code> e <code>error.tsx</code> com design consistente</li>
+        <li>Remover <code>console.log</code> / debug residual</li>
+        <li>Rodar <code>npm run lint</code> e zerar warnings</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- FASE D -->
+  <div class="section" id="fase-d">
+    <div class="phase-header d">
+      <h2>Fase D &middot; Go-Live em Producao</h2>
+      <p>Passos de producao, seguranca e conformidade antes de abrir para usuarios reais.</p>
+    </div>
+
+    <div class="step">
+      <span class="step-num">15</span>
+      <h3>Validar PagBank em producao</h3>
+      <div class="meta">
+        <span>Duracao: ~20 min</span>
+        <span>Resp.: Wendrew</span>
+        <span>Pre-req: conta PJ PagBank ativada</span>
+      </div>
+      <p>Como usamos somente o link hospedado, nao ha &ldquo;trocar para Live&rdquo;: os links ja sao produtivos desde a criacao. So validar que tudo esta amarrado.</p>
+      <ul class="checklist">
+        <li>Confirmar que a conta PagBank esta ativa (documentos PJ aprovados, conta bancaria para repasse)</li>
+        <li>Confirmar que o webhook aponta para <code>https://zelobjj.com.br/api/webhooks/pagbank</code></li>
+        <li>Confirmar que <code>PAGBANK_WEBHOOK_SECRET</code> em Production e igual ao do painel PagBank</li>
+        <li>Fazer 1 assinatura real com um cartao proprio (R$ 97) e depois cancelar pelo painel</li>
+        <li>Conferir que <code>subscription.status</code> passou por <code>active</code> e depois <code>canceled</code> no Supabase</li>
+      </ul>
+      <div class="callout warn"><strong>Cuidado:</strong> a API de Recorrencia PagBank (nao usada aqui) exige liberacao manual ao suporte e conta PJ. Se no futuro quiser migrar do link para API, esse e o bloqueador.</div>
+    </div>
+
+    <div class="step">
+      <span class="step-num">16</span>
+      <h3>Seguranca &amp; hardening</h3>
+      <div class="meta"><span>Duracao: ~1h</span><span>Resp.: Wendrew</span></div>
+      <ul class="checklist">
+        <li>Trocar senha do admin <code>wendrew.douglas@gmail.com.br</code></li>
+        <li>Criar usuario admin separado para o cliente</li>
+        <li>Ativar 2FA na Vercel, Supabase, PagBank, Bunny, Resend e GitHub</li>
+        <li>Revisar politicas RLS no Supabase (nenhuma tabela com RLS desligado)</li>
+        <li>Rate limiting nas rotas <code>/api/checkout</code> e <code>/api/portal</code> (Vercel ou middleware)</li>
+        <li>Headers de seguranca (CSP, X-Frame-Options) em <code>next.config.ts</code></li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <span class="step-num">17</span>
+      <h3>Conformidade legal (LGPD)</h3>
+      <div class="meta"><span>Duracao: ~2h</span><span>Resp.: Wendrew + Cliente</span></div>
+      <ul class="checklist">
+        <li>Pagina <code>/termos-de-uso</code></li>
+        <li>Pagina <code>/politica-de-privacidade</code> (menciona Supabase, PagBank, Bunny, Resend, Vercel)</li>
+        <li>Checkbox de aceite nos termos no cadastro</li>
+        <li>Footer com links para termos e politica</li>
+        <li>Banner de cookies (se usar analytics)</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <span class="step-num">18</span>
+      <h3>Observabilidade &amp; monitoramento</h3>
+      <div class="meta"><span>Duracao: ~1h</span><span>Resp.: Wendrew</span></div>
+      <ul class="checklist">
+        <li>Vercel Analytics ativado</li>
+        <li>Vercel Speed Insights (opcional)</li>
+        <li>Logs estruturados nas rotas <code>/api/*</code> (especialmente webhook PagBank)</li>
+        <li>Alerta por email em falhas de webhook (monitorar <code>audit_logs</code> no Supabase)</li>
+        <li>Backup do Supabase verificado (Dashboard &rarr; Database &rarr; Backups)</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <span class="step-num">19</span>
+      <h3>Handoff ao cliente</h3>
+      <div class="meta"><span>Duracao: ~1h</span><span>Resp.: Wendrew</span></div>
+      <ul class="checklist">
+        <li>Runbook de operacao (como adicionar curso, como ver aluno, como estornar)</li>
+        <li>Credenciais dos servicos entregues em canal seguro (1Password / Bitwarden)</li>
+        <li>Video gravado de 10-15 min mostrando o painel admin</li>
+        <li>Canal de suporte definido (email / WhatsApp Business)</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <span class="step-num">20</span>
+      <h3>Soft launch &rarr; Launch oficial</h3>
+      <div class="meta"><span>Duracao: 1 semana</span><span>Resp.: Wendrew + Cliente</span></div>
+      <ul class="checklist">
+        <li>Soft launch com 5-10 alunos iniciais (amigos/familia)</li>
+        <li>Monitorar logs, webhooks, churn e feedback por 5-7 dias</li>
+        <li>Ajustes finais de UX/copy</li>
+        <li>Divulgacao oficial (Instagram, lista WhatsApp)</li>
+        <li>Confirmar fluxo funcionando com 10 inscricoes pagas reais</li>
+      </ul>
+      <div class="callout success"><strong>Marco:</strong> ao concluir este step, a plataforma esta oficialmente entregue e em producao.</div>
+    </div>
+  </div>
+
+  <!-- FASE E -->
+  <div class="section" id="fase-e">
+    <div class="phase-header e">
+      <h2>Fase E &middot; Pos-Lancamento (backlog priorizado)</h2>
+      <p>Melhorias para os proximos sprints, depois que o produto estiver no ar e gerando dados reais.</p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Produto</h3>
+        <ul>
+          <li>Busca e filtros de cursos</li>
+          <li>Trilhas de aprendizagem (prerequisitos)</li>
+          <li>Certificados PDF de conclusao</li>
+          <li>Gamificacao (streak, badges)</li>
+          <li>Notificacoes Realtime (Supabase)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Engenharia</h3>
+        <ul>
+          <li>Testes automatizados (Vitest unit + Playwright E2E)</li>
+          <li>CI com lint + typecheck + test em PR</li>
+          <li>Storybook para <code>components/ui</code></li>
+          <li>Migrar <code>vercel.json</code> para <code>vercel.ts</code></li>
+          <li>Observability: Sentry ou equivalente</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Crescimento</h3>
+        <ul>
+          <li>Cupons de desconto (gerenciados pelo painel PagBank)</li>
+          <li>Trial 7 dias</li>
+          <li>Programa de afiliados</li>
+          <li>Dashboard analytics de engajamento</li>
+          <li>Integracao WhatsApp (BotID do usuario)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- CRITERIOS DE ACEITE -->
+  <div class="section" id="aceite">
+    <h2 class="section-title">Criterios de Aceite por Fase</h2>
+    <div class="card">
+      <table class="summary-table">
+        <tr><th>Fase</th><th>Definition of Done</th></tr>
+        <tr>
+          <td><span class="badge badge-error">A</span></td>
+          <td>Build verde na Vercel com as env vars preenchidas; pelo menos 1 email de teste enviado pelo Resend; 1 video reproduzindo via Bunny; link PagBank abrindo ao clicar em &ldquo;Assinar Agora&rdquo;.</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-warn">B</span></td>
+          <td>1 curso com 3+ aulas publicado; 1 usuario novo concluiu o fluxo completo (cadastro &rarr; checkout &rarr; acesso &rarr; progresso &rarr; cancelamento) sem intervencao manual.</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-info">C</span></td>
+          <td>Services com queries extraidas; 4 emails transacionais enviando; Lighthouse &ge; 85 em Performance/SEO/A11y nas 3 rotas principais; admin CRUD funcional.</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-ok">D</span></td>
+          <td>1 assinatura real (R$ 97) aprovada e depois cancelada com webhook processado sem erro; termos/privacidade publicados; cliente treinado; 10 inscricoes pagas reais sem falha.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- RISCOS -->
+  <div class="section" id="riscos">
+    <h2 class="section-title">Riscos &amp; Mitigacoes</h2>
+    <div class="card">
+      <table class="summary-table">
+        <tr><th>Risco</th><th>Impacto</th><th>Mitigacao</th></tr>
+        <tr>
+          <td>Verificacao DNS do Resend demorar</td>
+          <td>Alto (bloqueia emails)</td>
+          <td>Iniciar Step 3 <strong>primeiro</strong> para DNS propagar em paralelo com Steps 1, 2 e 4.</td>
+        </tr>
+        <tr>
+          <td>Webhook PagBank nao alcancar a Vercel em Production</td>
+          <td>Critico (assinaturas nao sincronizam)</td>
+          <td>Testar com tunel (<code>cloudflared</code>) em dev; conferir <code>audit_logs</code> apos primeira cobranca real no Step 7.</td>
+        </tr>
+        <tr>
+          <td>Bug Next.js 16 de build no Windows</td>
+          <td>Baixo (so local)</td>
+          <td>Nao tentar <code>next build</code> localmente; rodar <code>next dev</code> e deixar build para a Vercel (Linux).</td>
+        </tr>
+        <tr>
+          <td>Cliente sem conteudo gravado a tempo</td>
+          <td>Medio (atrasa soft launch)</td>
+          <td>Definir no Step 6 um curso piloto minimo (3-5 aulas) e liberar primeiro antes do catalogo completo.</td>
+        </tr>
+        <tr>
+          <td>Vazamento de chaves no repo</td>
+          <td>Critico</td>
+          <td>Confirmar <code>.env.local</code> no <code>.gitignore</code>; rotacionar imediatamente se algo vazar; usar Vercel Env para producao.</td>
+        </tr>
+        <tr>
+          <td>Ativacao PagBank demora (validacao KYC/PJ)</td>
+          <td>Alto (bloqueia Fase A)</td>
+          <td>Submeter CNPJ e dados bancarios assim que comecar a Fase A. Conta PJ aprovada e pre-requisito para criar os links de assinatura.</td>
+        </tr>
+        <tr>
+          <td>Formato do webhook do PagBank ambiguo (header/secret)</td>
+          <td>Medio</td>
+          <td>Codigo ja tolera 3 nomes de header (<code>x-payload-signature</code>, <code>x-pagbank-signature</code>, <code>x-hub-signature-256</code>). Em homologacao, capturar o header real e ajustar.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ORDEM SUGERIDA -->
+  <div class="section">
+    <h2 class="section-title">Ordem Sugerida de Execucao (otimizando tempo)</h2>
+    <div class="card">
+      <ol style="padding-left:1.2rem;">
+        <li>Disparar Step 3 (Resend/DNS) &mdash; para propagar em paralelo.</li>
+        <li>Em paralelo, rodar Steps 1 e 2 (PagBank links + webhook, Bunny).</li>
+        <li>Step 4 (Vercel env vars) assim que 1/2/3 tiverem valores.</li>
+        <li>Step 5 (migrations Supabase) &mdash; ja concluido em 20/04/2026.</li>
+        <li>Step 6 (popular curso) &mdash; depende do cliente enviar conteudo. Comecar em paralelo a Fase A.</li>
+        <li>Step 7 (E2E) apenas com tudo acima fechado.</li>
+        <li>Fase C em sequencia, mas 9 e 10 podem ser paralelizados.</li>
+        <li>Fase D so comeca com Fase C aceita e conta PagBank ativa.</li>
+      </ol>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  <p>Zelo BJJ &mdash; Plano gerado em 19/04/2026</p>
+  <p style="margin-top:0.3rem;">Leitura complementar: <a href="./ZELO_BJJ_DOCUMENTACAO.html">ZELO_BJJ_DOCUMENTACAO.html</a></p>
+</div>
+
+</body>
+</html>

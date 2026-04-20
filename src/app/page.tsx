@@ -1,4 +1,22 @@
 import Image from "next/image";
+import { SubscribeButton } from "@/components/public/subscribe-button";
+
+const offer = {
+  name: "Curso Brazilian Jiu-Jitsu",
+  subtitle: "Completo Digital · 9 módulos",
+  price: "29",
+  cents: "90",
+  payment: "à vista · em até 18x no cartão",
+  access: "Acesso vitalício",
+  features: [
+    "Acesso imediato aos 9 módulos completos",
+    "Vídeos em HD com técnicas detalhadas",
+    "Material de apoio em PDF para estudo offline",
+    "Comunidade exclusiva (fórum integrado)",
+    "Suporte via WhatsApp",
+    "Pagamento único — sem mensalidade",
+  ],
+};
 
 const modules = [
   {
@@ -57,47 +75,6 @@ const modules = [
   },
 ];
 
-const plans = [
-  {
-    name: "Iniciante",
-    price: "97",
-    period: "/mês",
-    features: [
-      "Acesso aos módulos 1-4",
-      "Vídeos em HD",
-      "Material de apoio em PDF",
-      "Suporte via WhatsApp",
-    ],
-    featured: false,
-  },
-  {
-    name: "Completo",
-    price: "197",
-    period: "/mês",
-    features: [
-      "Todos os 9 módulos",
-      "Vídeos em HD",
-      "Material de apoio em PDF",
-      "Suporte prioritário",
-      "Aulas ao vivo semanais",
-      "Comunidade exclusiva",
-    ],
-    featured: true,
-  },
-  {
-    name: "Presencial + Online",
-    price: "297",
-    period: "/mês",
-    features: [
-      "Acesso completo online",
-      "Aulas presenciais 3x/semana",
-      "Acompanhamento individual",
-      "Suporte VIP",
-      "Acesso vitalício ao conteúdo",
-    ],
-    featured: false,
-  },
-];
 
 export default function Home() {
   return (
@@ -295,68 +272,64 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Planos */}
+      {/* Oferta unica */}
       <section id="planos" className="bg-dark-light px-6 py-24">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-16 text-center">
+        <div className="mx-auto max-w-3xl">
+          <div className="mb-12 text-center">
+            <span className="mb-4 inline-block rounded-full border border-gold/30 px-4 py-1 text-xs font-semibold uppercase tracking-widest text-gold">
+              Oferta de Lançamento
+            </span>
             <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-              Escolha seu <span className="gradient-gold">Plano</span>
+              Invista uma vez. <span className="gradient-gold">Acesse para sempre.</span>
             </h2>
             <p className="mx-auto max-w-xl text-gray-text">
-              Invista na sua evolução. Todos os planos incluem acesso imediato ao conteúdo.
+              Pagamento único, sem mensalidade. Todo o curso, liberado na hora.
             </p>
           </div>
-          <div className="grid gap-8 md:grid-cols-3">
-            {plans.map((plan) => (
-              <div
-                key={plan.name}
-                className={`card-hover relative rounded-2xl border p-8 ${
-                  plan.featured
-                    ? "border-gold bg-dark-lighter"
-                    : "border-white/5 bg-dark-lighter"
-                }`}
-              >
-                {plan.featured && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gold px-4 py-1 text-xs font-bold text-dark">
-                    MAIS POPULAR
-                  </span>
-                )}
-                <h3 className="mb-2 text-xl font-bold">{plan.name}</h3>
-                <div className="mb-6">
-                  <span className="text-sm text-gray-text">R$</span>
-                  <span className="text-4xl font-extrabold text-gold">{plan.price}</span>
-                  <span className="text-sm text-gray-text">{plan.period}</span>
-                </div>
-                <ul className="mb-8 space-y-3">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-3 text-sm text-gray-text">
-                      <svg
-                        className="h-4 w-4 shrink-0 text-gold"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={3}
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <a
-                  href={`https://wa.me/5518981328589?text=Olá! Tenho interesse no plano ${plan.name} da Zelo BJJ`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`block w-full rounded-full py-3 text-center font-semibold transition-colors ${
-                    plan.featured
-                      ? "bg-gold text-dark hover:bg-gold-light"
-                      : "border border-white/20 text-white hover:border-gold hover:text-gold"
-                  }`}
-                >
-                  Assinar Agora
-                </a>
+
+          <div className="relative overflow-hidden rounded-3xl border border-gold bg-dark-lighter p-8 md:p-12">
+            <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gold px-5 py-1 text-xs font-bold uppercase tracking-widest text-dark">
+              Acesso Vitalicio
+            </span>
+
+            <div className="mb-8 text-center">
+              <p className="mb-2 text-sm uppercase tracking-widest text-gold">{offer.subtitle}</p>
+              <h3 className="mb-6 text-2xl font-bold md:text-3xl">{offer.name}</h3>
+              <div className="flex items-baseline justify-center gap-1">
+                <span className="text-2xl text-gray-text">R$</span>
+                <span className="text-6xl font-extrabold text-gold md:text-7xl">{offer.price}</span>
+                <span className="text-2xl font-bold text-gold">,{offer.cents}</span>
               </div>
-            ))}
+              <p className="mt-2 text-sm text-gray-text">{offer.payment}</p>
+            </div>
+
+            <ul className="mb-8 grid gap-3 sm:grid-cols-2">
+              {offer.features.map((feature) => (
+                <li key={feature} className="flex items-start gap-3 text-sm text-gray-text">
+                  <svg
+                    className="mt-0.5 h-4 w-4 shrink-0 text-gold"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+
+            <div className="mx-auto max-w-md">
+              <SubscribeButton
+                planSlug="curso_digital"
+                planName={offer.name}
+                featured
+              />
+              <p className="mt-3 text-center text-xs text-gray-text">
+                Pagamento seguro via PagBank. Cartão, Pix, boleto, Google Pay e Apple Pay.
+              </p>
+            </div>
           </div>
         </div>
       </section>

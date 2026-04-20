@@ -4,15 +4,24 @@
 
 export type UserRole = "admin" | "member";
 
+// Estados no app (lowercase). Referencia PagBank:
+// - Transacoes avulsas: AUTHORIZED, PAID, IN_ANALYSIS, DECLINED, CANCELED
+// - Assinaturas recorrentes: PENDING, TRIAL, ACTIVE, OVERDUE, PENDING_ACTION, SUSPENDED, CANCELED, EXPIRED
 export type SubscriptionStatus =
+  | "pending"
+  | "trial"
   | "active"
-  | "past_due"
+  | "overdue"
+  | "pending_action"
+  | "suspended"
   | "canceled"
-  | "unpaid"
-  | "trialing"
-  | "incomplete";
+  | "expired"
+  | "paid"
+  | "refunded"
+  | "in_analysis"
+  | "declined";
 
-export type PlanSlug = "iniciante" | "completo" | "presencial";
+export type PlanSlug = "curso_digital";
 
 // --- Profiles ---
 export interface Profile {
@@ -22,7 +31,7 @@ export interface Profile {
   avatar_url: string | null;
   phone: string | null;
   role: UserRole;
-  stripe_customer_id: string | null;
+  pagbank_customer_id: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -34,9 +43,11 @@ export interface Plan {
   slug: PlanSlug;
   description: string | null;
   price_monthly: number;
-  stripe_price_id: string | null;
+  payment_link: string | null;
+  pagbank_plan_id: string | null;
   features: string[];
   is_active: boolean;
+  is_lifetime: boolean;
   sort_order: number;
   created_at: string;
 }
@@ -107,11 +118,14 @@ export interface Subscription {
   id: string;
   user_id: string;
   plan_id: string;
-  stripe_subscription_id: string | null;
+  pagbank_subscription_id: string | null;
+  pagbank_reference_id: string | null;
+  pagbank_last_charge_id: string | null;
   status: SubscriptionStatus;
   current_period_start: string | null;
   current_period_end: string | null;
   cancel_at_period_end: boolean;
+  paid_at: string | null;
   created_at: string;
   updated_at: string;
 }

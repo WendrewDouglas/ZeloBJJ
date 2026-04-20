@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zelo BJJ - Documentacao do Projeto</title>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --bg-card: #1a1a1a;
+      --bg-card-alt: #222;
+      --gold: #f0ad4e;
+      --gold-dim: #c8912e;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #eab308;
+      --blue: #3b82f6;
+      --text: #e5e5e5;
+      --text-dim: #999;
+      --border: #333;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #1a1a1a 0%, #111 100%);
+      border-bottom: 2px solid var(--gold);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 2.2rem;
+      color: var(--gold);
+      margin-bottom: 0.3rem;
+      letter-spacing: 1px;
+    }
+    .header p {
+      color: var(--text-dim);
+      font-size: 1rem;
+    }
+    .header .date {
+      display: inline-block;
+      margin-top: 0.8rem;
+      background: var(--bg);
+      color: var(--gold);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      border: 1px solid var(--border);
+    }
+
+    /* Nav */
+    .nav {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 0.8rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav a {
+      color: var(--text-dim);
+      text-decoration: none;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .nav a:hover { background: var(--bg-card-alt); color: var(--gold); }
+
+    /* Container */
+    .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+    /* Section */
+    .section { margin-bottom: 3rem; }
+    .section-title {
+      font-size: 1.5rem;
+      color: var(--gold);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .section-title .icon { font-size: 1.3rem; }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .card h3 {
+      color: var(--gold);
+      font-size: 1.1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    /* Status badges */
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-ok { background: #16a34a22; color: var(--green); border: 1px solid #16a34a44; }
+    .badge-warn { background: #eab30822; color: var(--yellow); border: 1px solid #eab30844; }
+    .badge-error { background: #ef444422; color: var(--red); border: 1px solid #ef444444; }
+    .badge-info { background: #3b82f622; color: var(--blue); border: 1px solid #3b82f644; }
+    .badge-pending { background: #888822; color: #ccc; border: 1px solid #555; }
+
+    /* Grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; }
+    th, td {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    th { color: var(--gold); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    tr:hover td { background: #ffffff05; }
+
+    /* Code */
+    code {
+      background: #000;
+      color: var(--gold);
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+    }
+    pre {
+      background: #000;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      color: #ccc;
+      margin: 0.8rem 0;
+    }
+    pre .comment { color: #666; }
+    pre .key { color: var(--gold); }
+    pre .val { color: var(--green); }
+
+    /* List */
+    ul { padding-left: 1.3rem; }
+    li { margin-bottom: 0.4rem; font-size: 0.92rem; }
+    li code { font-size: 0.8rem; }
+
+    /* Checklist */
+    .checklist { list-style: none; padding: 0; }
+    .checklist li {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #ffffff08;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+    .checklist .check { color: var(--green); font-weight: bold; min-width: 1.2rem; }
+    .checklist .pending { color: var(--yellow); font-weight: bold; min-width: 1.2rem; }
+    .checklist .blocked { color: var(--red); font-weight: bold; min-width: 1.2rem; }
+
+    /* Step cards */
+    .step {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      border-left: 3px solid var(--gold);
+    }
+    .step.done { border-left-color: var(--green); opacity: 0.7; }
+    .step.blocked { border-left-color: var(--red); }
+    .step .step-num {
+      display: inline-block;
+      background: var(--gold);
+      color: #000;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 28px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-right: 0.5rem;
+    }
+    .step.done .step-num { background: var(--green); }
+    .step.blocked .step-num { background: var(--red); }
+    .step h3 { display: inline; font-size: 1.05rem; color: var(--text); }
+    .step p { margin-top: 0.5rem; color: var(--text-dim); font-size: 0.9rem; }
+
+    /* Architecture tree */
+    .tree { font-family: 'Cascadia Code', monospace; font-size: 0.82rem; line-height: 1.7; color: #aaa; }
+    .tree .folder { color: var(--gold); font-weight: 600; }
+    .tree .file { color: #ccc; }
+    .tree .desc { color: #666; font-style: italic; }
+
+    /* Divider */
+    hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Links */
+    a { color: var(--gold); }
+    a:hover { color: var(--gold-dim); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container { padding: 1rem; }
+      .grid, .grid-3 { grid-template-columns: 1fr; }
+      .header h1 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>ZELO BJJ</h1>
+  <p>Documentacao Completa do Projeto &mdash; Plataforma de Cursos de Jiu-Jitsu</p>
+  <span class="date">Atualizado em 12/04/2026</span>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <a href="#visao-geral">Visao Geral</a>
+  <a href="#stack">Stack</a>
+  <a href="#arquitetura">Arquitetura</a>
+  <a href="#banco">Banco de Dados</a>
+  <a href="#servicos">Servicos</a>
+  <a href="#funcionalidades">Funcionalidades</a>
+  <a href="#git">Git &amp; Deploy</a>
+  <a href="#credenciais">Credenciais</a>
+  <a href="#concluido">Concluido</a>
+  <a href="#proximos-passos">Proximos Passos</a>
+</div>
+
+<div class="container">
+
+<!-- ============================================================ -->
+<!-- VISAO GERAL -->
+<!-- ============================================================ -->
+<div class="section" id="visao-geral">
+  <h2 class="section-title"><span class="icon">&#9733;</span> Visao Geral</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>O que e</h3>
+      <p>Plataforma de cursos online de Jiu-Jitsu Brasileiro com area de membros, pagamento recorrente via Stripe, video-aulas protegidas via Bunny Stream, e comunidade/forum para alunos.</p>
+    </div>
+    <div class="card">
+      <h3>Links do Projeto</h3>
+      <table>
+        <tr><td>Site</td><td><a href="https://zelobjj.com.br" target="_blank">zelobjj.com.br</a></td></tr>
+        <tr><td>Repositorio</td><td><a href="https://github.com/WendrewDouglas/ZeloBJJ" target="_blank">WendrewDouglas/ZeloBJJ</a></td></tr>
+        <tr><td>Vercel</td><td><a href="https://vercel.com/wendrews-projects-06ff1b06/zelobjj" target="_blank">Dashboard Vercel</a></td></tr>
+        <tr><td>Supabase</td><td><a href="https://supabase.com/dashboard/project/uktkscymguwbztdrwjzt" target="_blank">Projeto Supabase</a></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card" style="margin-top:1rem;">
+    <h3>Numeros do Projeto</h3>
+    <div class="grid-3">
+      <div><strong style="color:var(--gold);font-size:1.8rem;">57</strong><br><span style="color:var(--text-dim);font-size:0.85rem;">Arquivos TypeScript/TSX</span></div>
+      <div><strong style="color:var(--gold);font-size:1.8rem;">14</strong><br><span style="color:var(--text-dim);font-size:0.85rem;">Tabelas no Banco</span></div>
+      <div><strong style="color:var(--gold);font-size:1.8rem;">3</strong><br><span style="color:var(--text-dim);font-size:0.85rem;">Planos de Assinatura</span></div>
+      <div><strong style="color:var(--gold);font-size:1.8rem;">10</strong><br><span style="color:var(--text-dim);font-size:0.85rem;">Commits no Git</span></div>
+      <div><strong style="color:var(--gold);font-size:1.8rem;">9</strong><br><span style="color:var(--text-dim);font-size:0.85rem;">Modulos de Curso</span></div>
+      <div><strong style="color:var(--gold);font-size:1.8rem;">5</strong><br><span style="color:var(--text-dim);font-size:0.85rem;">Categorias de Forum</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- STACK -->
+<!-- ============================================================ -->
+<div class="section" id="stack">
+  <h2 class="section-title"><span class="icon">&#9881;</span> Stack Tecnologica</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Frontend</h3>
+      <table>
+        <tr><td>Framework</td><td><code>Next.js 16.2.3</code> (App Router)</td></tr>
+        <tr><td>UI</td><td><code>React 19.2.3</code></td></tr>
+        <tr><td>Linguagem</td><td><code>TypeScript 5.x</code></td></tr>
+        <tr><td>Estilo</td><td><code>Tailwind CSS 4</code></td></tr>
+        <tr><td>Componentes</td><td><code>shadcn/ui</code> + <code>@base-ui/react</code></td></tr>
+        <tr><td>Icones</td><td><code>Lucide React</code></td></tr>
+        <tr><td>Notificacoes</td><td><code>Sonner</code></td></tr>
+        <tr><td>Validacao</td><td><code>Zod 4</code></td></tr>
+        <tr><td>Datas</td><td><code>date-fns</code></td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Backend &amp; Servicos</h3>
+      <table>
+        <tr><td>Banco de Dados</td><td><code>Supabase</code> (PostgreSQL + Auth + RLS)</td></tr>
+        <tr><td>Pagamentos</td><td><code>Stripe</code> (assinaturas recorrentes)</td></tr>
+        <tr><td>Videos</td><td><code>Bunny Stream</code> (CDN + embed)</td></tr>
+        <tr><td>Emails</td><td><code>Resend</code> (transacionais)</td></tr>
+        <tr><td>Deploy</td><td><code>Vercel</code> (plano gratuito)</td></tr>
+        <tr><td>Dominio</td><td><code>Hostinger</code> (registro), DNS na Vercel</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- ARQUITETURA -->
+<!-- ============================================================ -->
+<div class="section" id="arquitetura">
+  <h2 class="section-title"><span class="icon">&#128193;</span> Arquitetura do Projeto</h2>
+  <div class="card">
+    <pre class="tree"><span class="folder">src/</span>
+<span class="folder">  app/</span>
+<span class="folder">    (auth)/</span>                          <span class="desc">-- Rotas publicas de autenticacao</span>
+<span class="file">      login/page.tsx</span>                  <span class="desc">-- Formulario de login (email/senha)</span>
+<span class="file">      cadastro/page.tsx</span>               <span class="desc">-- Registro com validacao</span>
+<span class="file">      recuperar-senha/page.tsx</span>        <span class="desc">-- Reset de senha</span>
+<span class="file">      callback/route.ts</span>              <span class="desc">-- Callback OAuth/email do Supabase</span>
+<span class="file">      layout.tsx</span>                      <span class="desc">-- Layout das paginas auth</span>
+<span class="folder">    (member)/</span>                        <span class="desc">-- Rotas protegidas do aluno</span>
+<span class="file">      dashboard/page.tsx</span>             <span class="desc">-- Estatisticas: matriculas, progresso, plano</span>
+<span class="folder">      cursos/</span>
+<span class="file">        page.tsx</span>                     <span class="desc">-- Catalogo de cursos publicados</span>
+<span class="file">        [courseId]/page.tsx</span>          <span class="desc">-- Detalhes do curso com modulos e aulas</span>
+<span class="file">        [courseId]/aulas/[lessonId]/page.tsx</span>  <span class="desc">-- Player de video + progresso</span>
+<span class="folder">      comunidade/</span>
+<span class="file">        page.tsx</span>                     <span class="desc">-- Forum: categorias + posts recentes</span>
+<span class="file">        novo/page.tsx</span>                <span class="desc">-- Criar novo post</span>
+<span class="file">        [postId]/page.tsx</span>            <span class="desc">-- Post + comentarios</span>
+<span class="file">      perfil/page.tsx</span>                <span class="desc">-- Editar perfil + gerenciar assinatura</span>
+<span class="file">      layout.tsx</span>                      <span class="desc">-- Layout com Sidebar do aluno</span>
+<span class="folder">    (admin)/admin/</span>                  <span class="desc">-- Rotas protegidas do admin</span>
+<span class="file">      page.tsx</span>                        <span class="desc">-- Dashboard admin com stats</span>
+<span class="file">      alunos/page.tsx</span>                <span class="desc">-- Tabela de alunos</span>
+<span class="file">      cursos/page.tsx</span>                <span class="desc">-- Gerenciar cursos</span>
+<span class="file">      planos/page.tsx</span>                <span class="desc">-- Tabela de planos</span>
+<span class="file">      forum/page.tsx</span>                 <span class="desc">-- Moderacao do forum</span>
+<span class="file">      configuracoes/page.tsx</span>         <span class="desc">-- Configuracoes (placeholder)</span>
+<span class="file">      layout.tsx</span>                      <span class="desc">-- Layout com AdminSidebar</span>
+<span class="folder">    api/</span>
+<span class="file">      checkout/route.ts</span>              <span class="desc">-- POST: Cria sessao Stripe Checkout</span>
+<span class="file">      portal/route.ts</span>                <span class="desc">-- POST: Abre portal de billing Stripe</span>
+<span class="file">      webhooks/stripe/route.ts</span>       <span class="desc">-- POST: Webhook do Stripe (eventos)</span>
+<span class="file">    page.tsx</span>                           <span class="desc">-- Landing page (hero, modulos, planos, CTA)</span>
+<span class="file">    not-found.tsx</span>                      <span class="desc">-- Pagina 404 personalizada</span>
+<span class="file">    layout.tsx</span>                         <span class="desc">-- Root layout (fontes, metadata, tema dark)</span>
+<span class="file">    globals.css</span>                        <span class="desc">-- Estilos globais + Tailwind</span>
+<span class="folder">  components/</span>
+<span class="folder">    ui/</span>                              <span class="desc">-- shadcn: button, input, card, badge, etc</span>
+<span class="folder">    shared/</span>
+<span class="file">      sidebar.tsx</span>                     <span class="desc">-- Sidebar do membro com nav + logout</span>
+<span class="folder">    admin/</span>
+<span class="file">      admin-sidebar.tsx</span>              <span class="desc">-- Sidebar do admin (mobile + desktop)</span>
+<span class="folder">    member/</span>
+<span class="file">      video-player.tsx</span>               <span class="desc">-- Bunny Stream embed + fallback HTML5</span>
+<span class="file">      lesson-progress-button.tsx</span>     <span class="desc">-- Botao "Marcar como concluida"</span>
+<span class="file">      new-post-form.tsx</span>              <span class="desc">-- Form de novo post no forum</span>
+<span class="file">      comment-form.tsx</span>               <span class="desc">-- Form de comentario</span>
+<span class="folder">  lib/</span>
+<span class="folder">    supabase/</span>
+<span class="file">      client.ts</span>                      <span class="desc">-- Browser client (createBrowserClient)</span>
+<span class="file">      server.ts</span>                      <span class="desc">-- Server client (cookies + createServerClient)</span>
+<span class="file">      admin.ts</span>                       <span class="desc">-- Admin client (service role key)</span>
+<span class="file">      proxy.ts</span>                       <span class="desc">-- updateSession() para auth no proxy</span>
+<span class="file">      index.ts</span>                       <span class="desc">-- Re-exporta client</span>
+<span class="folder">    stripe/</span>
+<span class="file">      index.ts</span>                       <span class="desc">-- Instancia Stripe + PLAN_PRICE_MAP</span>
+<span class="file">      client.ts</span>                      <span class="desc">-- getStripe() para browser</span>
+<span class="folder">    auth/</span>
+<span class="file">      index.ts</span>                       <span class="desc">-- getSession, getProfile, requireAuth, requireAdmin</span>
+<span class="folder">    bunny/</span>
+<span class="file">      index.ts</span>                       <span class="desc">-- getBunnyEmbedUrl, getBunnyThumbnailUrl, listVideos</span>
+<span class="folder">    resend/</span>
+<span class="file">      index.ts</span>                       <span class="desc">-- Instancia Resend + FROM_EMAIL</span>
+<span class="folder">    permissions/</span>
+<span class="file">      index.ts</span>                       <span class="desc">-- PERMISSIONS (admin vs member) + hasPermission</span>
+<span class="file">    utils.ts</span>                           <span class="desc">-- cn(), formatCurrency, formatDate, slugify</span>
+<span class="folder">  types/</span>
+<span class="file">    database.ts</span>                        <span class="desc">-- Todos os tipos: Profile, Plan, Course, etc</span>
+<span class="file">    index.ts</span>                            <span class="desc">-- Re-exporta tipos</span>
+<span class="folder">  hooks/</span>
+<span class="file">    use-user.ts</span>                        <span class="desc">-- Hook client: user + profile + loading</span>
+<span class="folder">  services/</span>                           <span class="desc">-- VAZIO: emails, enrollments, forum, progress, subscriptions</span>
+<span class="file">  proxy.ts</span>                              <span class="desc">-- Proxy (ex-middleware): auth, redirect, admin check</span></pre>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- BANCO DE DADOS -->
+<!-- ============================================================ -->
+<div class="section" id="banco">
+  <h2 class="section-title"><span class="icon">&#128451;</span> Banco de Dados (Supabase)</h2>
+
+  <div class="card">
+    <h3>Informacoes do Projeto</h3>
+    <table>
+      <tr><td>Projeto</td><td><code>zelobjj</code></td></tr>
+      <tr><td>ID</td><td><code>uktkscymguwbztdrwjzt</code></td></tr>
+      <tr><td>Regiao</td><td><code>sa-east-1</code> (Sao Paulo)</td></tr>
+      <tr><td>Status</td><td><span class="badge badge-ok">ACTIVE HEALTHY</span></td></tr>
+      <tr><td>PostgreSQL</td><td><code>17.6.1</code></td></tr>
+      <tr><td>Migration</td><td><code>20260315231307_initial_schema</code> <span class="badge badge-ok">executada</span></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>14 Tabelas (todas com RLS)</h3>
+    <table>
+      <thead><tr><th>Tabela</th><th>Descricao</th><th>Registros</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><code>profiles</code></td><td>Perfis de usuario (linked auth.users)</td><td>1</td><td><span class="badge badge-ok">OK</span></td></tr>
+        <tr><td><code>plans</code></td><td>Planos de assinatura</td><td>3</td><td><span class="badge badge-ok">SEED OK</span></td></tr>
+        <tr><td><code>courses</code></td><td>Cursos (9 modulos)</td><td>0</td><td><span class="badge badge-warn">VAZIO</span></td></tr>
+        <tr><td><code>course_modules</code></td><td>Modulos dentro de cursos</td><td>0</td><td><span class="badge badge-warn">VAZIO</span></td></tr>
+        <tr><td><code>lessons</code></td><td>Aulas com video_url / bunny_video_id</td><td>0</td><td><span class="badge badge-warn">VAZIO</span></td></tr>
+        <tr><td><code>subscriptions</code></td><td>Assinaturas ativas (linked Stripe)</td><td>0</td><td><span class="badge badge-pending">AGUARDANDO STRIPE</span></td></tr>
+        <tr><td><code>enrollments</code></td><td>Matriculas por usuario + curso</td><td>0</td><td><span class="badge badge-pending">AGUARDANDO STRIPE</span></td></tr>
+        <tr><td><code>lesson_progress</code></td><td>Progresso por aula por usuario</td><td>0</td><td><span class="badge badge-pending">AGUARDANDO CONTEUDO</span></td></tr>
+        <tr><td><code>forum_categories</code></td><td>Categorias do forum</td><td>5</td><td><span class="badge badge-ok">SEED OK</span></td></tr>
+        <tr><td><code>forum_posts</code></td><td>Posts do forum</td><td>0</td><td><span class="badge badge-info">PRONTO</span></td></tr>
+        <tr><td><code>forum_comments</code></td><td>Comentarios nos posts</td><td>0</td><td><span class="badge badge-info">PRONTO</span></td></tr>
+        <tr><td><code>notifications</code></td><td>Notificacoes do usuario</td><td>0</td><td><span class="badge badge-info">PRONTO</span></td></tr>
+        <tr><td><code>audit_logs</code></td><td>Log de acoes admin (JSONB)</td><td>0</td><td><span class="badge badge-info">PRONTO</span></td></tr>
+        <tr><td><code>email_logs</code></td><td>Historico de emails enviados</td><td>0</td><td><span class="badge badge-pending">AGUARDANDO RESEND</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Planos Cadastrados</h3>
+    <table>
+      <thead><tr><th>Plano</th><th>Slug</th><th>Preco/mes</th><th>Stripe Price ID</th><th>Features</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Iniciante</strong></td>
+          <td><code>iniciante</code></td>
+          <td>R$ 97,00</td>
+          <td><span class="badge badge-error">NAO CONFIGURADO</span></td>
+          <td>Modulos 1-4, Videos HD, PDF, WhatsApp</td>
+        </tr>
+        <tr>
+          <td><strong>Completo</strong></td>
+          <td><code>completo</code></td>
+          <td>R$ 197,00</td>
+          <td><span class="badge badge-error">NAO CONFIGURADO</span></td>
+          <td>9 modulos, Videos HD, PDF, Suporte prioritario, Aulas ao vivo, Comunidade</td>
+        </tr>
+        <tr>
+          <td><strong>Presencial + Online</strong></td>
+          <td><code>presencial</code></td>
+          <td>R$ 297,00</td>
+          <td><span class="badge badge-error">NAO CONFIGURADO</span></td>
+          <td>Tudo online + Presencial 3x/sem, Individual, VIP, Vitalicio</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Funcionalidades do Banco</h3>
+    <ul>
+      <li><strong>RLS (Row Level Security)</strong> habilitado em TODAS as tabelas</li>
+      <li><strong>Trigger auto-create profile</strong>: ao criar usuario no auth, profile e criado automaticamente</li>
+      <li><strong>Trigger auto-update</strong>: campo <code>updated_at</code> atualizado automaticamente</li>
+      <li><strong>Funcao helper</strong>: <code>is_admin()</code> verifica role = 'admin'</li>
+      <li><strong>Indexes</strong> em colunas frequentes (user_id, status, created_at)</li>
+      <li><strong>Constraints</strong>: unique em user_id+course_id (enrollments) e user_id+lesson_id (progress)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SERVICOS EXTERNOS -->
+<!-- ============================================================ -->
+<div class="section" id="servicos">
+  <h2 class="section-title"><span class="icon">&#9729;</span> Servicos Externos</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Supabase <span class="badge badge-ok">CONFIGURADO</span></h3>
+      <ul>
+        <li>Projeto criado em <code>sa-east-1</code></li>
+        <li>Migration executada (14 tabelas)</li>
+        <li>Seed data: 3 planos + 5 categorias</li>
+        <li>Auth com email/senha funcionando</li>
+        <li>Chaves configuradas no <code>.env.local</code></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Stripe <span class="badge badge-error">PENDENTE</span></h3>
+      <ul>
+        <li>Codigo pronto (checkout, portal, webhook)</li>
+        <li>Null safety implementado (app funciona sem Stripe)</li>
+        <li><strong>Falta:</strong> Chaves de teste <code>pk_test_</code> / <code>sk_test_</code></li>
+        <li><strong>Falta:</strong> Criar 3 produtos com precos mensais</li>
+        <li><strong>Falta:</strong> Webhook secret <code>whsec_</code></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Bunny Stream <span class="badge badge-error">PENDENTE</span></h3>
+      <ul>
+        <li>Codigo pronto (embed, thumbnail, listagem)</li>
+        <li>VideoPlayer com fallback HTML5</li>
+        <li><strong>Falta:</strong> Criar conta e Video Library</li>
+        <li><strong>Falta:</strong> API key, Library ID, CDN hostname</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Resend <span class="badge badge-error">PENDENTE</span></h3>
+      <ul>
+        <li>Codigo pronto (instancia + FROM_EMAIL)</li>
+        <li><strong>Falta:</strong> Criar conta no Resend</li>
+        <li><strong>Falta:</strong> Verificar dominio zelobjj.com.br</li>
+        <li><strong>Falta:</strong> API key <code>re_</code></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Vercel <span class="badge badge-warn">PARCIAL</span></h3>
+      <ul>
+        <li>Projeto criado: <code>zelobjj</code></li>
+        <li>Dominio configurado: zelobjj.com.br + www</li>
+        <li>Ultimo deploy com sucesso: 15/03/2026</li>
+        <li><strong>Falta:</strong> Reconectar integracao Git para auto-deploy</li>
+        <li><strong>Falta:</strong> Configurar env vars do Stripe/Bunny/Resend</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Hostinger <span class="badge badge-ok">OK</span></h3>
+      <ul>
+        <li>Dominio <code>zelobjj.com.br</code> registrado</li>
+        <li>DNS apontando para Vercel</li>
+        <li>SSL/HTTPS ativo</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- FUNCIONALIDADES -->
+<!-- ============================================================ -->
+<div class="section" id="funcionalidades">
+  <h2 class="section-title"><span class="icon">&#9889;</span> Funcionalidades Implementadas</h2>
+
+  <div class="card">
+    <h3>Paginas Publicas</h3>
+    <table>
+      <thead><tr><th>Rota</th><th>Descricao</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><code>/</code></td><td>Landing page: hero, 9 modulos, 3 planos, CTA WhatsApp, footer</td><td><span class="badge badge-ok">OK</span></td></tr>
+        <tr><td><code>/login</code></td><td>Login com email/senha + redirect param</td><td><span class="badge badge-ok">OK</span></td></tr>
+        <tr><td><code>/cadastro</code></td><td>Registro com validacao (nome, email, senha)</td><td><span class="badge badge-ok">OK</span></td></tr>
+        <tr><td><code>/recuperar-senha</code></td><td>Fluxo de recuperacao de senha</td><td><span class="badge badge-ok">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Area do Membro (protegida)</h3>
+    <table>
+      <thead><tr><th>Rota</th><th>Descricao</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><code>/dashboard</code></td><td>Stats: matriculas, aulas concluidas, % progresso, plano atual</td><td><span class="badge badge-ok">OK</span></td></tr>
+        <tr><td><code>/cursos</code></td><td>Lista cursos publicados (bloqueado se nao matriculado)</td><td><span class="badge badge-ok">OK</span></td></tr>
+        <tr><td><code>/cursos/[id]</code></td><td>Detalhes do curso: modulos + lista de aulas + barra de progresso</td><td><span class="badge badge-ok">OK</span></td></tr>
+        <tr><td><code>/cursos/[id]/aulas/[id]</code></td><td>Player de video (Bunny/HTML5) + botao de progresso + navegacao</td><td><span class="badge badge-ok">OK</span></td></tr>
+        <tr><td><code>/comunidade</code></td><td>Forum: categorias + posts recentes</td><td><span class="badge badge-ok">OK</span></td></tr>
+        <tr><td><code>/comunidade/novo</code></td><td>Criar novo post com dropdown de categoria</td><td><span class="badge badge-ok">OK</span></td></tr>
+        <tr><td><code>/comunidade/[postId]</code></td><td>Post completo + comentarios</td><td><span class="badge badge-ok">OK</span></td></tr>
+        <tr><td><code>/perfil</code></td><td>Editar perfil + info assinatura + link portal Stripe</td><td><span class="badge badge-ok">OK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Painel Admin (protegido - role: admin)</h3>
+    <table>
+      <thead><tr><th>Rota</th><th>Descricao</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><code>/admin</code></td><td>Dashboard: total usuarios, assinaturas ativas, cursos, aulas</td><td><span class="badge badge-ok">OK</span></td></tr>
+        <tr><td><code>/admin/alunos</code></td><td>Tabela de alunos: nome, email, plano, status, data</td><td><span class="badge badge-ok">OK</span></td></tr>
+        <tr><td><code>/admin/cursos</code></td><td>Tabela de cursos: titulo, status, modulos, aulas</td><td><span class="badge badge-ok">OK</span></td></tr>
+        <tr><td><code>/admin/planos</code></td><td>Tabela de planos: nome, slug, preco, status, features</td><td><span class="badge badge-ok">OK</span></td></tr>
+        <tr><td><code>/admin/forum</code></td><td>Posts com indicadores pin/lock</td><td><span class="badge badge-ok">OK</span></td></tr>
+        <tr><td><code>/admin/configuracoes</code></td><td>Placeholder (nenhuma config implementada)</td><td><span class="badge badge-warn">PLACEHOLDER</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>API Routes</h3>
+    <table>
+      <thead><tr><th>Rota</th><th>Metodo</th><th>Descricao</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><code>/api/checkout</code></td><td>POST</td><td>Cria sessao Stripe Checkout (obtem/cria customer, redireciona)</td><td><span class="badge badge-warn">AGUARDA STRIPE</span></td></tr>
+        <tr><td><code>/api/portal</code></td><td>POST</td><td>Abre portal de billing Stripe (gerenciar assinatura)</td><td><span class="badge badge-warn">AGUARDA STRIPE</span></td></tr>
+        <tr><td><code>/api/webhooks/stripe</code></td><td>POST</td><td>Webhook: checkout.completed, subscription.updated/deleted, payment_failed</td><td><span class="badge badge-warn">AGUARDA STRIPE</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Autenticacao &amp; Autorizacao</h3>
+    <ul>
+      <li><strong>Proxy (proxy.ts)</strong>: Intercepta todas as requisicoes, verifica sessao Supabase</li>
+      <li><strong>Rotas publicas</strong>: <code>/</code>, <code>/login</code>, <code>/cadastro</code>, <code>/recuperar-senha</code>, <code>/callback</code>, <code>/api/webhooks/*</code></li>
+      <li><strong>Redirect</strong>: Nao autenticado? vai para <code>/login?redirect=...</code></li>
+      <li><strong>Redirect</strong>: Logado em pagina auth? vai para <code>/dashboard</code></li>
+      <li><strong>Admin</strong>: <code>/admin/*</code> requer <code>role = 'admin'</code> no profile (senao vai para /dashboard)</li>
+      <li><strong>Hook client</strong>: <code>useUser()</code> para estado do usuario no client-side</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Fluxo de Pagamento (Stripe)</h3>
+    <ol>
+      <li>Usuario clica em plano na landing page ou area de membros</li>
+      <li><code>POST /api/checkout</code> cria sessao Stripe com <code>price_id</code> do plano</li>
+      <li>Usuario completa pagamento no Stripe Checkout</li>
+      <li>Stripe envia webhook <code>checkout.session.completed</code></li>
+      <li>Webhook cria/atualiza <code>subscription</code> no Supabase</li>
+      <li>Auto-enroll: cria <code>enrollment</code> em todos os cursos publicados</li>
+      <li>Em caso de cancelamento/falha: desativa enrollments automaticamente</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- GIT E DEPLOY -->
+<!-- ============================================================ -->
+<div class="section" id="git">
+  <h2 class="section-title"><span class="icon">&#128279;</span> Git &amp; Deploy</h2>
+  <div class="card">
+    <h3>Repositorio</h3>
+    <table>
+      <tr><td>Repo</td><td><code>git@github.com:WendrewDouglas/ZeloBJJ.git</code></td></tr>
+      <tr><td>Branch</td><td><code>master</code></td></tr>
+      <tr><td>SSH Key</td><td><code>~/.ssh/github_wendrew_pessoal</code></td></tr>
+      <tr><td>Visibilidade</td><td>Privado</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Historico de Commits</h3>
+    <table>
+      <thead><tr><th>Hash</th><th>Mensagem</th></tr></thead>
+      <tbody>
+        <tr><td><code>fd2b600</code></td><td>Migra middleware para proxy (Next.js 16) e cria .env.example</td></tr>
+        <tr><td><code>bf08e75</code></td><td>Atualiza Next.js 16.2.3 e remove global-error (bug Windows)</td></tr>
+        <tr><td><code>8d278c9</code></td><td>Corrige build e adiciona melhorias para deploy</td></tr>
+        <tr><td><code>647270b</code></td><td>Implementa estrutura completa do MVP da plataforma Zelo BJJ</td></tr>
+        <tr><td><code>2dd86a5</code></td><td>feat: initial commit</td></tr>
+        <tr><td><code>dbdc244</code></td><td>feat: initial commit</td></tr>
+        <tr><td><code>606a4ca</code></td><td>Adiciona .vercel ao gitignore e atualiza permissoes do Claude</td></tr>
+        <tr><td><code>75d59b7</code></td><td>Corrige acentuacao em portugues brasileiro em todo o site</td></tr>
+        <tr><td><code>013b7ae</code></td><td>Site inicial Zelo BJJ - Jiu-Jitsu Brasileiro</td></tr>
+        <tr><td><code>c8beee4</code></td><td>Initial commit from Create Next App</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Deploy (Vercel)</h3>
+    <table>
+      <tr><td>Projeto</td><td><code>zelobjj</code></td></tr>
+      <tr><td>Dominios</td><td><code>zelobjj.com.br</code>, <code>www.zelobjj.com.br</code>, <code>zelobjj.vercel.app</code></td></tr>
+      <tr><td>Ultimo deploy</td><td>15/03/2026 <span class="badge badge-ok">Ready</span></td></tr>
+      <tr><td>Git Integration</td><td><span class="badge badge-error">DESCONECTADA</span> &mdash; precisa reconectar</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Bug Conhecido: Build no Windows</h3>
+    <p style="margin-bottom:0.8rem;">O <code>next build</code> falha no Windows com o erro <em>"Expected workStore to be initialized"</em> durante prerender de <code>/_global-error</code>. Este e um <a href="https://github.com/vercel/next.js/issues/87719" target="_blank">bug confirmado do Next.js 16</a> que <strong>nao afeta</strong> a Vercel (Linux).</p>
+    <ul>
+      <li><strong>Dev local</strong>: <code>npm run dev</code> funciona normalmente</li>
+      <li><strong>Vercel</strong>: Build com sucesso (Linux)</li>
+      <li><strong>Workaround</strong>: Usar <code>next dev</code> para desenvolvimento local</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- CREDENCIAIS -->
+<!-- ============================================================ -->
+<div class="section" id="credenciais">
+  <h2 class="section-title"><span class="icon">&#128272;</span> Credenciais &amp; Acessos</h2>
+  <div class="card" style="border-color: var(--red);">
+    <h3 style="color: var(--red);">ATENCAO: Nao compartilhe este arquivo publicamente!</h3>
+    <p style="color: var(--text-dim);">Este arquivo contem informacoes sensiveis de acesso.</p>
+  </div>
+
+  <div class="card">
+    <h3>Usuario Admin (Supabase Auth)</h3>
+    <table>
+      <tr><td>Email</td><td><code>wendrew.douglas@gmail.com.br</code></td></tr>
+      <tr><td>Senha</td><td><code>Admin@123</code></td></tr>
+      <tr><td>Role</td><td><code>admin</code></td></tr>
+      <tr><td>UUID</td><td><code>d5d88749-2c6a-46d1-9d48-fa023df8a0ec</code></td></tr>
+      <tr><td>Acesso</td><td>Todas as paginas + painel admin</td></tr>
+    </table>
+    <p style="margin-top:0.8rem;color:var(--yellow);font-size:0.85rem;"><strong>Importante:</strong> Troque a senha antes de ir para producao!</p>
+  </div>
+
+  <div class="card">
+    <h3>Variaveis de Ambiente (.env.local)</h3>
+    <table>
+      <thead><tr><th>Variavel</th><th>Status</th><th>Onde obter</th></tr></thead>
+      <tbody>
+        <tr><td><code>NEXT_PUBLIC_SUPABASE_URL</code></td><td><span class="badge badge-ok">CONFIGURADO</span></td><td>Supabase Dashboard &rarr; Settings &rarr; API</td></tr>
+        <tr><td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td><td><span class="badge badge-ok">CONFIGURADO</span></td><td>Supabase Dashboard &rarr; Settings &rarr; API</td></tr>
+        <tr><td><code>SUPABASE_SERVICE_ROLE_KEY</code></td><td><span class="badge badge-ok">CONFIGURADO</span></td><td>Supabase Dashboard &rarr; Settings &rarr; API</td></tr>
+        <tr><td><code>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code></td><td><span class="badge badge-error">PENDENTE</span></td><td><a href="https://dashboard.stripe.com/test/apikeys" target="_blank">Stripe &rarr; Developers &rarr; API keys</a></td></tr>
+        <tr><td><code>STRIPE_SECRET_KEY</code></td><td><span class="badge badge-error">PENDENTE</span></td><td><a href="https://dashboard.stripe.com/test/apikeys" target="_blank">Stripe &rarr; Developers &rarr; API keys</a></td></tr>
+        <tr><td><code>STRIPE_WEBHOOK_SECRET</code></td><td><span class="badge badge-error">PENDENTE</span></td><td><a href="https://dashboard.stripe.com/test/webhooks" target="_blank">Stripe &rarr; Developers &rarr; Webhooks</a></td></tr>
+        <tr><td><code>STRIPE_PRICE_INICIANTE</code></td><td><span class="badge badge-error">PENDENTE</span></td><td>Stripe &rarr; Products (criar produto)</td></tr>
+        <tr><td><code>STRIPE_PRICE_COMPLETO</code></td><td><span class="badge badge-error">PENDENTE</span></td><td>Stripe &rarr; Products (criar produto)</td></tr>
+        <tr><td><code>STRIPE_PRICE_PRESENCIAL</code></td><td><span class="badge badge-error">PENDENTE</span></td><td>Stripe &rarr; Products (criar produto)</td></tr>
+        <tr><td><code>BUNNY_STREAM_API_KEY</code></td><td><span class="badge badge-error">PENDENTE</span></td><td><a href="https://dash.bunny.net" target="_blank">Bunny &rarr; Stream &rarr; Video Library</a></td></tr>
+        <tr><td><code>BUNNY_STREAM_LIBRARY_ID</code></td><td><span class="badge badge-error">PENDENTE</span></td><td>Bunny &rarr; Stream &rarr; Video Library &rarr; API</td></tr>
+        <tr><td><code>BUNNY_STREAM_CDN_HOSTNAME</code></td><td><span class="badge badge-error">PENDENTE</span></td><td>Bunny &rarr; Stream &rarr; Video Library &rarr; Hostnames</td></tr>
+        <tr><td><code>RESEND_API_KEY</code></td><td><span class="badge badge-error">PENDENTE</span></td><td><a href="https://resend.com" target="_blank">Resend &rarr; API Keys</a></td></tr>
+        <tr><td><code>RESEND_FROM_EMAIL</code></td><td><span class="badge badge-ok">DEFINIDO</span></td><td><code>contato@zelobjj.com.br</code></td></tr>
+        <tr><td><code>NEXT_PUBLIC_APP_URL</code></td><td><span class="badge badge-ok">DEFINIDO</span></td><td><code>https://zelobjj.com.br</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- O QUE JA FOI CONCLUIDO -->
+<!-- ============================================================ -->
+<div class="section" id="concluido">
+  <h2 class="section-title"><span class="icon">&#10003;</span> O que ja foi concluido</h2>
+  <ul class="checklist">
+    <li><span class="check">&#10004;</span> <div><strong>Estrutura completa do MVP</strong> &mdash; 57 arquivos TS/TSX com todas as paginas, componentes, libs e tipos</div></li>
+    <li><span class="check">&#10004;</span> <div><strong>Landing page</strong> &mdash; Hero, 9 modulos, 3 planos de preco, CTA WhatsApp (numero atualizado), footer</div></li>
+    <li><span class="check">&#10004;</span> <div><strong>Autenticacao completa</strong> &mdash; Login, cadastro, recuperar senha, callback OAuth, proxy com protecao de rotas</div></li>
+    <li><span class="check">&#10004;</span> <div><strong>Area do membro</strong> &mdash; Dashboard, catalogo de cursos, player de video, tracking de progresso, forum, perfil</div></li>
+    <li><span class="check">&#10004;</span> <div><strong>Painel admin</strong> &mdash; Dashboard com stats, gestao de alunos, cursos, planos, forum</div></li>
+    <li><span class="check">&#10004;</span> <div><strong>Banco de dados Supabase</strong> &mdash; 14 tabelas com RLS, triggers, indexes, seed data, migration executada</div></li>
+    <li><span class="check">&#10004;</span> <div><strong>API Stripe integrada</strong> &mdash; Checkout, portal, webhook com null safety (funciona sem config)</div></li>
+    <li><span class="check">&#10004;</span> <div><strong>Migracao proxy.ts</strong> &mdash; Middleware migrado para novo padrao proxy do Next.js 16 (sem warnings)</div></li>
+    <li><span class="check">&#10004;</span> <div><strong>Usuario admin criado</strong> &mdash; <code>wendrew.douglas@gmail.com.br</code> com role admin no Supabase</div></li>
+    <li><span class="check">&#10004;</span> <div><strong>Repositorio Git</strong> &mdash; 10 commits no GitHub, push atualizado com todas as mudancas</div></li>
+    <li><span class="check">&#10004;</span> <div><strong>Vercel deploy</strong> &mdash; Ultimo deploy com sucesso em 15/03/2026, dominio configurado</div></li>
+    <li><span class="check">&#10004;</span> <div><strong>.env.example</strong> &mdash; Arquivo criado no repositorio com todas as variaveis documentadas</div></li>
+    <li><span class="check">&#10004;</span> <div><strong>Pagina 404</strong> &mdash; not-found.tsx com design consistente</div></li>
+    <li><span class="check">&#10004;</span> <div><strong>Next.js 16.2.3</strong> &mdash; Atualizado para a versao mais recente</div></li>
+  </ul>
+</div>
+
+<!-- ============================================================ -->
+<!-- PROXIMOS PASSOS -->
+<!-- ============================================================ -->
+<div class="section" id="proximos-passos">
+  <h2 class="section-title"><span class="icon">&#9654;</span> Proximos Passos</h2>
+
+  <h3 style="color:var(--red);margin-bottom:1rem;">Fase A &mdash; Servicos Externos (Bloqueadores)</h3>
+  <p style="color:var(--text-dim);margin-bottom:1rem;">Estas tarefas precisam de acao manual para criar contas e obter chaves.</p>
+
+  <div class="step blocked">
+    <span class="step-num">1</span>
+    <h3>Configurar Stripe (Modo Teste)</h3>
+    <p>
+      1. Acessar <a href="https://dashboard.stripe.com" target="_blank">dashboard.stripe.com</a> (criar conta se nao tiver)<br>
+      2. Ir em <strong>Developers &rarr; API keys</strong> e copiar <code>pk_test_...</code> e <code>sk_test_...</code><br>
+      3. Criar 3 <strong>Products</strong> com precos mensais recorrentes:<br>
+      &nbsp;&nbsp;&nbsp;&bull; <strong>Iniciante</strong>: R$ 97,00/mes &rarr; copiar o <code>price_...</code><br>
+      &nbsp;&nbsp;&nbsp;&bull; <strong>Completo</strong>: R$ 197,00/mes &rarr; copiar o <code>price_...</code><br>
+      &nbsp;&nbsp;&nbsp;&bull; <strong>Presencial + Online</strong>: R$ 297,00/mes &rarr; copiar o <code>price_...</code><br>
+      4. Ir em <strong>Developers &rarr; Webhooks</strong>, criar endpoint:<br>
+      &nbsp;&nbsp;&nbsp;&bull; URL: <code>https://zelobjj.com.br/api/webhooks/stripe</code><br>
+      &nbsp;&nbsp;&nbsp;&bull; Eventos: <code>checkout.session.completed</code>, <code>customer.subscription.updated</code>, <code>customer.subscription.deleted</code>, <code>invoice.payment_failed</code><br>
+      &nbsp;&nbsp;&nbsp;&bull; Copiar o <code>whsec_...</code><br>
+      5. Colar tudo no <code>.env.local</code><br>
+      6. Atualizar <code>stripe_price_id</code> nos planos do Supabase
+    </p>
+  </div>
+
+  <div class="step blocked">
+    <span class="step-num">2</span>
+    <h3>Configurar Bunny Stream</h3>
+    <p>
+      1. Acessar <a href="https://dash.bunny.net" target="_blank">dash.bunny.net</a> (criar conta gratis)<br>
+      2. Ir em <strong>Stream &rarr; Add Video Library</strong><br>
+      3. Copiar <strong>API Key</strong>, <strong>Library ID</strong> e <strong>CDN Hostname</strong><br>
+      4. Colar no <code>.env.local</code><br>
+      5. Fazer upload de pelo menos 1 video de teste
+    </p>
+  </div>
+
+  <div class="step blocked">
+    <span class="step-num">3</span>
+    <h3>Configurar Resend</h3>
+    <p>
+      1. Acessar <a href="https://resend.com" target="_blank">resend.com</a> (criar conta gratis)<br>
+      2. Ir em <strong>Domains</strong> e adicionar <code>zelobjj.com.br</code><br>
+      3. Adicionar registros DNS (DKIM, SPF) na Hostinger/Vercel<br>
+      4. Ir em <strong>API Keys</strong> e criar uma chave <code>re_...</code><br>
+      5. Colar no <code>.env.local</code>
+    </p>
+  </div>
+
+  <div class="step blocked">
+    <span class="step-num">4</span>
+    <h3>Reconectar Vercel + GitHub</h3>
+    <p>
+      1. Acessar <a href="https://vercel.com/wendrews-projects-06ff1b06/zelobjj/settings/git" target="_blank">Vercel &rarr; Settings &rarr; Git</a><br>
+      2. Conectar o repositorio <code>WendrewDouglas/ZeloBJJ</code> branch <code>master</code><br>
+      3. Adicionar todas as env vars (Stripe, Bunny, Resend) em <strong>Settings &rarr; Environment Variables</strong><br>
+      4. Fazer um push para triggerar o deploy automatico
+    </p>
+  </div>
+
+  <hr>
+
+  <h3 style="color:var(--yellow);margin-bottom:1rem;">Fase B &mdash; Conteudo e Testes</h3>
+  <p style="color:var(--text-dim);margin-bottom:1rem;">Apos configurar os servicos, popular o banco e testar.</p>
+
+  <div class="step">
+    <span class="step-num">5</span>
+    <h3>Popular Cursos e Aulas no Supabase</h3>
+    <p>
+      Inserir pelo menos 1 curso com 2-3 modulos e 3-5 aulas de teste.<br>
+      Cada aula precisa de um <code>bunny_video_id</code> ou <code>video_url</code> direto.
+    </p>
+  </div>
+
+  <div class="step">
+    <span class="step-num">6</span>
+    <h3>Testar Fluxo Completo</h3>
+    <p>
+      &bull; Cadastro de novo usuario<br>
+      &bull; Login e acesso ao dashboard<br>
+      &bull; Checkout com cartao de teste do Stripe (<code>4242 4242 4242 4242</code>)<br>
+      &bull; Verificar enrollment e acesso aos cursos<br>
+      &bull; Assistir aula e marcar como concluida<br>
+      &bull; Criar post e comentario no forum<br>
+      &bull; Acessar portal de billing<br>
+      &bull; Cancelar assinatura e verificar desativacao<br>
+      &bull; Testar acesso admin
+    </p>
+  </div>
+
+  <div class="step">
+    <span class="step-num">7</span>
+    <h3>Atualizar Stripe Price IDs no Supabase</h3>
+    <p>
+      Apos criar os produtos no Stripe, rodar SQL para linkar:
+    </p>
+    <pre><span class="comment">-- Substituir pelos IDs reais do Stripe</span>
+<span class="key">UPDATE</span> plans <span class="key">SET</span> stripe_price_id = <span class="val">'price_xxx'</span> <span class="key">WHERE</span> slug = <span class="val">'iniciante'</span>;
+<span class="key">UPDATE</span> plans <span class="key">SET</span> stripe_price_id = <span class="val">'price_yyy'</span> <span class="key">WHERE</span> slug = <span class="val">'completo'</span>;
+<span class="key">UPDATE</span> plans <span class="key">SET</span> stripe_price_id = <span class="val">'price_zzz'</span> <span class="key">WHERE</span> slug = <span class="val">'presencial'</span>;</pre>
+  </div>
+
+  <hr>
+
+  <h3 style="color:var(--green);margin-bottom:1rem;">Fase C &mdash; Polimento e Producao</h3>
+  <p style="color:var(--text-dim);margin-bottom:1rem;">Ajustes finais antes de abrir para usuarios reais.</p>
+
+  <div class="step">
+    <span class="step-num">8</span>
+    <h3>Extrair logica para services/</h3>
+    <p>
+      O diretorio <code>src/services/</code> tem 5 subdiretorios vazios (emails, enrollments, forum, progress, subscriptions).<br>
+      Mover queries Supabase das pages para services para melhor manutencao.
+    </p>
+  </div>
+
+  <div class="step">
+    <span class="step-num">9</span>
+    <h3>Configurar emails transacionais</h3>
+    <p>
+      Implementar templates de email no Resend:<br>
+      &bull; Boas-vindas apos cadastro<br>
+      &bull; Confirmacao de assinatura<br>
+      &bull; Lembrete de pagamento falho<br>
+      &bull; Notificacao de nova aula
+    </p>
+  </div>
+
+  <div class="step">
+    <span class="step-num">10</span>
+    <h3>Trocar Stripe para modo producao</h3>
+    <p>
+      &bull; Ativar conta Stripe com dados bancarios reais<br>
+      &bull; Trocar chaves <code>pk_test_</code>/<code>sk_test_</code> por <code>pk_live_</code>/<code>sk_live_</code><br>
+      &bull; Criar produtos de producao com precos reais<br>
+      &bull; Atualizar webhook URL e secret<br>
+      &bull; Atualizar env vars na Vercel<br>
+      &bull; <strong>Trocar senha do admin!</strong>
+    </p>
+  </div>
+
+  <div class="step">
+    <span class="step-num">11</span>
+    <h3>Melhorias futuras</h3>
+    <p>
+      &bull; Implementar pagina de configuracoes do admin (CRUD de cursos/aulas pelo painel)<br>
+      &bull; Adicionar busca de cursos e filtros<br>
+      &bull; Notificacoes em tempo real (Supabase Realtime)<br>
+      &bull; Certificados de conclusao em PDF<br>
+      &bull; Analytics e metricas de engajamento<br>
+      &bull; Testes automatizados (Vitest + Playwright)
+    </p>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>Zelo BJJ &mdash; Documentacao gerada em 12/04/2026</p>
+  <p style="margin-top:0.3rem;">Repositorio: <a href="https://github.com/WendrewDouglas/ZeloBJJ">github.com/WendrewDouglas/ZeloBJJ</a></p>
+</div>
+
+</body>
+</html>

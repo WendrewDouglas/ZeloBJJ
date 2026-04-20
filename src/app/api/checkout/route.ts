@@ -1,15 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { stripe, PLAN_PRICE_MAP } from "@/lib/stripe";
+import { buildCheckoutUrl, buildReferenceId } from "@/lib/pagbank";
 
 export async function POST(request: Request) {
-  if (!stripe) {
-    return NextResponse.json(
-      { error: "Stripe ainda não configurado" },
-      { status: 503 }
-    );
-  }
-
   try {
     const supabase = await createClient();
     const {
@@ -20,63 +13,39 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
-    const { planSlug } = await request.json();
-    const priceId = PLAN_PRICE_MAP[planSlug];
-
-    if (!priceId) {
+    const { planSlug } = (await request.json()) as { planSlug?: string };
+    if (!planSlug) {
       return NextResponse.json({ error: "Plano inválido" }, { status: 400 });
     }
 
-    // Get or create Stripe customer
+    const { data: plan } = await supabase
+      .from("plans")
+      .select("id, slug, payment_link")
+      .eq("slug", planSlug)
+      .eq("is_active", true)
+      .single();
+
+    if (!plan?.payment_link) {
+      return NextResponse.json(
+        { error: "Plano sem link de pagamento configurado" },
+        { status: 503 }
+      );
+    }
+
     const { data: profile } = await supabase
       .from("profiles")
-      .select("stripe_customer_id, email, full_name")
+      .select("email")
       .eq("id", user.id)
       .single();
 
-    let customerId = profile?.stripe_customer_id;
+    const reference = buildReferenceId(user.id, plan.slug);
+    const url = buildCheckoutUrl(plan.payment_link, reference, profile?.email ?? user.email);
 
-    if (!customerId) {
-      const customer = await stripe.customers.create({
-        email: profile?.email || user.email,
-        name: profile?.full_name || undefined,
-        metadata: { supabase_user_id: user.id },
-      });
-      customerId = customer.id;
-
-      await supabase
-        .from("profiles")
-        .update({ stripe_customer_id: customerId })
-        .eq("id", user.id);
-    }
-
-    // Create checkout session
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-
-    const session = await stripe.checkout.sessions.create({
-      customer: customerId,
-      mode: "subscription",
-      payment_method_types: ["card"],
-      line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${appUrl}/dashboard?checkout=success`,
-      cancel_url: `${appUrl}/dashboard?checkout=canceled`,
-      metadata: {
-        supabase_user_id: user.id,
-        plan_slug: planSlug,
-      },
-      subscription_data: {
-        metadata: {
-          supabase_user_id: user.id,
-          plan_slug: planSlug,
-        },
-      },
-    });
-
-    return NextResponse.json({ url: session.url });
+    return NextResponse.json({ url });
   } catch (error) {
     console.error("Checkout error:", error);
     return NextResponse.json(
-      { error: "Erro ao criar sessão de pagamento" },
+      { error: "Erro ao gerar link de pagamento" },
       { status: 500 }
     );
   }

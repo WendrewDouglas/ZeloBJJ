@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, CreditCard } from "lucide-react";
+import { Loader2, CheckCircle2 } from "lucide-react";
 import type { Profile, SubscriptionWithPlan } from "@/types";
 
 export default function PerfilPage() {
@@ -40,8 +40,10 @@ export default function PerfilPage() {
         .from("subscriptions")
         .select("*, plan:plans(*)")
         .eq("user_id", user.id)
-        .eq("status", "active")
-        .single();
+        .in("status", ["active", "paid"])
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
 
       setSubscription(sub);
       setLoading(false);
@@ -66,14 +68,6 @@ export default function PerfilPage() {
       setMessage("Perfil atualizado!");
     }
     setSaving(false);
-  }
-
-  async function openPortal() {
-    const res = await fetch("/api/portal", { method: "POST" });
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    }
   }
 
   if (loading) {
@@ -126,46 +120,43 @@ export default function PerfilPage() {
           </form>
         </div>
 
-        {/* Subscription info */}
+        {/* Acesso ao curso */}
         <div className="rounded-xl border border-white/5 bg-dark-lighter p-6">
-          <h2 className="mb-6 text-lg font-bold text-white">Assinatura</h2>
+          <h2 className="mb-6 text-lg font-bold text-white">Acesso ao Curso</h2>
           {subscription ? (
             <div className="space-y-4">
-              <div>
-                <p className="text-sm text-gray-text">Plano atual</p>
-                <p className="text-lg font-bold text-gold">
-                  {subscription.plan?.name}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-text">Status</p>
-                <span className="inline-block rounded-full bg-green-500/10 px-3 py-1 text-xs font-medium text-green-500">
-                  Ativo
-                </span>
-              </div>
-              {subscription.current_period_end && (
+              <div className="flex items-start gap-3 rounded-lg border border-gold/30 bg-gold/5 p-4">
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-gold" />
                 <div>
-                  <p className="text-sm text-gray-text">Próxima cobrança</p>
+                  <p className="font-bold text-gold">Acesso Vitalicio Liberado</p>
+                  <p className="mt-1 text-xs text-gray-text">
+                    Pagamento unico confirmado. Voce tem acesso permanente ao curso.
+                  </p>
+                </div>
+              </div>
+              <div>
+                <p className="text-sm text-gray-text">Produto</p>
+                <p className="font-medium text-white">{subscription.plan?.name}</p>
+              </div>
+              {subscription.paid_at && (
+                <div>
+                  <p className="text-sm text-gray-text">Comprado em</p>
                   <p className="text-white">
-                    {new Date(subscription.current_period_end).toLocaleDateString("pt-BR")}
+                    {new Date(subscription.paid_at).toLocaleDateString("pt-BR")}
                   </p>
                 </div>
               )}
-              <Button onClick={openPortal} variant="outline" className="w-full">
-                <CreditCard className="mr-2 h-4 w-4" />
-                Gerenciar Assinatura
-              </Button>
             </div>
           ) : (
             <div className="text-center">
               <p className="mb-4 text-gray-text">
-                Você não possui uma assinatura ativa.
+                Voce ainda nao adquiriu o curso.
               </p>
               <Link
                 href="/#planos"
                 className="inline-block rounded-full bg-gold px-6 py-2 text-sm font-semibold text-dark hover:bg-gold-light"
               >
-                Ver Planos
+                Comprar Agora
               </Link>
             </div>
           )}
