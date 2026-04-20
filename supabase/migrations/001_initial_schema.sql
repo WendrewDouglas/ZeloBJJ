@@ -26,10 +26,15 @@ CREATE INDEX idx_profiles_role ON profiles(role);
 CREATE INDEX idx_profiles_stripe_customer ON profiles(stripe_customer_id);
 
 -- Auto-create profile on signup
-CREATE OR REPLACE FUNCTION handle_new_user()
-RETURNS TRIGGER AS $$
+-- SECURITY DEFINER + search_path fixo evita "relation profiles does not exist"
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
 BEGIN
-  INSERT INTO profiles (id, email, full_name, avatar_url)
+  INSERT INTO public.profiles (id, email, full_name, avatar_url)
   VALUES (
     NEW.id,
     NEW.email,
@@ -38,7 +43,7 @@ BEGIN
   );
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
