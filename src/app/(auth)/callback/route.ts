@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   }
 
   if (type === "recovery") {
-    return NextResponse.redirect(`${origin}/perfil?reset=true`);
+    return NextResponse.redirect(`${origin}/redefinir-senha`);
   }
 
   return NextResponse.redirect(`${origin}/dashboard`);
