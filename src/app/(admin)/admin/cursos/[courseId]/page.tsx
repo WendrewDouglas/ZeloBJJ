@@ -7,29 +7,34 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Save, ArrowLeft, ChevronDown, ChevronRight } from "lucide-react";
+import { BookOpen, Save, ArrowLeft, ChevronDown, ChevronRight, PlayCircle } from "lucide-react";
 import Link from "next/link";
+import { LessonVideoUpload } from "@/components/admin/lesson-video-upload";
 
 interface Course {
   id: string;
   title: string;
-  description: string;
-  published: boolean;
+  description: string | null;
+  is_published: boolean;
   created_at: string;
 }
 
 interface Module {
   id: string;
   title: string;
-  order_index: number;
+  sort_order: number;
   course_id: string;
 }
 
 interface Lesson {
   id: string;
   title: string;
-  order_index: number;
+  sort_order: number;
   module_id: string;
+  is_published: boolean;
+  storage_path: string | null;
+  video_url: string | null;
+  bunny_video_id: string | null;
 }
 
 export default function CourseEditPage({
@@ -46,34 +51,34 @@ export default function CourseEditPage({
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
-  const [expandedModules, setExpandedModules] = useState<Set<string>>(
-    new Set()
-  );
+  const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     async function loadData() {
       setLoading(true);
 
-      const [courseRes, modulesRes] = await Promise.all([
-        supabase.from("courses").select("*").eq("id", courseId).single(),
-        supabase
-          .from("modules")
-          .select("*")
-          .eq("course_id", courseId)
-          .order("order_index"),
-      ]);
+      const { data: courseData } = await supabase
+        .from("courses")
+        .select("*")
+        .eq("id", courseId)
+        .single();
+      if (courseData) setCourse(courseData);
 
-      if (courseRes.data) setCourse(courseRes.data);
-      if (modulesRes.data) {
-        setModules(modulesRes.data);
+      const { data: modulesData } = await supabase
+        .from("course_modules")
+        .select("*")
+        .eq("course_id", courseId)
+        .order("sort_order");
+      if (modulesData) {
+        setModules(modulesData);
 
-        const moduleIds = modulesRes.data.map((m) => m.id);
+        const moduleIds = modulesData.map((m) => m.id);
         if (moduleIds.length > 0) {
           const { data: lessonsData } = await supabase
             .from("lessons")
-            .select("*")
+            .select("id, title, sort_order, module_id, is_published, storage_path, video_url, bunny_video_id")
             .in("module_id", moduleIds)
-            .order("order_index");
+            .order("sort_order");
 
           if (lessonsData) setLessons(lessonsData);
         }
@@ -88,11 +93,8 @@ export default function CourseEditPage({
   const toggleModule = (moduleId: string) => {
     setExpandedModules((prev) => {
       const next = new Set(prev);
-      if (next.has(moduleId)) {
-        next.delete(moduleId);
-      } else {
-        next.add(moduleId);
-      }
+      if (next.has(moduleId)) next.delete(moduleId);
+      else next.add(moduleId);
       return next;
     });
   };
@@ -107,7 +109,7 @@ export default function CourseEditPage({
       .update({
         title: course.title,
         description: course.description,
-        published: course.published,
+        is_published: course.is_published,
       })
       .eq("id", course.id);
 
@@ -117,8 +119,16 @@ export default function CourseEditPage({
       setSaveMessage("Curso salvo com sucesso!");
       setTimeout(() => setSaveMessage(""), 3000);
     }
-
     setSaving(false);
+  };
+
+  const expandAll = () => setExpandedModules(new Set(modules.map((m) => m.id)));
+  const collapseAll = () => setExpandedModules(new Set());
+
+  const handleVideoUpdated = (lessonId: string, newPath: string | null) => {
+    setLessons((prev) =>
+      prev.map((l) => (l.id === lessonId ? { ...l, storage_path: newPath, video_url: newPath ? null : l.video_url } : l))
+    );
   };
 
   if (loading) {
@@ -133,23 +143,20 @@ export default function CourseEditPage({
     return (
       <div className="text-center py-20">
         <p className="text-gray-text">Curso não encontrado.</p>
-        <Link
-          href="/admin/cursos"
-          className="text-gold hover:text-gold-light text-sm mt-2 inline-block"
-        >
+        <Link href="/admin/cursos" className="text-gold hover:text-gold-light text-sm mt-2 inline-block">
           Voltar aos cursos
         </Link>
       </div>
     );
   }
 
+  const totalLessons = lessons.length;
+  const lessonsWithVideo = lessons.filter((l) => l.storage_path || l.video_url || l.bunny_video_id).length;
+
   return (
     <div>
       <div className="flex items-center gap-4 mb-8">
-        <Link
-          href="/admin/cursos"
-          className="text-gray-text hover:text-white transition-colors"
-        >
+        <Link href="/admin/cursos" className="text-gray-text hover:text-white transition-colors">
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div className="flex items-center gap-3">
@@ -162,29 +169,21 @@ export default function CourseEditPage({
       <Card className="bg-dark-lighter border-white/5 p-6 mb-6">
         <div className="space-y-4">
           <div>
-            <Label htmlFor="title" className="text-gray-text text-sm">
-              Título do Curso
-            </Label>
+            <Label htmlFor="title" className="text-gray-text text-sm">Título do Curso</Label>
             <Input
               id="title"
               value={course.title}
-              onChange={(e) =>
-                setCourse({ ...course, title: e.target.value })
-              }
+              onChange={(e) => setCourse({ ...course, title: e.target.value })}
               className="mt-1 bg-white/5 border-white/10 text-white focus:border-gold"
             />
           </div>
 
           <div>
-            <Label htmlFor="description" className="text-gray-text text-sm">
-              Descrição
-            </Label>
+            <Label htmlFor="description" className="text-gray-text text-sm">Descrição</Label>
             <textarea
               id="description"
               value={course.description || ""}
-              onChange={(e) =>
-                setCourse({ ...course, description: e.target.value })
-              }
+              onChange={(e) => setCourse({ ...course, description: e.target.value })}
               rows={4}
               className="mt-1 w-full rounded-md bg-white/5 border border-white/10 text-white px-3 py-2 text-sm focus:outline-none focus:border-gold transition-colors resize-none"
             />
@@ -192,47 +191,25 @@ export default function CourseEditPage({
 
           <div className="flex items-center gap-3">
             <Label className="text-gray-text text-sm">Status:</Label>
-            <button
-              onClick={() =>
-                setCourse({ ...course, published: !course.published })
-              }
-              className="flex items-center gap-2"
-            >
-              {course.published ? (
-                <Badge className="bg-green-500/10 text-green-400 border-green-500/20 cursor-pointer">
-                  Publicado
-                </Badge>
+            <button onClick={() => setCourse({ ...course, is_published: !course.is_published })} className="flex items-center gap-2">
+              {course.is_published ? (
+                <Badge className="bg-green-500/10 text-green-400 border-green-500/20 cursor-pointer">Publicado</Badge>
               ) : (
-                <Badge
-                  variant="secondary"
-                  className="bg-yellow-500/10 text-yellow-400 border-yellow-500/20 cursor-pointer"
-                >
+                <Badge variant="secondary" className="bg-yellow-500/10 text-yellow-400 border-yellow-500/20 cursor-pointer">
                   Rascunho
                 </Badge>
               )}
             </button>
-            <span className="text-gray-text text-xs">
-              (clique para alternar)
-            </span>
+            <span className="text-gray-text text-xs">(clique para alternar)</span>
           </div>
 
           <div className="flex items-center gap-3 pt-2">
-            <Button
-              onClick={handleSave}
-              disabled={saving}
-              className="bg-gold hover:bg-gold-light text-black font-medium"
-            >
+            <Button onClick={handleSave} disabled={saving} className="bg-gold hover:bg-gold-light text-black font-medium">
               <Save className="w-4 h-4 mr-2" />
               {saving ? "Salvando..." : "Salvar Alterações"}
             </Button>
             {saveMessage && (
-              <span
-                className={`text-sm ${
-                  saveMessage.includes("Erro")
-                    ? "text-red-400"
-                    : "text-green-400"
-                }`}
-              >
+              <span className={`text-sm ${saveMessage.includes("Erro") ? "text-red-400" : "text-green-400"}`}>
                 {saveMessage}
               </span>
             )}
@@ -242,23 +219,30 @@ export default function CourseEditPage({
 
       {/* Modules & Lessons */}
       <Card className="bg-dark-lighter border-white/5 p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">
-          Módulos e Aulas
-        </h2>
+        <div className="mb-4 flex items-center justify-between gap-4">
+          <h2 className="text-lg font-semibold text-white">Módulos e Aulas</h2>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-gray-text">
+              {lessonsWithVideo}/{totalLessons} aulas com vídeo
+            </span>
+            <button onClick={expandAll} className="text-xs text-gold hover:underline">
+              Expandir tudo
+            </button>
+            <button onClick={collapseAll} className="text-xs text-gray-text hover:text-white">
+              Recolher
+            </button>
+          </div>
+        </div>
 
         {modules.length > 0 ? (
           <div className="space-y-2">
             {modules.map((mod) => {
-              const moduleLessons = lessons.filter(
-                (l) => l.module_id === mod.id
-              );
+              const moduleLessons = lessons.filter((l) => l.module_id === mod.id);
               const isExpanded = expandedModules.has(mod.id);
+              const moduleWithVideo = moduleLessons.filter((l) => l.storage_path || l.video_url || l.bunny_video_id).length;
 
               return (
-                <div
-                  key={mod.id}
-                  className="border border-white/5 rounded-lg overflow-hidden"
-                >
+                <div key={mod.id} className="border border-white/5 rounded-lg overflow-hidden">
                   <button
                     onClick={() => toggleModule(mod.id)}
                     className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/[0.02] transition-colors"
@@ -270,38 +254,47 @@ export default function CourseEditPage({
                         <ChevronRight className="w-4 h-4 text-gray-text" />
                       )}
                       <span className="text-white text-sm font-medium">
-                        {mod.title}
+                        {mod.sort_order}. {mod.title}
                       </span>
                     </div>
                     <span className="text-gray-text text-xs">
-                      {moduleLessons.length} aula(s)
+                      {moduleWithVideo}/{moduleLessons.length} com vídeo
                     </span>
                   </button>
 
                   {isExpanded && (
                     <div className="border-t border-white/5 bg-white/[0.01]">
                       {moduleLessons.length > 0 ? (
-                        moduleLessons.map((lesson, i) => (
-                          <div
-                            key={lesson.id}
-                            className={`flex items-center gap-3 px-4 py-2.5 pl-12 ${
-                              i < moduleLessons.length - 1
-                                ? "border-b border-white/5"
-                                : ""
-                            }`}
-                          >
-                            <span className="text-gray-text text-xs w-6">
-                              {lesson.order_index + 1}.
-                            </span>
-                            <span className="text-gray-text text-sm">
-                              {lesson.title}
-                            </span>
-                          </div>
-                        ))
+                        moduleLessons.map((lesson, i) => {
+                          const hasAnyVideo = lesson.storage_path || lesson.video_url || lesson.bunny_video_id;
+                          return (
+                            <div
+                              key={lesson.id}
+                              className={`flex flex-col gap-2 px-4 py-3 pl-12 sm:flex-row sm:items-center ${
+                                i < moduleLessons.length - 1 ? "border-b border-white/5" : ""
+                              }`}
+                            >
+                              <div className="flex min-w-0 flex-1 items-center gap-3">
+                                <PlayCircle className={`h-4 w-4 shrink-0 ${hasAnyVideo ? "text-gold" : "text-gray-text/40"}`} />
+                                <div className="min-w-0">
+                                  <div className="text-sm text-white truncate">
+                                    {lesson.sort_order}. {lesson.title}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="sm:ml-auto sm:w-auto">
+                                <LessonVideoUpload
+                                  lessonId={lesson.id}
+                                  lessonTitle={lesson.title}
+                                  initialStoragePath={lesson.storage_path}
+                                  onUpdated={(newPath) => handleVideoUpdated(lesson.id, newPath)}
+                                />
+                              </div>
+                            </div>
+                          );
+                        })
                       ) : (
-                        <p className="px-4 py-3 pl-12 text-gray-text text-sm">
-                          Nenhuma aula neste módulo.
-                        </p>
+                        <p className="px-4 py-3 pl-12 text-gray-text text-sm">Nenhuma aula neste módulo.</p>
                       )}
                     </div>
                   )}
@@ -310,9 +303,7 @@ export default function CourseEditPage({
             })}
           </div>
         ) : (
-          <p className="text-gray-text text-sm">
-            Nenhum módulo encontrado para este curso.
-          </p>
+          <p className="text-gray-text text-sm">Nenhum módulo encontrado para este curso.</p>
         )}
       </Card>
     </div>

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { VideoPlayer } from "@/components/member/video-player";
 import { LessonProgressButton } from "@/components/member/lesson-progress-button";
+import { getLessonVideoUrl } from "@/lib/storage/video";
 
 interface Props {
   params: Promise<{ courseId: string; lessonId: string }>;
@@ -80,7 +81,7 @@ export default async function LessonPage({ params }: Props) {
       {/* Video Player */}
       <div className="mb-6 overflow-hidden rounded-xl border border-white/5 bg-dark-lighter">
         <VideoPlayer
-          videoUrl={lesson.video_url}
+          videoUrl={await getLessonVideoUrl(supabase, lesson)}
           bunnyVideoId={lesson.bunny_video_id}
         />
       </div>

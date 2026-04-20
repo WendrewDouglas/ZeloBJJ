@@ -84,6 +84,7 @@ export interface Lesson {
   description: string | null;
   video_url: string | null;
   bunny_video_id: string | null;
+  storage_path: string | null;
   duration_seconds: number | null;
   sort_order: number;
   is_published: boolean;
