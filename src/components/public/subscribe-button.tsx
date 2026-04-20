@@ -1,15 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 
 type Props = {
   planSlug: "curso_digital";
   planName: string;
   featured?: boolean;
+  size?: "md" | "lg";
+  label?: string;
 };
 
-export function SubscribeButton({ planSlug, planName, featured }: Props) {
+export function SubscribeButton({ planSlug, planName, featured, size = "md", label }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -44,22 +46,36 @@ export function SubscribeButton({ planSlug, planName, featured }: Props) {
     }
   }
 
+  const sizeCls =
+    size === "lg"
+      ? "py-4 text-base md:text-lg"
+      : "py-3 text-sm md:text-base";
+
   return (
     <div className="flex flex-col gap-2">
       <button
         type="button"
         onClick={handleClick}
         disabled={loading}
-        className={`flex w-full items-center justify-center gap-2 rounded-full py-3 text-center font-semibold transition-colors disabled:opacity-60 ${
+        className={`group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-6 text-center font-bold shadow-lg transition-all hover:shadow-gold/30 disabled:opacity-60 ${sizeCls} ${
           featured
             ? "bg-gold text-dark hover:bg-gold-light"
             : "border border-white/20 text-white hover:border-gold hover:text-gold"
         }`}
       >
-        {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-        {loading ? "Abrindo checkout..." : "Comprar Agora"}
+        {loading ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Abrindo checkout...
+          </>
+        ) : (
+          <>
+            {label ?? "Comprar Agora"}
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </>
+        )}
       </button>
-      {error && <p className="text-xs text-red-400">{error}</p>}
+      {error && <p className="text-center text-xs text-red-400">{error}</p>}
     </div>
   );
 }
