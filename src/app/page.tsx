@@ -309,7 +309,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="glow-gold relative overflow-hidden rounded-3xl border border-gold/50 bg-gradient-to-b from-dark-lighter to-dark-light p-6 md:p-10">
+          <div className="glow-gold relative rounded-3xl border border-gold/50 bg-gradient-to-b from-dark-lighter to-dark-light p-6 pt-10 md:p-10 md:pt-12">
             <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gold px-5 py-1 text-xs font-bold uppercase tracking-widest text-dark shadow-lg">
               Acesso Vitalício
             </span>
