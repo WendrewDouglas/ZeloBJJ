@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   LayoutDashboard,
   BookOpen,
@@ -11,25 +10,27 @@ import {
   LogOut,
   Shield,
 } from "lucide-react";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import type { Profile } from "@/types";
-
-const memberLinks = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/cursos", label: "Meus Cursos", icon: BookOpen },
-  { href: "/comunidade", label: "Comunidade", icon: MessageSquare },
-  { href: "/perfil", label: "Meu Perfil", icon: User },
-];
 
 interface SidebarProps {
   profile: Profile;
 }
 
 export function Sidebar({ profile }: SidebarProps) {
+  const t = useTranslations("member.sidebar");
+  const tCommon = useTranslations("common");
   const pathname = usePathname();
   const router = useRouter();
+
+  const memberLinks = [
+    { href: "/dashboard" as const, label: t("dashboard"), icon: LayoutDashboard },
+    { href: "/cursos" as const, label: t("courses"), icon: BookOpen },
+    { href: "/comunidade" as const, label: t("community"), icon: MessageSquare },
+    { href: "/perfil" as const, label: t("profile"), icon: User },
+  ];
 
   async function handleLogout() {
     const supabase = createClient();
@@ -85,7 +86,7 @@ export function Sidebar({ profile }: SidebarProps) {
               )}
             >
               <Shield className="h-4 w-4" />
-              Painel Admin
+              {t("adminPanel")}
             </Link>
           </>
         )}
@@ -99,7 +100,7 @@ export function Sidebar({ profile }: SidebarProps) {
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium text-white">
-              {profile.full_name || "Usuário"}
+              {profile.full_name || t("user")}
             </p>
             <p className="truncate text-xs text-gray-text">{profile.email}</p>
           </div>
@@ -109,7 +110,7 @@ export function Sidebar({ profile }: SidebarProps) {
           className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-text transition-colors hover:bg-white/5 hover:text-red-400"
         >
           <LogOut className="h-4 w-4" />
-          Sair
+          {tCommon("logout")}
         </button>
       </div>
     </aside>

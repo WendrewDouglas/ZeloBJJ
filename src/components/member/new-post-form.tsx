@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +14,8 @@ interface NewPostFormProps {
 }
 
 export function NewPostForm({ categories }: NewPostFormProps) {
+  const t = useTranslations("member.community.form");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [categoryId, setCategoryId] = useState("");
@@ -36,7 +39,7 @@ export function NewPostForm({ categories }: NewPostFormProps) {
       } = await supabase.auth.getUser();
 
       if (!user) {
-        setError("Você precisa estar logado para criar um post.");
+        setError(t("errorAuth"));
         return;
       }
 
@@ -52,13 +55,13 @@ export function NewPostForm({ categories }: NewPostFormProps) {
         .single();
 
       if (insertError || !data) {
-        setError("Erro ao criar post. Tente novamente.");
+        setError(t("errorCreate"));
         return;
       }
 
       router.push(`/comunidade/${data.id}`);
     } catch {
-      setError("Erro inesperado. Tente novamente.");
+      setError(tCommon("errorGeneric"));
     } finally {
       setLoading(false);
     }
@@ -68,11 +71,11 @@ export function NewPostForm({ categories }: NewPostFormProps) {
     <form onSubmit={handleSubmit} className="space-y-5">
       <div className="space-y-2">
         <label htmlFor="title" className="text-sm font-medium text-white">
-          Título
+          {t("title")}
         </label>
         <Input
           id="title"
-          placeholder="Título do post"
+          placeholder={t("titlePlaceholder")}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="bg-dark-lighter border-white/5 text-white placeholder:text-gray-text"
@@ -81,7 +84,7 @@ export function NewPostForm({ categories }: NewPostFormProps) {
 
       <div className="space-y-2">
         <label htmlFor="category" className="text-sm font-medium text-white">
-          Categoria
+          {t("category")}
         </label>
         <select
           id="category"
@@ -90,7 +93,7 @@ export function NewPostForm({ categories }: NewPostFormProps) {
           className="w-full rounded-md border border-white/5 bg-dark-lighter px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-gold"
         >
           <option value="" disabled>
-            Selecione uma categoria
+            {t("selectCategory")}
           </option>
           {categories.map((cat) => (
             <option key={cat.id} value={cat.id}>
@@ -102,11 +105,11 @@ export function NewPostForm({ categories }: NewPostFormProps) {
 
       <div className="space-y-2">
         <label htmlFor="content" className="text-sm font-medium text-white">
-          Conteúdo
+          {t("content")}
         </label>
         <Textarea
           id="content"
-          placeholder="Escreva o conteúdo do seu post..."
+          placeholder={t("contentPlaceholder")}
           value={content}
           onChange={(e) => setContent(e.target.value)}
           rows={8}
@@ -122,7 +125,7 @@ export function NewPostForm({ categories }: NewPostFormProps) {
         className="bg-gold text-black hover:bg-gold/90 disabled:opacity-50"
       >
         <Send className="h-4 w-4 mr-2" />
-        {loading ? "Publicando..." : "Publicar Post"}
+        {loading ? t("publishing") : t("submit")}
       </Button>
     </form>
   );

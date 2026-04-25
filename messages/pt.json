@@ -1,0 +1,510 @@
+{
+  "language": {
+    "label": "Idioma",
+    "pt": "Português",
+    "en": "Inglês",
+    "ko": "Coreano"
+  },
+  "common": {
+    "loading": "Carregando...",
+    "save": "Salvar",
+    "saving": "Salvando...",
+    "cancel": "Cancelar",
+    "back": "Voltar",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "remove": "Remover",
+    "publish": "Publicar",
+    "draft": "Rascunho",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "yes": "Sim",
+    "no": "Não",
+    "logout": "Sair",
+    "comingSoon": "Em breve",
+    "anonymous": "Anônimo",
+    "unknown": "Desconhecido",
+    "noName": "Sem nome",
+    "errorGeneric": "Erro inesperado. Tente novamente.",
+    "errorNetwork": "Erro de rede. Tente novamente."
+  },
+  "header": {
+    "nav": {
+      "about": "Sobre",
+      "modules": "Módulos",
+      "offer": "Oferta",
+      "faq": "FAQ"
+    },
+    "login": "Entrar",
+    "cta": "Garantir Acesso",
+    "studentArea": "Área do Aluno",
+    "dashboard": "Dashboard",
+    "openMenu": "Abrir menu"
+  },
+  "hero": {
+    "badge": "Oferta de Lançamento · Acesso Vitalício",
+    "title1": "Aprenda",
+    "titleHighlight": "Jiu-Jitsu Brasileiro",
+    "title2": "do zero ao avançado",
+    "subtitle": "9 módulos estruturados, vídeo-aulas em HD e material de apoio. Pague uma única vez e estude no seu ritmo, quando e onde quiser.",
+    "ctaPrimary": "Garantir meu acesso · R$ 29,90",
+    "ctaSecondary": "Já sou aluno · Entrar",
+    "trust": {
+      "secure": "Pagamento seguro",
+      "instant": "Acesso imediato",
+      "lifetime": "Vitalício",
+      "installments": "Até 18x"
+    }
+  },
+  "about": {
+    "eyebrow": "Sobre a Zelo BJJ",
+    "title1": "A arte suave, com",
+    "titleHighlight": "técnica e propósito",
+    "p1": "O Jiu-Jitsu Brasileiro é uma arte marcial, esporte e sistema de defesa pessoal baseado em princípios técnicos e estratégicos. Na Zelo BJJ, ensinamos os fundamentos essenciais que todo praticante precisa para construir uma base sólida e evoluir com segurança.",
+    "p2": "O verdadeiro progresso é construído no longo prazo, com paciência e dedicação aos princípios básicos. Esse curso é sobre isso.",
+    "stats": {
+      "modules": "Módulos Completos",
+      "techniques": "Técnicas Ensinadas",
+      "videos": "Vídeos Detalhados",
+      "lifetime": "Acesso Vitalício"
+    }
+  },
+  "forWhom": {
+    "eyebrow": "Para quem é",
+    "title1": "Feito para",
+    "titleHighlight": "cada fase",
+    "title2": "da sua jornada",
+    "items": {
+      "beginners": {
+        "title": "Iniciantes absolutos",
+        "desc": "Quem nunca pisou no tatame e quer começar com a base correta desde o primeiro dia."
+      },
+      "whiteBlue": {
+        "title": "Faixas brancas e azuis",
+        "desc": "Quem treina na academia e quer preencher lacunas técnicas estudando fora do tatame."
+      },
+      "review": {
+        "title": "Quem quer revisar",
+        "desc": "Praticantes mais experientes que querem voltar aos fundamentos e refinar os princípios."
+      }
+    }
+  },
+  "modules": {
+    "eyebrow": "Conteúdo do Curso",
+    "title1": "9 módulos, do",
+    "titleHighlight": "fundamento ao combate real",
+    "subtitle": "Do conceito de base à mentalidade do lutador. Estudada nessa ordem para você não pular etapas nem revisitar o mesmo conteúdo várias vezes.",
+    "moduleLabel": "Módulo",
+    "items": {
+      "01": { "title": "Base e Postura", "desc": "Alicerce do Jiu-Jitsu. Postura, distribuição de peso e proteção corporal." },
+      "02": { "title": "Movimentação Corporal", "desc": "Ponte, fuga de quadril, giro, levantada técnica e ajustes de base." },
+      "03": { "title": "Hierarquia das Posições", "desc": "Costas, montada, controle lateral, passagem de guarda e progressão." },
+      "04": { "title": "Guarda: Conceito e Função", "desc": "Transforme a posição inferior em ataque com guarda fechada e aberta." },
+      "05": { "title": "Raspagens Básicas", "desc": "Inversão de posições com técnica: tesoura, gancho, desequilíbrio e timing." },
+      "06": { "title": "Finalizações Fundamentais", "desc": "Mata-leão, americana, armlock e triângulo com controle e posicionamento." },
+      "07": { "title": "Defesa e Sobrevivência", "desc": "Proteção, fechamento de espaço e inteligência tática sob pressão." },
+      "08": { "title": "Respiração e Controle Emocional", "desc": "Controle a pressão com respiração, calma e economia de energia." },
+      "09": { "title": "Conduta e Mentalidade", "desc": "Respeito, constância, humildade e disciplina como aceleradores da evolução." }
+    }
+  },
+  "principles": {
+    "eyebrow": "Metodologia",
+    "title1": "Princípios",
+    "titleHighlight": "Fundamentais",
+    "items": {
+      "position": {
+        "title": "Posição antes da Finalização",
+        "desc": "Sem controle posicional, tentativas de finalização falham e expõem você. Domine a posição primeiro."
+      },
+      "technique": {
+        "title": "Técnica sobre Força",
+        "desc": "Jiu-Jitsu eficiente é economia de energia. Técnica bem aplicada requer pouca força."
+      },
+      "consistency": {
+        "title": "Constância e Paciência",
+        "desc": "Melhor treinar 3x por semana com consistência do que 6x em uma semana e faltar um mês."
+      }
+    }
+  },
+  "offer": {
+    "eyebrow": "Oferta de Lançamento",
+    "title1": "Invista uma vez.",
+    "titleHighlight": "Acesse para sempre.",
+    "subtitle": "Pagamento único, sem mensalidade. Todo o curso liberado na hora.",
+    "ribbon": "Acesso Vitalício",
+    "kicker": "Completo Digital · 9 módulos",
+    "name": "Curso Brazilian Jiu-Jitsu — Completo Digital",
+    "price": "29",
+    "cents": "90",
+    "currency": "R$",
+    "installments": "à vista · em até <strong>18x</strong> no cartão",
+    "features": {
+      "f1": "Acesso imediato aos 9 módulos completos",
+      "f2": "Vídeos em HD com técnicas detalhadas",
+      "f3": "Material de apoio em PDF para estudo offline",
+      "f4": "Comunidade exclusiva (fórum integrado)",
+      "f5": "Suporte via WhatsApp",
+      "f6": "Pagamento único — sem mensalidade"
+    },
+    "ctaLabel": "Garantir meu acesso agora",
+    "secure": "Pagamento seguro via PagBank",
+    "methods": {
+      "card": "Cartão",
+      "pix": "Pix",
+      "boleto": "Boleto",
+      "googlePay": "Google Pay",
+      "applePay": "Apple Pay"
+    },
+    "alreadyBought": "Já comprou?",
+    "loginLink": "Fazer login"
+  },
+  "faq": {
+    "eyebrow": "Perguntas frequentes",
+    "title1": "Dúvidas",
+    "titleHighlight": "rápidas",
+    "items": {
+      "q1": {
+        "q": "Como funciona o acesso ao curso?",
+        "a": "Após o pagamento aprovado, você recebe um e-mail de confirmação e o acesso é liberado automaticamente na área do aluno. É só fazer login e começar a estudar."
+      },
+      "q2": {
+        "q": "Por quanto tempo tenho acesso?",
+        "a": "Acesso vitalício. Você paga uma única vez e pode voltar ao conteúdo sempre que quiser, sem mensalidade."
+      },
+      "q3": {
+        "q": "Posso parcelar?",
+        "a": "Sim — no cartão de crédito, em até 18x com taxa de parcelamento por conta do comprador. Também aceitamos Pix, boleto, Google Pay, Apple Pay e saldo PagBank."
+      },
+      "q4": {
+        "q": "O pagamento é seguro?",
+        "a": "Sim. Todo o processamento é feito pelo PagBank (grupo UOL), com criptografia ponta-a-ponta. Nenhum dado de cartão passa pelos servidores da Zelo BJJ."
+      },
+      "q5": {
+        "q": "Preciso ter experiência prévia em Jiu-Jitsu?",
+        "a": "Não. O curso foi estruturado para quem está começando do zero. Se você já treina, vai usar o material como guia de referência e revisão."
+      },
+      "q6": {
+        "q": "Como entro em contato com o suporte?",
+        "a": "Pelo WhatsApp no botão flutuante do site ou direto em wa.me/5518981328589. Respondemos em horário comercial."
+      }
+    }
+  },
+  "cta": {
+    "title1": "Pronto para",
+    "titleHighlight": "começar",
+    "subtitle": "Clique abaixo para garantir seu acesso ou fale com a gente no WhatsApp.",
+    "buy": "Comprar agora · R$ 29,90",
+    "whatsapp": "Tirar dúvida no WhatsApp"
+  },
+  "footer": {
+    "login": "Entrar",
+    "faq": "FAQ",
+    "instagram": "Instagram",
+    "whatsapp": "WhatsApp",
+    "rights": "© 2026 Zelo BJJ. Todos os direitos reservados."
+  },
+  "whatsapp": {
+    "ariaLabel": "WhatsApp",
+    "message": "Olá! Quero saber mais sobre a Zelo BJJ"
+  },
+  "auth": {
+    "branding": {
+      "tagline": "Domine o Jiu-Jitsu Brasileiro com quem entende de verdade"
+    },
+    "login": {
+      "title": "Entrar",
+      "subtitle": "Acesse sua conta para continuar aprendendo",
+      "email": "E-mail",
+      "emailPlaceholder": "seu@email.com",
+      "password": "Senha",
+      "passwordPlaceholder": "••••••••",
+      "forgot": "Esqueceu a senha?",
+      "submit": "Entrar",
+      "noAccount": "Ainda não tem conta?",
+      "signupLink": "Cadastre-se",
+      "errorInvalid": "E-mail ou senha incorretos."
+    },
+    "signup": {
+      "title": "Criar conta",
+      "subtitle": "Comece sua jornada no Jiu-Jitsu",
+      "fullName": "Nome completo",
+      "fullNamePlaceholder": "Seu nome",
+      "passwordPlaceholder": "Mínimo 6 caracteres",
+      "confirmPassword": "Confirmar senha",
+      "confirmPasswordPlaceholder": "Repita a senha",
+      "submit": "Criar conta",
+      "haveAccount": "Já tem uma conta?",
+      "loginLink": "Entrar",
+      "errorMismatch": "As senhas não coincidem.",
+      "errorTooShort": "A senha deve ter pelo menos 6 caracteres.",
+      "successTitle": "Verifique seu e-mail",
+      "successMessage": "Enviamos um link de confirmação para <strong>{email}</strong>. Clique no link para ativar sua conta.",
+      "backToLogin": "Voltar para o login"
+    },
+    "recover": {
+      "title": "Recuperar senha",
+      "subtitle": "Informe seu e-mail para receber o link de recuperação",
+      "submit": "Enviar link",
+      "sentTitle": "E-mail enviado",
+      "sentMessage": "Se existe uma conta com <strong>{email}</strong>, você receberá um link para redefinir sua senha.",
+      "backToLogin": "Voltar para o login"
+    },
+    "reset": {
+      "title": "Definir nova senha",
+      "subtitle": "Crie uma senha forte para sua conta. Mínimo de 8 caracteres.",
+      "newPassword": "Nova senha",
+      "confirmPassword": "Confirmar senha",
+      "submit": "Salvar nova senha",
+      "errorTooShort": "A senha precisa ter ao menos 8 caracteres.",
+      "errorMismatch": "As senhas não conferem.",
+      "invalidTitle": "Link expirado ou inválido",
+      "invalidMessage": "Este link de redefinição de senha não é mais válido. Peça um novo clicando no botão abaixo.",
+      "requestNew": "Solicitar novo link",
+      "doneTitle": "Senha atualizada",
+      "doneMessage": "Redirecionando para o seu dashboard...",
+      "backToLogin": "Voltar para o login"
+    }
+  },
+  "member": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "courses": "Meus Cursos",
+      "community": "Comunidade",
+      "profile": "Meu Perfil",
+      "adminPanel": "Painel Admin",
+      "user": "Usuário"
+    },
+    "dashboard": {
+      "greetingFallback": "Aluno",
+      "greeting": "Olá, {name}!",
+      "subtitle": "Continue sua evolução no Jiu-Jitsu",
+      "stats": {
+        "enrolled": "Cursos Matriculados",
+        "completed": "Aulas Concluídas",
+        "progress": "Progresso Geral",
+        "currentPlan": "Plano Atual",
+        "noPlan": "Nenhum"
+      },
+      "noPlanTitle": "Você ainda não tem um plano ativo",
+      "noPlanDesc": "Assine um plano para ter acesso aos cursos e conteúdos exclusivos.",
+      "viewPlans": "Ver Planos",
+      "actions": {
+        "myCourses": "Meus Cursos",
+        "myCoursesDesc": "Continue de onde parou nas suas aulas",
+        "community": "Comunidade",
+        "communityDesc": "Participe das discussões com outros alunos"
+      }
+    },
+    "courses": {
+      "title": "Meus Cursos",
+      "subtitle": "Explore os cursos disponíveis e continue aprendendo",
+      "empty": "Nenhum curso disponível",
+      "emptyDesc": "Em breve novos cursos serão adicionados.",
+      "subscribeToAccess": "Assine para acessar"
+    },
+    "course": {
+      "back": "← Voltar aos cursos",
+      "progressLabel": "{completed}/{total} aulas ({percent}%)",
+      "minutes": "{min} min"
+    },
+    "lesson": {
+      "back": "Voltar ao curso",
+      "videoComingSoon": "Vídeo em breve",
+      "completed": "Aula concluída",
+      "markCompleted": "Marcar como concluída"
+    },
+    "community": {
+      "title": "Comunidade",
+      "newPost": "Novo Post",
+      "categories": "Categorias",
+      "recentPosts": "Posts Recentes",
+      "empty": "Nenhum post ainda. Seja o primeiro a publicar!",
+      "postsCount": "{count} posts",
+      "commentsCount": "{count} comentários",
+      "commentsTitle": "Comentários ({count})",
+      "noComments": "Nenhum comentário ainda. Seja o primeiro!",
+      "back": "Voltar para Comunidade",
+      "form": {
+        "title": "Título",
+        "titlePlaceholder": "Título do post",
+        "category": "Categoria",
+        "selectCategory": "Selecione uma categoria",
+        "content": "Conteúdo",
+        "contentPlaceholder": "Escreva o conteúdo do seu post...",
+        "submit": "Publicar Post",
+        "publishing": "Publicando...",
+        "errorAuth": "Você precisa estar logado para criar um post.",
+        "errorCreate": "Erro ao criar post. Tente novamente."
+      },
+      "comment": {
+        "placeholder": "Escreva seu comentário...",
+        "submit": "Comentar",
+        "sending": "Enviando...",
+        "errorAuth": "Você precisa estar logado para comentar.",
+        "errorSend": "Erro ao enviar comentário. Tente novamente."
+      }
+    },
+    "profile": {
+      "title": "Meu Perfil",
+      "personalDataTitle": "Dados Pessoais",
+      "email": "E-mail",
+      "fullName": "Nome completo",
+      "phone": "Telefone",
+      "phonePlaceholder": "(00) 00000-0000",
+      "errorSave": "Erro ao salvar.",
+      "successSave": "Perfil atualizado!",
+      "accessTitle": "Acesso ao Curso",
+      "accessActiveTitle": "Acesso Vitalício Liberado",
+      "accessActiveDesc": "Pagamento único confirmado. Você tem acesso permanente ao curso.",
+      "product": "Produto",
+      "purchasedAt": "Comprado em",
+      "noAccess": "Você ainda não adquiriu o curso.",
+      "buyNow": "Comprar Agora"
+    }
+  },
+  "admin": {
+    "sidebar": {
+      "title": "Admin",
+      "dashboard": "Dashboard",
+      "students": "Alunos",
+      "courses": "Cursos",
+      "plans": "Planos",
+      "forum": "Fórum",
+      "settings": "Configurações",
+      "backToSite": "Voltar ao Site"
+    },
+    "dashboard": {
+      "title": "Painel Administrativo",
+      "stats": {
+        "totalStudents": "Total de Alunos",
+        "activeSubscriptions": "Assinaturas Ativas",
+        "totalCourses": "Total de Cursos",
+        "totalLessons": "Total de Aulas"
+      },
+      "recentSignups": "Cadastros Recentes",
+      "noSignups": "Nenhum cadastro recente."
+    },
+    "students": {
+      "title": "Alunos",
+      "found": "{count} aluno(s) encontrado(s)",
+      "table": {
+        "name": "Nome",
+        "email": "E-mail",
+        "plan": "Plano",
+        "status": "Status",
+        "signupDate": "Data de Cadastro"
+      },
+      "noPlan": "Sem plano",
+      "empty": "Nenhum aluno encontrado."
+    },
+    "courses": {
+      "title": "Cursos",
+      "newCourse": "Novo Curso",
+      "table": {
+        "title": "Título",
+        "status": "Status",
+        "modules": "Módulos",
+        "lessons": "Aulas",
+        "actions": "Ações"
+      },
+      "published": "Publicado",
+      "edit": "Editar",
+      "empty": "Nenhum curso encontrado."
+    },
+    "courseEdit": {
+      "title": "Editar Curso",
+      "notFound": "Curso não encontrado.",
+      "backToCourses": "Voltar aos cursos",
+      "courseTitle": "Título do Curso",
+      "description": "Descrição",
+      "status": "Status:",
+      "toggleHint": "(clique para alternar)",
+      "saveChanges": "Salvar Alterações",
+      "errorSave": "Erro ao salvar: {message}",
+      "successSave": "Curso salvo com sucesso!",
+      "modulesAndLessons": "Módulos e Aulas",
+      "lessonsWithVideo": "{withVideo}/{total} aulas com vídeo",
+      "expandAll": "Expandir tudo",
+      "collapseAll": "Recolher",
+      "moduleWithVideo": "{withVideo}/{total} com vídeo",
+      "noLessons": "Nenhuma aula neste módulo.",
+      "noModules": "Nenhum módulo encontrado para este curso."
+    },
+    "videoUpload": {
+      "errorType": "Arquivo precisa ser um vídeo (MP4, WebM, MOV, MKV).",
+      "errorSize": "Arquivo muito grande ({sizeMB}MB). Máximo {maxMB}MB.",
+      "errorUpload": "Falha no upload: {message}",
+      "errorUpdate": "Upload feito, mas não consegui atualizar a aula: {message}",
+      "errorRemove": "Erro ao remover: {message}",
+      "errorUnknown": "Erro desconhecido",
+      "successUpload": "Vídeo enviado com sucesso!",
+      "successRemove": "Vídeo removido.",
+      "uploading": "Enviando {progress}%",
+      "replace": "Trocar vídeo",
+      "upload": "Subir vídeo",
+      "published": "Vídeo publicado",
+      "removeTooltip": "Remover vídeo",
+      "removeConfirm": "Remover o vídeo da aula \"{title}\"?"
+    },
+    "plans": {
+      "title": "Planos",
+      "table": {
+        "name": "Nome",
+        "slug": "Slug",
+        "price": "Preço",
+        "status": "Status",
+        "features": "Features"
+      },
+      "featuresCount": "{count} feature(s)",
+      "empty": "Nenhum plano encontrado."
+    },
+    "forum": {
+      "title": "Fórum",
+      "table": {
+        "title": "Título",
+        "author": "Autor",
+        "category": "Categoria",
+        "date": "Data",
+        "status": "Status"
+      },
+      "pinned": "Fixado",
+      "locked": "Trancado",
+      "empty": "Nenhum post encontrado."
+    },
+    "settings": {
+      "title": "Configurações",
+      "platformInfo": "Informações da Plataforma",
+      "totalPlans": "Total de Planos",
+      "totalCourses": "Total de Cursos",
+      "sections": {
+        "general": {
+          "title": "Geral",
+          "description": "Configurações gerais da plataforma, como nome, logo e informações de contato."
+        },
+        "security": {
+          "title": "Segurança",
+          "description": "Gerenciamento de permissões, políticas de senha e autenticação."
+        },
+        "notifications": {
+          "title": "Notificações",
+          "description": "Configurações de e-mail, notificações push e alertas do sistema."
+        },
+        "appearance": {
+          "title": "Aparência",
+          "description": "Personalização de cores, fontes e tema da plataforma."
+        }
+      }
+    }
+  },
+  "subscribe": {
+    "openingCheckout": "Abrindo checkout...",
+    "buyNow": "Comprar Agora",
+    "errorCheckout": "Não foi possível abrir o checkout do {planName}"
+  },
+  "notFound": {
+    "code": "404",
+    "title": "Página não encontrada",
+    "subtitle": "A página que você está procurando não existe.",
+    "back": "Voltar ao início"
+  }
+}

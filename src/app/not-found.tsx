@@ -1,6 +1,8 @@
-export const dynamic = 'force-dynamic';
+"use client";
 
 import Link from "next/link";
+
+export const dynamic = "force-dynamic";
 
 export default function NotFound() {
   return (

@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 import {
   LayoutDashboard,
   Users,
@@ -15,26 +16,27 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import type { Profile } from "@/types";
-
-const adminLinks = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/alunos", label: "Alunos", icon: Users },
-  { href: "/admin/cursos", label: "Cursos", icon: BookOpen },
-  { href: "/admin/planos", label: "Planos", icon: CreditCard },
-  { href: "/admin/forum", label: "Fórum", icon: MessageSquare },
-  { href: "/admin/configuracoes", label: "Configurações", icon: Settings },
-];
 
 interface AdminSidebarProps {
   profile: Profile;
 }
 
 export function AdminSidebar({ profile }: AdminSidebarProps) {
+  const t = useTranslations("admin.sidebar");
+  const tCommon = useTranslations("common");
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const adminLinks = [
+    { href: "/admin" as const, label: t("dashboard"), icon: LayoutDashboard },
+    { href: "/admin/alunos" as const, label: t("students"), icon: Users },
+    { href: "/admin/cursos" as const, label: t("courses"), icon: BookOpen },
+    { href: "/admin/planos" as const, label: t("plans"), icon: CreditCard },
+    { href: "/admin/forum" as const, label: t("forum"), icon: MessageSquare },
+    { href: "/admin/configuracoes" as const, label: t("settings"), icon: Settings },
+  ];
 
   const isActive = (href: string) => {
     if (href === "/admin") return pathname === "/admin";
@@ -50,13 +52,13 @@ export function AdminSidebar({ profile }: AdminSidebarProps) {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-white font-medium text-sm truncate">
-              {profile.full_name || "Admin"}
+              {profile.full_name || t("title")}
             </p>
             <Badge
               variant="outline"
               className="text-gold border-gold/30 text-xs mt-0.5"
             >
-              Admin
+              {t("title")}
             </Badge>
           </div>
         </div>
@@ -91,22 +93,21 @@ export function AdminSidebar({ profile }: AdminSidebarProps) {
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-text hover:text-white hover:bg-white/5 transition-colors"
         >
           <ArrowLeft className="w-4 h-4 flex-shrink-0" />
-          Voltar ao Site
+          {t("backToSite")}
         </Link>
-        <Link
+        <a
           href="/auth/logout"
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-text hover:text-white hover:bg-white/5 transition-colors"
         >
           <LogOut className="w-4 h-4 flex-shrink-0" />
-          Sair
-        </Link>
+          {tCommon("logout")}
+        </a>
       </div>
     </>
   );
 
   return (
     <>
-      {/* Mobile toggle */}
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
         className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-dark-lighter border border-white/5 text-white"
@@ -114,7 +115,6 @@ export function AdminSidebar({ profile }: AdminSidebarProps) {
         {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
       </button>
 
-      {/* Mobile overlay */}
       {mobileOpen && (
         <div
           className="lg:hidden fixed inset-0 bg-black/50 z-40"
@@ -122,7 +122,6 @@ export function AdminSidebar({ profile }: AdminSidebarProps) {
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-dark-lighter border-r border-white/5 flex flex-col transition-transform lg:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"

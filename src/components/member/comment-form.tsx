@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,8 @@ interface CommentFormProps {
 }
 
 export function CommentForm({ postId }: CommentFormProps) {
+  const t = useTranslations("member.community.comment");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
@@ -33,7 +36,7 @@ export function CommentForm({ postId }: CommentFormProps) {
       } = await supabase.auth.getUser();
 
       if (!user) {
-        setError("Você precisa estar logado para comentar.");
+        setError(t("errorAuth"));
         return;
       }
 
@@ -46,14 +49,14 @@ export function CommentForm({ postId }: CommentFormProps) {
         });
 
       if (insertError) {
-        setError("Erro ao enviar comentário. Tente novamente.");
+        setError(t("errorSend"));
         return;
       }
 
       setContent("");
       router.refresh();
     } catch {
-      setError("Erro inesperado. Tente novamente.");
+      setError(tCommon("errorGeneric"));
     } finally {
       setLoading(false);
     }
@@ -62,7 +65,7 @@ export function CommentForm({ postId }: CommentFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
       <Textarea
-        placeholder="Escreva seu comentário..."
+        placeholder={t("placeholder")}
         value={content}
         onChange={(e) => setContent(e.target.value)}
         rows={3}
@@ -75,7 +78,7 @@ export function CommentForm({ postId }: CommentFormProps) {
         className="bg-gold text-black hover:bg-gold/90 disabled:opacity-50"
       >
         <Send className="h-4 w-4 mr-2" />
-        {loading ? "Enviando..." : "Comentar"}
+        {loading ? t("sending") : t("submit")}
       </Button>
     </form>
   );

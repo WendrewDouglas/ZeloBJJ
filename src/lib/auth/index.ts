@@ -1,6 +1,19 @@
+import { getLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
+import { redirect } from "@/i18n/navigation";
+import { routing, type Locale } from "@/i18n/routing";
 import type { Profile } from "@/types";
+
+async function currentLocale(): Promise<Locale> {
+  try {
+    const l = await getLocale();
+    return (routing.locales as readonly string[]).includes(l)
+      ? (l as Locale)
+      : routing.defaultLocale;
+  } catch {
+    return routing.defaultLocale;
+  }
+}
 
 export async function getSession() {
   const supabase = await createClient();
@@ -29,13 +42,24 @@ export async function getProfile(): Promise<Profile | null> {
 
 export async function requireAuth() {
   const user = await getSession();
-  if (!user) redirect("/login");
+  if (!user) {
+    const locale = await currentLocale();
+    redirect({ href: "/login", locale });
+    throw new Error("unreachable"); // satisfies TS since redirect is not typed as never
+  }
   return user;
 }
 
-export async function requireAdmin() {
+export async function requireAdmin(): Promise<Profile> {
   const profile = await getProfile();
-  if (!profile) redirect("/login");
-  if (profile.role !== "admin") redirect("/dashboard");
+  const locale = await currentLocale();
+  if (!profile) {
+    redirect({ href: "/login", locale });
+    throw new Error("unreachable");
+  }
+  if (profile.role !== "admin") {
+    redirect({ href: "/dashboard", locale });
+    throw new Error("unreachable");
+  }
   return profile;
 }

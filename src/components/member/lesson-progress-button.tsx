@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Circle, Loader2 } from "lucide-react";
@@ -14,6 +15,7 @@ export function LessonProgressButton({
   lessonId,
   completed: initialCompleted,
 }: LessonProgressButtonProps) {
+  const t = useTranslations("member.lesson");
   const [completed, setCompleted] = useState(initialCompleted);
   const [loading, setLoading] = useState(false);
 
@@ -62,7 +64,7 @@ export function LessonProgressButton({
       ) : (
         <Circle className="mr-2 h-4 w-4" />
       )}
-      {completed ? "Aula concluída" : "Marcar como concluída"}
+      {completed ? t("completed") : t("markCompleted")}
     </Button>
   );
 }

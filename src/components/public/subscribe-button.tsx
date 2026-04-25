@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { ArrowRight, Loader2 } from "lucide-react";
 
 type Props = {
@@ -12,6 +13,8 @@ type Props = {
 };
 
 export function SubscribeButton({ planSlug, planName, featured, size = "md", label }: Props) {
+  const t = useTranslations("subscribe");
+  const tCommon = useTranslations("common");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,7 +36,7 @@ export function SubscribeButton({ planSlug, planName, featured, size = "md", lab
 
       const data = await res.json();
       if (!res.ok || !data.url) {
-        setError(data.error ?? `Nao foi possivel abrir o checkout do ${planName}`);
+        setError(data.error ?? t("errorCheckout", { planName }));
         setLoading(false);
         return;
       }
@@ -41,7 +44,7 @@ export function SubscribeButton({ planSlug, planName, featured, size = "md", lab
       window.location.href = data.url;
     } catch (err) {
       console.error(err);
-      setError("Erro de rede. Tente novamente.");
+      setError(tCommon("errorNetwork"));
       setLoading(false);
     }
   }
@@ -66,11 +69,11 @@ export function SubscribeButton({ planSlug, planName, featured, size = "md", lab
         {loading ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            Abrindo checkout...
+            {t("openingCheckout")}
           </>
         ) : (
           <>
-            {label ?? "Comprar Agora"}
+            {label ?? t("buyNow")}
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </>
         )}
