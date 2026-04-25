@@ -1,12 +1,22 @@
 export const dynamic = 'force-dynamic';
 
+import { getLocale, getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { requireAuth } from "@/lib/auth";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { MessageSquare, Clock, User, FolderOpen } from "lucide-react";
 
+const localeMap: Record<string, string> = {
+  pt: "pt-BR",
+  en: "en-US",
+  ko: "ko-KR",
+};
+
 export default async function ComunidadePage() {
-  const session = await requireAuth();
+  await requireAuth();
+  const locale = await getLocale();
+  const t = await getTranslations("member.community");
+  const tCommon = await getTranslations("common");
   const supabase = await createClient();
 
   const { data: categories } = await supabase
@@ -22,21 +32,22 @@ export default async function ComunidadePage() {
     .order("created_at", { ascending: false })
     .limit(20);
 
+  const dateLocale = localeMap[locale] || "pt-BR";
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-10">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-white">Comunidade</h1>
+        <h1 className="text-3xl font-bold text-white">{t("title")}</h1>
         <Link
           href="/comunidade/novo"
           className="inline-flex items-center gap-2 rounded-md bg-gold px-4 py-2 text-sm font-semibold text-black hover:bg-gold/90 transition-colors"
         >
-          Novo Post
+          {t("newPost")}
         </Link>
       </div>
 
-      {/* Categories */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold text-white">Categorias</h2>
+        <h2 className="text-xl font-semibold text-white">{t("categories")}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {categories?.map((category) => (
             <Link
@@ -49,21 +60,18 @@ export default async function ComunidadePage() {
                 <h3 className="font-semibold text-white">{category.name}</h3>
               </div>
               <p className="text-sm text-gray-text">
-                {category.forum_posts?.[0]?.count ?? 0} posts
+                {t("postsCount", { count: category.forum_posts?.[0]?.count ?? 0 })}
               </p>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* Recent Posts */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold text-white">Posts Recentes</h2>
+        <h2 className="text-xl font-semibold text-white">{t("recentPosts")}</h2>
         <div className="space-y-2">
           {recentPosts?.length === 0 && (
-            <p className="text-gray-text">
-              Nenhum post ainda. Seja o primeiro a publicar!
-            </p>
+            <p className="text-gray-text">{t("empty")}</p>
           )}
           {recentPosts?.map((post) => (
             <Link
@@ -75,7 +83,7 @@ export default async function ComunidadePage() {
               <div className="flex flex-wrap items-center gap-4 text-sm text-gray-text">
                 <span className="flex items-center gap-1">
                   <User className="h-4 w-4" />
-                  {post.author?.full_name ?? "Anônimo"}
+                  {post.author?.full_name ?? tCommon("anonymous")}
                 </span>
                 <span className="flex items-center gap-1">
                   <FolderOpen className="h-4 w-4" />
@@ -83,11 +91,11 @@ export default async function ComunidadePage() {
                 </span>
                 <span className="flex items-center gap-1">
                   <Clock className="h-4 w-4" />
-                  {new Date(post.created_at).toLocaleDateString("pt-BR")}
+                  {new Date(post.created_at).toLocaleDateString(dateLocale)}
                 </span>
                 <span className="flex items-center gap-1">
                   <MessageSquare className="h-4 w-4" />
-                  {post.forum_comments?.[0]?.count ?? 0} comentários
+                  {t("commentsCount", { count: post.forum_comments?.[0]?.count ?? 0 })}
                 </span>
               </div>
             </Link>

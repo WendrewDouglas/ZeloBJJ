@@ -1,13 +1,15 @@
 export const dynamic = 'force-dynamic';
 
+import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { requireAuth } from "@/lib/auth";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ArrowLeft } from "lucide-react";
 import { NewPostForm } from "@/components/member/new-post-form";
 
 export default async function NovoPostPage() {
-  const session = await requireAuth();
+  await requireAuth();
+  const t = await getTranslations("member.community");
   const supabase = await createClient();
 
   const { data: categories } = await supabase
@@ -22,10 +24,10 @@ export default async function NovoPostPage() {
         className="inline-flex items-center gap-2 text-sm text-gray-text hover:text-gold transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
-        Voltar para Comunidade
+        {t("back")}
       </Link>
 
-      <h1 className="text-2xl font-bold text-white">Novo Post</h1>
+      <h1 className="text-2xl font-bold text-white">{t("newPost")}</h1>
 
       <div className="rounded-lg border border-white/5 bg-dark-lighter p-6">
         <NewPostForm categories={categories ?? []} />

@@ -1,9 +1,10 @@
 export const dynamic = 'force-dynamic';
 
+import { getLocale, getTranslations } from "next-intl/server";
 import { requireAuth } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
-import Link from "next/link";
+import { Link, redirect } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 import { PlayCircle, CheckCircle, ChevronRight } from "lucide-react";
 
 interface Props {
@@ -12,10 +13,11 @@ interface Props {
 
 export default async function CoursePage({ params }: Props) {
   const { courseId } = await params;
+  const locale = (await getLocale()) as Locale;
+  const t = await getTranslations("member.course");
   const user = await requireAuth();
   const supabase = await createClient();
 
-  // Verify enrollment
   const { data: enrollment } = await supabase
     .from("enrollments")
     .select("*")
@@ -25,10 +27,9 @@ export default async function CoursePage({ params }: Props) {
     .single();
 
   if (!enrollment) {
-    redirect("/cursos");
+    redirect({ href: "/cursos", locale });
   }
 
-  // Get course with modules and lessons
   const { data: course } = await supabase
     .from("courses")
     .select("*")
@@ -42,7 +43,6 @@ export default async function CoursePage({ params }: Props) {
     .eq("is_published", true)
     .order("sort_order");
 
-  // Get lessons for each module
   const moduleIds = modules?.map((m) => m.id) || [];
   const { data: lessons } = await supabase
     .from("lessons")
@@ -51,7 +51,6 @@ export default async function CoursePage({ params }: Props) {
     .eq("is_published", true)
     .order("sort_order");
 
-  // Get user progress
   const lessonIds = lessons?.map((l) => l.id) || [];
   const { data: progress } = await supabase
     .from("lesson_progress")
@@ -63,7 +62,6 @@ export default async function CoursePage({ params }: Props) {
     progress?.filter((p) => p.completed).map((p) => p.lesson_id) || []
   );
 
-  // Group lessons by module
   const lessonsByModule = new Map<string, typeof lessons>();
   lessons?.forEach((lesson) => {
     const current = lessonsByModule.get(lesson.module_id) || [];
@@ -79,15 +77,13 @@ export default async function CoursePage({ params }: Props) {
 
   return (
     <div>
-      {/* Header */}
       <div className="mb-8">
         <Link href="/cursos" className="mb-4 inline-block text-sm text-gray-text hover:text-gold">
-          ← Voltar aos cursos
+          {t("back")}
         </Link>
         <h1 className="mb-2 text-2xl font-bold text-white">{course?.title}</h1>
         <p className="mb-4 text-gray-text">{course?.description}</p>
 
-        {/* Progress bar */}
         <div className="flex items-center gap-4">
           <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/10">
             <div
@@ -96,12 +92,15 @@ export default async function CoursePage({ params }: Props) {
             />
           </div>
           <span className="text-sm text-gray-text">
-            {completedLessons}/{totalLessons} aulas ({progressPercent}%)
+            {t("progressLabel", {
+              completed: completedLessons,
+              total: totalLessons,
+              percent: progressPercent,
+            })}
           </span>
         </div>
       </div>
 
-      {/* Modules */}
       <div className="space-y-6">
         {modules?.map((mod, index) => {
           const modLessons = lessonsByModule.get(mod.id) || [];
@@ -114,7 +113,6 @@ export default async function CoursePage({ params }: Props) {
               key={mod.id}
               className="rounded-xl border border-white/5 bg-dark-lighter overflow-hidden"
             >
-              {/* Module header */}
               <div className="flex items-center justify-between border-b border-white/5 px-6 py-4">
                 <div className="flex items-center gap-3">
                   <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold/10 text-sm font-bold text-gold">
@@ -132,7 +130,6 @@ export default async function CoursePage({ params }: Props) {
                 </span>
               </div>
 
-              {/* Lessons list */}
               <div className="divide-y divide-white/5">
                 {modLessons.map((lesson) => {
                   const isCompleted = completedSet.has(lesson.id);
@@ -151,7 +148,7 @@ export default async function CoursePage({ params }: Props) {
                         <p className="text-sm text-white">{lesson.title}</p>
                         {lesson.duration_seconds && (
                           <p className="text-xs text-gray-text">
-                            {Math.floor(lesson.duration_seconds / 60)} min
+                            {t("minutes", { min: Math.floor(lesson.duration_seconds / 60) })}
                           </p>
                         )}
                       </div>

@@ -1,22 +1,22 @@
 export const dynamic = 'force-dynamic';
 
+import { getTranslations } from "next-intl/server";
 import { requireAuth } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { BookOpen, Trophy, Clock, TrendingUp } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 export default async function DashboardPage() {
+  const t = await getTranslations("member.dashboard");
   const user = await requireAuth();
   const supabase = await createClient();
 
-  // Get profile
   const { data: profile } = await supabase
     .from("profiles")
     .select("*")
     .eq("id", user.id)
     .single();
 
-  // Get active subscription
   const { data: subscription } = await supabase
     .from("subscriptions")
     .select("*, plan:plans(*)")
@@ -24,21 +24,18 @@ export default async function DashboardPage() {
     .eq("status", "active")
     .single();
 
-  // Get enrollments count
   const { count: enrollmentCount } = await supabase
     .from("enrollments")
     .select("*", { count: "exact", head: true })
     .eq("user_id", user.id)
     .eq("is_active", true);
 
-  // Get completed lessons count
   const { count: completedLessons } = await supabase
     .from("lesson_progress")
     .select("*", { count: "exact", head: true })
     .eq("user_id", user.id)
     .eq("completed", true);
 
-  // Get total lessons available
   const { count: totalLessons } = await supabase
     .from("lessons")
     .select("*", { count: "exact", head: true })
@@ -50,40 +47,27 @@ export default async function DashboardPage() {
       : 0;
 
   const stats = [
+    { label: t("stats.enrolled"), value: enrollmentCount || 0, icon: BookOpen },
+    { label: t("stats.completed"), value: completedLessons || 0, icon: Trophy },
+    { label: t("stats.progress"), value: `${progressPercent}%`, icon: TrendingUp },
     {
-      label: "Cursos Matriculados",
-      value: enrollmentCount || 0,
-      icon: BookOpen,
-    },
-    {
-      label: "Aulas Concluídas",
-      value: completedLessons || 0,
-      icon: Trophy,
-    },
-    {
-      label: "Progresso Geral",
-      value: `${progressPercent}%`,
-      icon: TrendingUp,
-    },
-    {
-      label: "Plano Atual",
-      value: subscription?.plan?.name || "Nenhum",
+      label: t("stats.currentPlan"),
+      value: subscription?.plan?.name || t("stats.noPlan"),
       icon: Clock,
     },
   ];
+
+  const firstName = profile?.full_name?.split(" ")[0] || t("greetingFallback");
 
   return (
     <div>
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-white">
-          Olá, {profile?.full_name?.split(" ")[0] || "Aluno"}!
+          {t("greeting", { name: firstName })}
         </h1>
-        <p className="text-gray-text">
-          Continue sua evolução no Jiu-Jitsu
-        </p>
+        <p className="text-gray-text">{t("subtitle")}</p>
       </div>
 
-      {/* Stats */}
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => {
           const Icon = stat.icon;
@@ -102,25 +86,21 @@ export default async function DashboardPage() {
         })}
       </div>
 
-      {/* No subscription CTA */}
       {!subscription && (
         <div className="mb-8 rounded-xl border border-gold/20 bg-gold/5 p-6">
           <h3 className="mb-2 text-lg font-bold text-white">
-            Você ainda não tem um plano ativo
+            {t("noPlanTitle")}
           </h3>
-          <p className="mb-4 text-sm text-gray-text">
-            Assine um plano para ter acesso aos cursos e conteúdos exclusivos.
-          </p>
+          <p className="mb-4 text-sm text-gray-text">{t("noPlanDesc")}</p>
           <Link
             href="/#planos"
             className="inline-block rounded-full bg-gold px-6 py-2 text-sm font-semibold text-dark hover:bg-gold-light"
           >
-            Ver Planos
+            {t("viewPlans")}
           </Link>
         </div>
       )}
 
-      {/* Quick actions */}
       <div className="grid gap-4 sm:grid-cols-2">
         <Link
           href="/cursos"
@@ -128,11 +108,9 @@ export default async function DashboardPage() {
         >
           <BookOpen className="mb-3 h-8 w-8 text-gold" />
           <h3 className="mb-1 font-bold text-white group-hover:text-gold">
-            Meus Cursos
+            {t("actions.myCourses")}
           </h3>
-          <p className="text-sm text-gray-text">
-            Continue de onde parou nas suas aulas
-          </p>
+          <p className="text-sm text-gray-text">{t("actions.myCoursesDesc")}</p>
         </Link>
 
         <Link
@@ -141,11 +119,9 @@ export default async function DashboardPage() {
         >
           <Trophy className="mb-3 h-8 w-8 text-gold" />
           <h3 className="mb-1 font-bold text-white group-hover:text-gold">
-            Comunidade
+            {t("actions.community")}
           </h3>
-          <p className="text-sm text-gray-text">
-            Participe das discussões com outros alunos
-          </p>
+          <p className="text-sm text-gray-text">{t("actions.communityDesc")}</p>
         </Link>
       </div>
     </div>

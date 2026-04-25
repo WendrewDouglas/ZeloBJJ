@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { useRouter, Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 
 export default function CadastroPage() {
+  const t = useTranslations("auth.signup");
+  const tLogin = useTranslations("auth.login");
   const router = useRouter();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -24,12 +26,12 @@ export default function CadastroPage() {
     setError("");
 
     if (password !== confirmPassword) {
-      setError("As senhas não coincidem.");
+      setError(t("errorMismatch"));
       return;
     }
 
     if (password.length < 6) {
-      setError("A senha deve ter pelo menos 6 caracteres.");
+      setError(t("errorTooShort"));
       return;
     }
 
@@ -55,18 +57,22 @@ export default function CadastroPage() {
 
     setSuccess(true);
     setLoading(false);
+    // Note: router used for type compatibility; success state takes over UI
+    void router;
   }
 
   if (success) {
     return (
       <div className="text-center">
-        <h2 className="mb-4 text-2xl font-bold text-white">Verifique seu e-mail</h2>
+        <h2 className="mb-4 text-2xl font-bold text-white">{t("successTitle")}</h2>
         <p className="mb-6 text-gray-text">
-          Enviamos um link de confirmação para <strong className="text-white">{email}</strong>.
-          Clique no link para ativar sua conta.
+          {t.rich("successMessage", {
+            email,
+            strong: (chunks) => <strong className="text-white">{chunks}</strong>,
+          })}
         </p>
         <Link href="/login">
-          <Button variant="outline">Voltar para o login</Button>
+          <Button variant="outline">{t("backToLogin")}</Button>
         </Link>
       </div>
     );
@@ -74,18 +80,16 @@ export default function CadastroPage() {
 
   return (
     <div>
-      <h2 className="mb-2 text-2xl font-bold text-white">Criar conta</h2>
-      <p className="mb-8 text-sm text-gray-text">
-        Comece sua jornada no Jiu-Jitsu
-      </p>
+      <h2 className="mb-2 text-2xl font-bold text-white">{t("title")}</h2>
+      <p className="mb-8 text-sm text-gray-text">{t("subtitle")}</p>
 
       <form onSubmit={handleSignUp} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="fullName">Nome completo</Label>
+          <Label htmlFor="fullName">{t("fullName")}</Label>
           <Input
             id="fullName"
             type="text"
-            placeholder="Seu nome"
+            placeholder={t("fullNamePlaceholder")}
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             required
@@ -93,11 +97,11 @@ export default function CadastroPage() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email">E-mail</Label>
+          <Label htmlFor="email">{tLogin("email")}</Label>
           <Input
             id="email"
             type="email"
-            placeholder="seu@email.com"
+            placeholder={tLogin("emailPlaceholder")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -105,11 +109,11 @@ export default function CadastroPage() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password">Senha</Label>
+          <Label htmlFor="password">{tLogin("password")}</Label>
           <Input
             id="password"
             type="password"
-            placeholder="Mínimo 6 caracteres"
+            placeholder={t("passwordPlaceholder")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -117,11 +121,11 @@ export default function CadastroPage() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="confirmPassword">Confirmar senha</Label>
+          <Label htmlFor="confirmPassword">{t("confirmPassword")}</Label>
           <Input
             id="confirmPassword"
             type="password"
-            placeholder="Repita a senha"
+            placeholder={t("confirmPasswordPlaceholder")}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
@@ -134,14 +138,14 @@ export default function CadastroPage() {
 
         <Button type="submit" className="w-full bg-gold text-dark hover:bg-gold-light" disabled={loading}>
           {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-          Criar conta
+          {t("submit")}
         </Button>
       </form>
 
       <p className="mt-6 text-center text-sm text-gray-text">
-        Já tem uma conta?{" "}
+        {t("haveAccount")}{" "}
         <Link href="/login" className="text-gold hover:underline">
-          Entrar
+          {t("loginLink")}
         </Link>
       </p>
     </div>

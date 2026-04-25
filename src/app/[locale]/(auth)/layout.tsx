@@ -1,13 +1,16 @@
 export const dynamic = 'force-dynamic';
 
 import Image from "next/image";
-import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 
-export default function AuthLayout({
+export default async function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const t = await getTranslations("auth.branding");
+
   return (
     <div className="flex min-h-screen">
       {/* Left side - Branding */}
@@ -18,9 +21,7 @@ export default function AuthLayout({
         <h1 className="mb-2 text-3xl font-bold text-white">
           ZELO <span className="text-gold">BJJ</span>
         </h1>
-        <p className="max-w-xs text-center text-gray-text">
-          Domine o Jiu-Jitsu Brasileiro com quem entende de verdade
-        </p>
+        <p className="max-w-xs text-center text-gray-text">{t("tagline")}</p>
       </div>
 
       {/* Right side - Form */}

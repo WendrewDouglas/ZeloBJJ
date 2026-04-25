@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter, Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,7 @@ import { ArrowLeft, CheckCircle2, Loader2 } from "lucide-react";
 type Stage = "checking" | "ready" | "invalid" | "saving" | "done";
 
 export default function RedefinirSenhaPage() {
+  const t = useTranslations("auth.reset");
   const router = useRouter();
   const [stage, setStage] = useState<Stage>("checking");
   const [password, setPassword] = useState("");
@@ -25,21 +26,18 @@ export default function RedefinirSenhaPage() {
       const url = new URL(window.location.href);
       const code = url.searchParams.get("code");
 
-      // Caso 1: veio direto do email com ?code=... (PKCE)
       if (code) {
         const { error } = await supabase.auth.exchangeCodeForSession(code);
         if (error) {
           setStage("invalid");
           return;
         }
-        // Limpa o code da URL
         url.searchParams.delete("code");
         window.history.replaceState({}, "", url.toString());
         setStage("ready");
         return;
       }
 
-      // Caso 2: callback ja trocou o code e redirecionou aqui — checa sessao
       const { data } = await supabase.auth.getSession();
       if (data.session) {
         setStage("ready");
@@ -57,11 +55,11 @@ export default function RedefinirSenhaPage() {
     setError("");
 
     if (password.length < 8) {
-      setError("A senha precisa ter ao menos 8 caracteres.");
+      setError(t("errorTooShort"));
       return;
     }
     if (password !== confirm) {
-      setError("As senhas nao conferem.");
+      setError(t("errorMismatch"));
       return;
     }
 
@@ -91,20 +89,17 @@ export default function RedefinirSenhaPage() {
   if (stage === "invalid") {
     return (
       <div className="text-center">
-        <h2 className="mb-3 text-2xl font-bold text-white">Link expirado ou invalido</h2>
-        <p className="mb-6 text-sm text-gray-text">
-          Este link de redefinicao de senha nao e mais valido. Peca um novo
-          clicando no botao abaixo.
-        </p>
+        <h2 className="mb-3 text-2xl font-bold text-white">{t("invalidTitle")}</h2>
+        <p className="mb-6 text-sm text-gray-text">{t("invalidMessage")}</p>
         <Link href="/recuperar-senha">
           <Button className="bg-gold text-dark hover:bg-gold-light">
-            Solicitar novo link
+            {t("requestNew")}
           </Button>
         </Link>
         <p className="mt-4 text-xs text-gray-text">
           <Link href="/login" className="text-gold hover:underline">
             <ArrowLeft className="mr-1 inline h-3 w-3" />
-            Voltar para o login
+            {t("backToLogin")}
           </Link>
         </p>
       </div>
@@ -115,22 +110,20 @@ export default function RedefinirSenhaPage() {
     return (
       <div className="text-center">
         <CheckCircle2 className="mx-auto mb-4 h-12 w-12 text-gold" />
-        <h2 className="mb-2 text-2xl font-bold text-white">Senha atualizada</h2>
-        <p className="text-sm text-gray-text">Redirecionando para o seu dashboard...</p>
+        <h2 className="mb-2 text-2xl font-bold text-white">{t("doneTitle")}</h2>
+        <p className="text-sm text-gray-text">{t("doneMessage")}</p>
       </div>
     );
   }
 
   return (
     <div>
-      <h2 className="mb-2 text-2xl font-bold text-white">Definir nova senha</h2>
-      <p className="mb-8 text-sm text-gray-text">
-        Crie uma senha forte para sua conta. Minimo de 8 caracteres.
-      </p>
+      <h2 className="mb-2 text-2xl font-bold text-white">{t("title")}</h2>
+      <p className="mb-8 text-sm text-gray-text">{t("subtitle")}</p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="password">Nova senha</Label>
+          <Label htmlFor="password">{t("newPassword")}</Label>
           <Input
             id="password"
             type="password"
@@ -144,7 +137,7 @@ export default function RedefinirSenhaPage() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="confirm">Confirmar senha</Label>
+          <Label htmlFor="confirm">{t("confirmPassword")}</Label>
           <Input
             id="confirm"
             type="password"
@@ -164,7 +157,7 @@ export default function RedefinirSenhaPage() {
           disabled={stage === "saving"}
         >
           {stage === "saving" && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Salvar nova senha
+          {t("submit")}
         </Button>
       </form>
     </div>

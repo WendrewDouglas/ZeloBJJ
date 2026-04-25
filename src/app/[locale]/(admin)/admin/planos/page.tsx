@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic';
 
+import { getTranslations } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/card";
@@ -8,6 +9,8 @@ import { CreditCard } from "lucide-react";
 
 export default async function PlanosAdminPage() {
   await requireAdmin();
+  const t = await getTranslations("admin.plans");
+  const tCommon = await getTranslations("common");
   const supabase = await createClient();
 
   const { data: plans } = await supabase
@@ -19,7 +22,7 @@ export default async function PlanosAdminPage() {
     <div>
       <div className="flex items-center gap-3 mb-8">
         <CreditCard className="w-6 h-6 text-gold" />
-        <h1 className="text-2xl font-bold text-white">Planos</h1>
+        <h1 className="text-2xl font-bold text-white">{t("title")}</h1>
       </div>
 
       <Card className="bg-dark-lighter border-white/5 overflow-hidden">
@@ -28,28 +31,26 @@ export default async function PlanosAdminPage() {
             <thead>
               <tr className="border-b border-white/5">
                 <th className="text-left text-xs font-medium text-gray-text uppercase tracking-wider px-6 py-4">
-                  Nome
+                  {t("table.name")}
                 </th>
                 <th className="text-left text-xs font-medium text-gray-text uppercase tracking-wider px-6 py-4">
-                  Slug
+                  {t("table.slug")}
                 </th>
                 <th className="text-left text-xs font-medium text-gray-text uppercase tracking-wider px-6 py-4">
-                  Preço
+                  {t("table.price")}
                 </th>
                 <th className="text-left text-xs font-medium text-gray-text uppercase tracking-wider px-6 py-4">
-                  Status
+                  {t("table.status")}
                 </th>
                 <th className="text-left text-xs font-medium text-gray-text uppercase tracking-wider px-6 py-4">
-                  Features
+                  {t("table.features")}
                 </th>
               </tr>
             </thead>
             <tbody>
               {plans && plans.length > 0 ? (
                 plans.map((plan) => {
-                  const features = Array.isArray(plan.features)
-                    ? plan.features
-                    : [];
+                  const features = Array.isArray(plan.features) ? plan.features : [];
                   const isActive = plan.active !== false;
 
                   return (
@@ -75,19 +76,19 @@ export default async function PlanosAdminPage() {
                       <td className="px-6 py-4">
                         {isActive ? (
                           <Badge className="bg-green-500/10 text-green-400 border-green-500/20">
-                            Ativo
+                            {tCommon("active")}
                           </Badge>
                         ) : (
                           <Badge
                             variant="secondary"
                             className="bg-red-500/10 text-red-400 border-red-500/20"
                           >
-                            Inativo
+                            {tCommon("inactive")}
                           </Badge>
                         )}
                       </td>
                       <td className="px-6 py-4 text-gray-text text-sm">
-                        {features.length} feature(s)
+                        {t("featuresCount", { count: features.length })}
                       </td>
                     </tr>
                   );
@@ -98,7 +99,7 @@ export default async function PlanosAdminPage() {
                     colSpan={5}
                     className="px-6 py-8 text-center text-gray-text text-sm"
                   >
-                    Nenhum plano encontrado.
+                    {t("empty")}
                   </td>
                 </tr>
               )}

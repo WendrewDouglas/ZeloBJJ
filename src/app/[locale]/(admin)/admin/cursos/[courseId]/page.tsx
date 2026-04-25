@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, Save, ArrowLeft, ChevronDown, ChevronRight, PlayCircle } from "lucide-react";
-import Link from "next/link";
 import { LessonVideoUpload } from "@/components/admin/lesson-video-upload";
 
 interface Course {
@@ -43,6 +44,8 @@ export default function CourseEditPage({
   params: Promise<{ courseId: string }>;
 }) {
   const { courseId } = use(params);
+  const t = useTranslations("admin.courseEdit");
+  const tCommon = useTranslations("common");
   const supabase = createClient();
 
   const [course, setCourse] = useState<Course | null>(null);
@@ -50,7 +53,7 @@ export default function CourseEditPage({
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [saveMessage, setSaveMessage] = useState("");
+  const [saveMessage, setSaveMessage] = useState<{ type: "ok" | "error"; text: string } | null>(null);
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -88,7 +91,7 @@ export default function CourseEditPage({
     }
 
     loadData();
-  }, [courseId]);
+  }, [courseId, supabase]);
 
   const toggleModule = (moduleId: string) => {
     setExpandedModules((prev) => {
@@ -102,7 +105,7 @@ export default function CourseEditPage({
   const handleSave = async () => {
     if (!course) return;
     setSaving(true);
-    setSaveMessage("");
+    setSaveMessage(null);
 
     const { error } = await supabase
       .from("courses")
@@ -114,10 +117,10 @@ export default function CourseEditPage({
       .eq("id", course.id);
 
     if (error) {
-      setSaveMessage("Erro ao salvar: " + error.message);
+      setSaveMessage({ type: "error", text: t("errorSave", { message: error.message }) });
     } else {
-      setSaveMessage("Curso salvo com sucesso!");
-      setTimeout(() => setSaveMessage(""), 3000);
+      setSaveMessage({ type: "ok", text: t("successSave") });
+      setTimeout(() => setSaveMessage(null), 3000);
     }
     setSaving(false);
   };
@@ -142,9 +145,9 @@ export default function CourseEditPage({
   if (!course) {
     return (
       <div className="text-center py-20">
-        <p className="text-gray-text">Curso não encontrado.</p>
+        <p className="text-gray-text">{t("notFound")}</p>
         <Link href="/admin/cursos" className="text-gold hover:text-gold-light text-sm mt-2 inline-block">
-          Voltar aos cursos
+          {t("backToCourses")}
         </Link>
       </div>
     );
@@ -161,15 +164,14 @@ export default function CourseEditPage({
         </Link>
         <div className="flex items-center gap-3">
           <BookOpen className="w-6 h-6 text-gold" />
-          <h1 className="text-2xl font-bold text-white">Editar Curso</h1>
+          <h1 className="text-2xl font-bold text-white">{t("title")}</h1>
         </div>
       </div>
 
-      {/* Course Details */}
       <Card className="bg-dark-lighter border-white/5 p-6 mb-6">
         <div className="space-y-4">
           <div>
-            <Label htmlFor="title" className="text-gray-text text-sm">Título do Curso</Label>
+            <Label htmlFor="title" className="text-gray-text text-sm">{t("courseTitle")}</Label>
             <Input
               id="title"
               value={course.title}
@@ -179,7 +181,7 @@ export default function CourseEditPage({
           </div>
 
           <div>
-            <Label htmlFor="description" className="text-gray-text text-sm">Descrição</Label>
+            <Label htmlFor="description" className="text-gray-text text-sm">{t("description")}</Label>
             <textarea
               id="description"
               value={course.description || ""}
@@ -190,46 +192,45 @@ export default function CourseEditPage({
           </div>
 
           <div className="flex items-center gap-3">
-            <Label className="text-gray-text text-sm">Status:</Label>
+            <Label className="text-gray-text text-sm">{t("status")}</Label>
             <button onClick={() => setCourse({ ...course, is_published: !course.is_published })} className="flex items-center gap-2">
               {course.is_published ? (
-                <Badge className="bg-green-500/10 text-green-400 border-green-500/20 cursor-pointer">Publicado</Badge>
+                <Badge className="bg-green-500/10 text-green-400 border-green-500/20 cursor-pointer">{tCommon("publish")}</Badge>
               ) : (
                 <Badge variant="secondary" className="bg-yellow-500/10 text-yellow-400 border-yellow-500/20 cursor-pointer">
-                  Rascunho
+                  {tCommon("draft")}
                 </Badge>
               )}
             </button>
-            <span className="text-gray-text text-xs">(clique para alternar)</span>
+            <span className="text-gray-text text-xs">{t("toggleHint")}</span>
           </div>
 
           <div className="flex items-center gap-3 pt-2">
             <Button onClick={handleSave} disabled={saving} className="bg-gold hover:bg-gold-light text-black font-medium">
               <Save className="w-4 h-4 mr-2" />
-              {saving ? "Salvando..." : "Salvar Alterações"}
+              {saving ? tCommon("saving") : t("saveChanges")}
             </Button>
             {saveMessage && (
-              <span className={`text-sm ${saveMessage.includes("Erro") ? "text-red-400" : "text-green-400"}`}>
-                {saveMessage}
+              <span className={`text-sm ${saveMessage.type === "error" ? "text-red-400" : "text-green-400"}`}>
+                {saveMessage.text}
               </span>
             )}
           </div>
         </div>
       </Card>
 
-      {/* Modules & Lessons */}
       <Card className="bg-dark-lighter border-white/5 p-6">
         <div className="mb-4 flex items-center justify-between gap-4">
-          <h2 className="text-lg font-semibold text-white">Módulos e Aulas</h2>
+          <h2 className="text-lg font-semibold text-white">{t("modulesAndLessons")}</h2>
           <div className="flex items-center gap-3">
             <span className="text-xs text-gray-text">
-              {lessonsWithVideo}/{totalLessons} aulas com vídeo
+              {t("lessonsWithVideo", { withVideo: lessonsWithVideo, total: totalLessons })}
             </span>
             <button onClick={expandAll} className="text-xs text-gold hover:underline">
-              Expandir tudo
+              {t("expandAll")}
             </button>
             <button onClick={collapseAll} className="text-xs text-gray-text hover:text-white">
-              Recolher
+              {t("collapseAll")}
             </button>
           </div>
         </div>
@@ -258,7 +259,7 @@ export default function CourseEditPage({
                       </span>
                     </div>
                     <span className="text-gray-text text-xs">
-                      {moduleWithVideo}/{moduleLessons.length} com vídeo
+                      {t("moduleWithVideo", { withVideo: moduleWithVideo, total: moduleLessons.length })}
                     </span>
                   </button>
 
@@ -294,7 +295,7 @@ export default function CourseEditPage({
                           );
                         })
                       ) : (
-                        <p className="px-4 py-3 pl-12 text-gray-text text-sm">Nenhuma aula neste módulo.</p>
+                        <p className="px-4 py-3 pl-12 text-gray-text text-sm">{t("noLessons")}</p>
                       )}
                     </div>
                   )}
@@ -303,7 +304,7 @@ export default function CourseEditPage({
             })}
           </div>
         ) : (
-          <p className="text-gray-text text-sm">Nenhum módulo encontrado para este curso.</p>
+          <p className="text-gray-text text-sm">{t("noModules")}</p>
         )}
       </Card>
     </div>

@@ -1,13 +1,23 @@
 export const dynamic = 'force-dynamic';
 
+import { getLocale, getTranslations } from "next-intl/server";
 import { requireAdmin } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
 
+const localeMap: Record<string, string> = {
+  pt: "pt-BR",
+  en: "en-US",
+  ko: "ko-KR",
+};
+
 export default async function AlunosPage() {
   await requireAdmin();
+  const locale = await getLocale();
+  const t = await getTranslations("admin.students");
+  const tCommon = await getTranslations("common");
   const supabase = await createClient();
 
   const { data: profiles } = await supabase
@@ -16,7 +26,6 @@ export default async function AlunosPage() {
     .order("created_at", { ascending: false })
     .limit(50);
 
-  // Fetch subscriptions for all profiles
   const profileIds = profiles?.map((p) => p.id) ?? [];
   const { data: subscriptions } = await supabase
     .from("subscriptions")
@@ -27,15 +36,17 @@ export default async function AlunosPage() {
     subscriptions?.map((s) => [s.user_id, s]) ?? []
   );
 
+  const dateLocale = localeMap[locale] || "pt-BR";
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <Users className="w-6 h-6 text-gold" />
-          <h1 className="text-2xl font-bold text-white">Alunos</h1>
+          <h1 className="text-2xl font-bold text-white">{t("title")}</h1>
         </div>
         <p className="text-gray-text text-sm">
-          {profiles?.length ?? 0} aluno(s) encontrado(s)
+          {t("found", { count: profiles?.length ?? 0 })}
         </p>
       </div>
 
@@ -45,19 +56,19 @@ export default async function AlunosPage() {
             <thead>
               <tr className="border-b border-white/5">
                 <th className="text-left text-xs font-medium text-gray-text uppercase tracking-wider px-6 py-4">
-                  Nome
+                  {t("table.name")}
                 </th>
                 <th className="text-left text-xs font-medium text-gray-text uppercase tracking-wider px-6 py-4">
-                  E-mail
+                  {t("table.email")}
                 </th>
                 <th className="text-left text-xs font-medium text-gray-text uppercase tracking-wider px-6 py-4">
-                  Plano
+                  {t("table.plan")}
                 </th>
                 <th className="text-left text-xs font-medium text-gray-text uppercase tracking-wider px-6 py-4">
-                  Status
+                  {t("table.status")}
                 </th>
                 <th className="text-left text-xs font-medium text-gray-text uppercase tracking-wider px-6 py-4">
-                  Data de Cadastro
+                  {t("table.signupDate")}
                 </th>
               </tr>
             </thead>
@@ -78,13 +89,11 @@ export default async function AlunosPage() {
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center flex-shrink-0">
                             <span className="text-gold text-sm font-medium">
-                              {(profile.full_name || "?")
-                                .charAt(0)
-                                .toUpperCase()}
+                              {(profile.full_name || "?").charAt(0).toUpperCase()}
                             </span>
                           </div>
                           <span className="text-white text-sm font-medium">
-                            {profile.full_name || "Sem nome"}
+                            {profile.full_name || tCommon("noName")}
                           </span>
                         </div>
                       </td>
@@ -104,21 +113,19 @@ export default async function AlunosPage() {
                                 : "bg-red-500/10 text-red-400 border-red-500/20"
                             }
                           >
-                            {isActive ? "Ativo" : "Inativo"}
+                            {isActive ? tCommon("active") : tCommon("inactive")}
                           </Badge>
                         ) : (
                           <Badge
                             variant="secondary"
                             className="bg-white/5 text-gray-text border-white/10"
                           >
-                            Sem plano
+                            {t("noPlan")}
                           </Badge>
                         )}
                       </td>
                       <td className="px-6 py-4 text-gray-text text-sm">
-                        {new Date(profile.created_at).toLocaleDateString(
-                          "pt-BR"
-                        )}
+                        {new Date(profile.created_at).toLocaleDateString(dateLocale)}
                       </td>
                     </tr>
                   );
@@ -129,7 +136,7 @@ export default async function AlunosPage() {
                     colSpan={5}
                     className="px-6 py-8 text-center text-gray-text text-sm"
                   >
-                    Nenhum aluno encontrado.
+                    {t("empty")}
                   </td>
                 </tr>
               )}

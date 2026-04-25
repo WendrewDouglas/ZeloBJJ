@@ -1,6 +1,8 @@
 export const dynamic = 'force-dynamic';
 
-import { redirect } from "next/navigation";
+import { getLocale } from "next-intl/server";
+import { redirect } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 import { getProfile } from "@/lib/auth";
 import { Sidebar } from "@/components/shared/sidebar";
 
@@ -12,7 +14,9 @@ export default async function MemberLayout({
   const profile = await getProfile();
 
   if (!profile) {
-    redirect("/login");
+    const locale = (await getLocale()) as Locale;
+    redirect({ href: "/login", locale });
+    return null;
   }
 
   return (

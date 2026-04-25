@@ -5,6 +5,29 @@
     "en": "English",
     "ko": "Korean"
   },
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "back": "Back",
+    "edit": "Edit",
+    "delete": "Delete",
+    "remove": "Remove",
+    "publish": "Publish",
+    "draft": "Draft",
+    "active": "Active",
+    "inactive": "Inactive",
+    "yes": "Yes",
+    "no": "No",
+    "logout": "Sign out",
+    "comingSoon": "Coming soon",
+    "anonymous": "Anonymous",
+    "unknown": "Unknown",
+    "noName": "No name",
+    "errorGeneric": "Unexpected error. Please try again.",
+    "errorNetwork": "Network error. Please try again."
+  },
   "header": {
     "nav": {
       "about": "About",
@@ -183,5 +206,305 @@
   "whatsapp": {
     "ariaLabel": "WhatsApp",
     "message": "Hi! I'd like to know more about Zelo BJJ"
+  },
+  "auth": {
+    "branding": {
+      "tagline": "Master Brazilian Jiu-Jitsu with people who truly understand it"
+    },
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Access your account to keep learning",
+      "email": "Email",
+      "emailPlaceholder": "you@email.com",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••",
+      "forgot": "Forgot your password?",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account yet?",
+      "signupLink": "Sign up",
+      "errorInvalid": "Incorrect email or password."
+    },
+    "signup": {
+      "title": "Create account",
+      "subtitle": "Start your Jiu-Jitsu journey",
+      "fullName": "Full name",
+      "fullNamePlaceholder": "Your name",
+      "passwordPlaceholder": "Minimum 6 characters",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "Repeat password",
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Sign in",
+      "errorMismatch": "Passwords don't match.",
+      "errorTooShort": "Password must be at least 6 characters.",
+      "successTitle": "Check your email",
+      "successMessage": "We sent a confirmation link to <strong>{email}</strong>. Click the link to activate your account.",
+      "backToLogin": "Back to sign in"
+    },
+    "recover": {
+      "title": "Recover password",
+      "subtitle": "Enter your email to receive the recovery link",
+      "submit": "Send link",
+      "sentTitle": "Email sent",
+      "sentMessage": "If an account exists with <strong>{email}</strong>, you will receive a link to reset your password.",
+      "backToLogin": "Back to sign in"
+    },
+    "reset": {
+      "title": "Set a new password",
+      "subtitle": "Create a strong password for your account. Minimum 8 characters.",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "submit": "Save new password",
+      "errorTooShort": "Password must be at least 8 characters.",
+      "errorMismatch": "Passwords don't match.",
+      "invalidTitle": "Link expired or invalid",
+      "invalidMessage": "This password reset link is no longer valid. Request a new one by clicking the button below.",
+      "requestNew": "Request new link",
+      "doneTitle": "Password updated",
+      "doneMessage": "Redirecting to your dashboard...",
+      "backToLogin": "Back to sign in"
+    }
+  },
+  "member": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "courses": "My Courses",
+      "community": "Community",
+      "profile": "My Profile",
+      "adminPanel": "Admin Panel",
+      "user": "User"
+    },
+    "dashboard": {
+      "greetingFallback": "Student",
+      "greeting": "Hello, {name}!",
+      "subtitle": "Continue your Jiu-Jitsu evolution",
+      "stats": {
+        "enrolled": "Enrolled Courses",
+        "completed": "Completed Lessons",
+        "progress": "Overall Progress",
+        "currentPlan": "Current Plan",
+        "noPlan": "None"
+      },
+      "noPlanTitle": "You don't have an active plan yet",
+      "noPlanDesc": "Subscribe to a plan to access courses and exclusive content.",
+      "viewPlans": "View Plans",
+      "actions": {
+        "myCourses": "My Courses",
+        "myCoursesDesc": "Pick up where you left off",
+        "community": "Community",
+        "communityDesc": "Join discussions with other students"
+      }
+    },
+    "courses": {
+      "title": "My Courses",
+      "subtitle": "Browse the available courses and keep learning",
+      "empty": "No courses available",
+      "emptyDesc": "New courses will be added soon.",
+      "subscribeToAccess": "Subscribe to access"
+    },
+    "course": {
+      "back": "← Back to courses",
+      "progressLabel": "{completed}/{total} lessons ({percent}%)",
+      "minutes": "{min} min"
+    },
+    "lesson": {
+      "back": "Back to course",
+      "videoComingSoon": "Video coming soon",
+      "completed": "Lesson completed",
+      "markCompleted": "Mark as completed"
+    },
+    "community": {
+      "title": "Community",
+      "newPost": "New Post",
+      "categories": "Categories",
+      "recentPosts": "Recent Posts",
+      "empty": "No posts yet. Be the first to publish!",
+      "postsCount": "{count} posts",
+      "commentsCount": "{count} comments",
+      "commentsTitle": "Comments ({count})",
+      "noComments": "No comments yet. Be the first!",
+      "back": "Back to Community",
+      "form": {
+        "title": "Title",
+        "titlePlaceholder": "Post title",
+        "category": "Category",
+        "selectCategory": "Select a category",
+        "content": "Content",
+        "contentPlaceholder": "Write your post content...",
+        "submit": "Publish Post",
+        "publishing": "Publishing...",
+        "errorAuth": "You need to be signed in to create a post.",
+        "errorCreate": "Error creating post. Please try again."
+      },
+      "comment": {
+        "placeholder": "Write your comment...",
+        "submit": "Comment",
+        "sending": "Sending...",
+        "errorAuth": "You need to be signed in to comment.",
+        "errorSend": "Error sending comment. Please try again."
+      }
+    },
+    "profile": {
+      "title": "My Profile",
+      "personalDataTitle": "Personal Data",
+      "email": "Email",
+      "fullName": "Full name",
+      "phone": "Phone",
+      "phonePlaceholder": "(00) 00000-0000",
+      "errorSave": "Error saving.",
+      "successSave": "Profile updated!",
+      "accessTitle": "Course Access",
+      "accessActiveTitle": "Lifetime Access Granted",
+      "accessActiveDesc": "One-time payment confirmed. You have permanent access to the course.",
+      "product": "Product",
+      "purchasedAt": "Purchased on",
+      "noAccess": "You haven't purchased the course yet.",
+      "buyNow": "Buy Now"
+    }
+  },
+  "admin": {
+    "sidebar": {
+      "title": "Admin",
+      "dashboard": "Dashboard",
+      "students": "Students",
+      "courses": "Courses",
+      "plans": "Plans",
+      "forum": "Forum",
+      "settings": "Settings",
+      "backToSite": "Back to Site"
+    },
+    "dashboard": {
+      "title": "Admin Panel",
+      "stats": {
+        "totalStudents": "Total Students",
+        "activeSubscriptions": "Active Subscriptions",
+        "totalCourses": "Total Courses",
+        "totalLessons": "Total Lessons"
+      },
+      "recentSignups": "Recent Signups",
+      "noSignups": "No recent signups."
+    },
+    "students": {
+      "title": "Students",
+      "found": "{count} student(s) found",
+      "table": {
+        "name": "Name",
+        "email": "Email",
+        "plan": "Plan",
+        "status": "Status",
+        "signupDate": "Signup Date"
+      },
+      "noPlan": "No plan",
+      "empty": "No students found."
+    },
+    "courses": {
+      "title": "Courses",
+      "newCourse": "New Course",
+      "table": {
+        "title": "Title",
+        "status": "Status",
+        "modules": "Modules",
+        "lessons": "Lessons",
+        "actions": "Actions"
+      },
+      "published": "Published",
+      "edit": "Edit",
+      "empty": "No courses found."
+    },
+    "courseEdit": {
+      "title": "Edit Course",
+      "notFound": "Course not found.",
+      "backToCourses": "Back to courses",
+      "courseTitle": "Course Title",
+      "description": "Description",
+      "status": "Status:",
+      "toggleHint": "(click to toggle)",
+      "saveChanges": "Save Changes",
+      "errorSave": "Error saving: {message}",
+      "successSave": "Course saved successfully!",
+      "modulesAndLessons": "Modules and Lessons",
+      "lessonsWithVideo": "{withVideo}/{total} lessons with video",
+      "expandAll": "Expand all",
+      "collapseAll": "Collapse",
+      "moduleWithVideo": "{withVideo}/{total} with video",
+      "noLessons": "No lessons in this module.",
+      "noModules": "No modules found for this course."
+    },
+    "videoUpload": {
+      "errorType": "File must be a video (MP4, WebM, MOV, MKV).",
+      "errorSize": "File too large ({sizeMB}MB). Max {maxMB}MB.",
+      "errorUpload": "Upload failed: {message}",
+      "errorUpdate": "Upload completed, but couldn't update lesson: {message}",
+      "errorRemove": "Error removing: {message}",
+      "errorUnknown": "Unknown error",
+      "successUpload": "Video uploaded successfully!",
+      "successRemove": "Video removed.",
+      "uploading": "Uploading {progress}%",
+      "replace": "Replace video",
+      "upload": "Upload video",
+      "published": "Video published",
+      "removeTooltip": "Remove video",
+      "removeConfirm": "Remove the video from lesson \"{title}\"?"
+    },
+    "plans": {
+      "title": "Plans",
+      "table": {
+        "name": "Name",
+        "slug": "Slug",
+        "price": "Price",
+        "status": "Status",
+        "features": "Features"
+      },
+      "featuresCount": "{count} feature(s)",
+      "empty": "No plans found."
+    },
+    "forum": {
+      "title": "Forum",
+      "table": {
+        "title": "Title",
+        "author": "Author",
+        "category": "Category",
+        "date": "Date",
+        "status": "Status"
+      },
+      "pinned": "Pinned",
+      "locked": "Locked",
+      "empty": "No posts found."
+    },
+    "settings": {
+      "title": "Settings",
+      "platformInfo": "Platform Information",
+      "totalPlans": "Total Plans",
+      "totalCourses": "Total Courses",
+      "sections": {
+        "general": {
+          "title": "General",
+          "description": "General platform settings such as name, logo and contact information."
+        },
+        "security": {
+          "title": "Security",
+          "description": "Permissions, password policies and authentication management."
+        },
+        "notifications": {
+          "title": "Notifications",
+          "description": "Email, push notifications and system alert settings."
+        },
+        "appearance": {
+          "title": "Appearance",
+          "description": "Customize colors, fonts and the platform theme."
+        }
+      }
+    }
+  },
+  "subscribe": {
+    "openingCheckout": "Opening checkout...",
+    "buyNow": "Buy Now",
+    "errorCheckout": "Couldn't open checkout for {planName}"
+  },
+  "notFound": {
+    "code": "404",
+    "title": "Page not found",
+    "subtitle": "The page you are looking for does not exist.",
+    "back": "Back home"
   }
 }

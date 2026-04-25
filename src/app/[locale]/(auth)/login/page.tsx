@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter, Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +19,7 @@ export default function LoginPage() {
 }
 
 function LoginForm() {
+  const t = useTranslations("auth.login");
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/dashboard";
@@ -39,7 +41,7 @@ function LoginForm() {
     });
 
     if (error) {
-      setError("E-mail ou senha incorretos.");
+      setError(t("errorInvalid"));
       setLoading(false);
       return;
     }
@@ -50,18 +52,16 @@ function LoginForm() {
 
   return (
     <div>
-      <h2 className="mb-2 text-2xl font-bold text-white">Entrar</h2>
-      <p className="mb-8 text-sm text-gray-text">
-        Acesse sua conta para continuar aprendendo
-      </p>
+      <h2 className="mb-2 text-2xl font-bold text-white">{t("title")}</h2>
+      <p className="mb-8 text-sm text-gray-text">{t("subtitle")}</p>
 
       <form onSubmit={handleLogin} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email">E-mail</Label>
+          <Label htmlFor="email">{t("email")}</Label>
           <Input
             id="email"
             type="email"
-            placeholder="seu@email.com"
+            placeholder={t("emailPlaceholder")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -70,18 +70,18 @@ function LoginForm() {
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password">Senha</Label>
+            <Label htmlFor="password">{t("password")}</Label>
             <Link
               href="/recuperar-senha"
               className="text-xs text-gold hover:underline"
             >
-              Esqueceu a senha?
+              {t("forgot")}
             </Link>
           </div>
           <Input
             id="password"
             type="password"
-            placeholder="••••••••"
+            placeholder={t("passwordPlaceholder")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -94,14 +94,14 @@ function LoginForm() {
 
         <Button type="submit" className="w-full bg-gold text-dark hover:bg-gold-light" disabled={loading}>
           {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-          Entrar
+          {t("submit")}
         </Button>
       </form>
 
       <p className="mt-6 text-center text-sm text-gray-text">
-        Ainda não tem conta?{" "}
+        {t("noAccount")}{" "}
         <Link href="/cadastro" className="text-gold hover:underline">
-          Cadastre-se
+          {t("signupLink")}
         </Link>
       </p>
     </div>

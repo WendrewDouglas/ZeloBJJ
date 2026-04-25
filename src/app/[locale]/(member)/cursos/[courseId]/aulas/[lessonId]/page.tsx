@@ -1,9 +1,10 @@
 export const dynamic = 'force-dynamic';
 
+import { getLocale, getTranslations } from "next-intl/server";
 import { requireAuth } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
-import Link from "next/link";
+import { Link, redirect } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { VideoPlayer } from "@/components/member/video-player";
 import { LessonProgressButton } from "@/components/member/lesson-progress-button";
@@ -15,10 +16,11 @@ interface Props {
 
 export default async function LessonPage({ params }: Props) {
   const { courseId, lessonId } = await params;
+  const locale = (await getLocale()) as Locale;
+  const t = await getTranslations("member.lesson");
   const user = await requireAuth();
   const supabase = await createClient();
 
-  // Verify enrollment
   const { data: enrollment } = await supabase
     .from("enrollments")
     .select("*")
@@ -28,10 +30,9 @@ export default async function LessonPage({ params }: Props) {
     .single();
 
   if (!enrollment) {
-    redirect("/cursos");
+    redirect({ href: "/cursos", locale });
   }
 
-  // Get lesson
   const { data: lesson } = await supabase
     .from("lessons")
     .select("*, module:course_modules(*)")
@@ -39,10 +40,9 @@ export default async function LessonPage({ params }: Props) {
     .single();
 
   if (!lesson) {
-    redirect(`/cursos/${courseId}`);
+    redirect({ href: `/cursos/${courseId}`, locale });
   }
 
-  // Get progress
   const { data: progress } = await supabase
     .from("lesson_progress")
     .select("*")
@@ -50,7 +50,6 @@ export default async function LessonPage({ params }: Props) {
     .eq("lesson_id", lessonId)
     .single();
 
-  // Get adjacent lessons for navigation
   const { data: allLessons } = await supabase
     .from("lessons")
     .select("id, title, sort_order, module_id")
@@ -67,18 +66,16 @@ export default async function LessonPage({ params }: Props) {
 
   return (
     <div>
-      {/* Breadcrumb */}
       <div className="mb-6">
         <Link
           href={`/cursos/${courseId}`}
           className="inline-flex items-center text-sm text-gray-text hover:text-gold"
         >
           <ChevronLeft className="mr-1 h-4 w-4" />
-          Voltar ao curso
+          {t("back")}
         </Link>
       </div>
 
-      {/* Video Player */}
       <div className="mb-6 overflow-hidden rounded-xl border border-white/5 bg-dark-lighter">
         <VideoPlayer
           videoUrl={await getLessonVideoUrl(supabase, lesson)}
@@ -86,7 +83,6 @@ export default async function LessonPage({ params }: Props) {
         />
       </div>
 
-      {/* Lesson info */}
       <div className="mb-6">
         <p className="mb-1 text-xs font-bold text-gold">
           {lesson.module?.title}
@@ -97,7 +93,6 @@ export default async function LessonPage({ params }: Props) {
         )}
       </div>
 
-      {/* Progress button */}
       <div className="mb-8">
         <LessonProgressButton
           lessonId={lessonId}
@@ -105,7 +100,6 @@ export default async function LessonPage({ params }: Props) {
         />
       </div>
 
-      {/* Navigation */}
       <div className="flex items-center justify-between border-t border-white/5 pt-6">
         {prevLesson ? (
           <Link

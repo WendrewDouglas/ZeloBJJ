@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Loader2, ArrowLeft } from "lucide-react";
 
 export default function RecuperarSenhaPage() {
+  const t = useTranslations("auth.recover");
+  const tLogin = useTranslations("auth.login");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -37,15 +40,17 @@ export default function RecuperarSenhaPage() {
   if (sent) {
     return (
       <div className="text-center">
-        <h2 className="mb-4 text-2xl font-bold text-white">E-mail enviado</h2>
+        <h2 className="mb-4 text-2xl font-bold text-white">{t("sentTitle")}</h2>
         <p className="mb-6 text-gray-text">
-          Se existe uma conta com <strong className="text-white">{email}</strong>,
-          você receberá um link para redefinir sua senha.
+          {t.rich("sentMessage", {
+            email,
+            strong: (chunks) => <strong className="text-white">{chunks}</strong>,
+          })}
         </p>
         <Link href="/login">
           <Button variant="outline">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Voltar para o login
+            {t("backToLogin")}
           </Button>
         </Link>
       </div>
@@ -54,18 +59,16 @@ export default function RecuperarSenhaPage() {
 
   return (
     <div>
-      <h2 className="mb-2 text-2xl font-bold text-white">Recuperar senha</h2>
-      <p className="mb-8 text-sm text-gray-text">
-        Informe seu e-mail para receber o link de recuperação
-      </p>
+      <h2 className="mb-2 text-2xl font-bold text-white">{t("title")}</h2>
+      <p className="mb-8 text-sm text-gray-text">{t("subtitle")}</p>
 
       <form onSubmit={handleReset} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email">E-mail</Label>
+          <Label htmlFor="email">{tLogin("email")}</Label>
           <Input
             id="email"
             type="email"
-            placeholder="seu@email.com"
+            placeholder={tLogin("emailPlaceholder")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -78,14 +81,14 @@ export default function RecuperarSenhaPage() {
 
         <Button type="submit" className="w-full bg-gold text-dark hover:bg-gold-light" disabled={loading}>
           {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-          Enviar link
+          {t("submit")}
         </Button>
       </form>
 
       <p className="mt-6 text-center text-sm text-gray-text">
         <Link href="/login" className="text-gold hover:underline">
           <ArrowLeft className="mr-1 inline h-3 w-3" />
-          Voltar para o login
+          {t("backToLogin")}
         </Link>
       </p>
     </div>
