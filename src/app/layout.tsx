@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Geist } from "next/font/google";
-import { cookies } from "next/headers";
+import { headers } from "next/headers";
 import { routing } from "@/i18n/routing";
 import "./globals.css";
 
@@ -22,6 +22,8 @@ export const metadata: Metadata = {
   },
 };
 
+const validLocales = routing.locales as readonly string[];
+
 export default async function RootLayout({
   children,
 }: {
@@ -29,10 +31,22 @@ export default async function RootLayout({
 }) {
   let locale: string = routing.defaultLocale;
   try {
-    const cookieStore = await cookies();
-    const candidate = cookieStore.get("NEXT_LOCALE")?.value;
-    if (candidate && (routing.locales as readonly string[]).includes(candidate)) {
-      locale = candidate;
+    const headerStore = await headers();
+    // next-intl middleware sets this on every matched request, even on first visit
+    const fromHeader = headerStore.get("x-next-intl-locale");
+    if (fromHeader && validLocales.includes(fromHeader)) {
+      locale = fromHeader;
+    } else {
+      // Fallback: parse first path segment (covers cases the header isn't set)
+      const pathname =
+        headerStore.get("x-invoke-path") ??
+        headerStore.get("x-pathname") ??
+        headerStore.get("next-url") ??
+        "";
+      const segment = pathname.split("/").filter(Boolean)[0];
+      if (segment && validLocales.includes(segment)) {
+        locale = segment;
+      }
     }
   } catch {
     // No request context (e.g. build of internal _global-error / _not-found)
