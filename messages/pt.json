@@ -1,0 +1,187 @@
+{
+  "language": {
+    "label": "Idioma",
+    "pt": "Português",
+    "en": "Inglês",
+    "ko": "Coreano"
+  },
+  "header": {
+    "nav": {
+      "about": "Sobre",
+      "modules": "Módulos",
+      "offer": "Oferta",
+      "faq": "FAQ"
+    },
+    "login": "Entrar",
+    "cta": "Garantir Acesso",
+    "studentArea": "Área do Aluno",
+    "dashboard": "Dashboard",
+    "openMenu": "Abrir menu"
+  },
+  "hero": {
+    "badge": "Oferta de Lançamento · Acesso Vitalício",
+    "title1": "Aprenda",
+    "titleHighlight": "Jiu-Jitsu Brasileiro",
+    "title2": "do zero ao avançado",
+    "subtitle": "9 módulos estruturados, vídeo-aulas em HD e material de apoio. Pague uma única vez e estude no seu ritmo, quando e onde quiser.",
+    "ctaPrimary": "Garantir meu acesso · R$ 29,90",
+    "ctaSecondary": "Já sou aluno · Entrar",
+    "trust": {
+      "secure": "Pagamento seguro",
+      "instant": "Acesso imediato",
+      "lifetime": "Vitalício",
+      "installments": "Até 18x"
+    }
+  },
+  "about": {
+    "eyebrow": "Sobre a Zelo BJJ",
+    "title1": "A arte suave, com",
+    "titleHighlight": "técnica e propósito",
+    "p1": "O Jiu-Jitsu Brasileiro é uma arte marcial, esporte e sistema de defesa pessoal baseado em princípios técnicos e estratégicos. Na Zelo BJJ, ensinamos os fundamentos essenciais que todo praticante precisa para construir uma base sólida e evoluir com segurança.",
+    "p2": "O verdadeiro progresso é construído no longo prazo, com paciência e dedicação aos princípios básicos. Esse curso é sobre isso.",
+    "stats": {
+      "modules": "Módulos Completos",
+      "techniques": "Técnicas Ensinadas",
+      "videos": "Vídeos Detalhados",
+      "lifetime": "Acesso Vitalício"
+    }
+  },
+  "forWhom": {
+    "eyebrow": "Para quem é",
+    "title1": "Feito para",
+    "titleHighlight": "cada fase",
+    "title2": "da sua jornada",
+    "items": {
+      "beginners": {
+        "title": "Iniciantes absolutos",
+        "desc": "Quem nunca pisou no tatame e quer começar com a base correta desde o primeiro dia."
+      },
+      "whiteBlue": {
+        "title": "Faixas brancas e azuis",
+        "desc": "Quem treina na academia e quer preencher lacunas técnicas estudando fora do tatame."
+      },
+      "review": {
+        "title": "Quem quer revisar",
+        "desc": "Praticantes mais experientes que querem voltar aos fundamentos e refinar os princípios."
+      }
+    }
+  },
+  "modules": {
+    "eyebrow": "Conteúdo do Curso",
+    "title1": "9 módulos, do",
+    "titleHighlight": "fundamento ao combate real",
+    "subtitle": "Do conceito de base à mentalidade do lutador. Estudada nessa ordem para você não pular etapas nem revisitar o mesmo conteúdo várias vezes.",
+    "moduleLabel": "Módulo",
+    "items": {
+      "01": { "title": "Base e Postura", "desc": "Alicerce do Jiu-Jitsu. Postura, distribuição de peso e proteção corporal." },
+      "02": { "title": "Movimentação Corporal", "desc": "Ponte, fuga de quadril, giro, levantada técnica e ajustes de base." },
+      "03": { "title": "Hierarquia das Posições", "desc": "Costas, montada, controle lateral, passagem de guarda e progressão." },
+      "04": { "title": "Guarda: Conceito e Função", "desc": "Transforme a posição inferior em ataque com guarda fechada e aberta." },
+      "05": { "title": "Raspagens Básicas", "desc": "Inversão de posições com técnica: tesoura, gancho, desequilíbrio e timing." },
+      "06": { "title": "Finalizações Fundamentais", "desc": "Mata-leão, americana, armlock e triângulo com controle e posicionamento." },
+      "07": { "title": "Defesa e Sobrevivência", "desc": "Proteção, fechamento de espaço e inteligência tática sob pressão." },
+      "08": { "title": "Respiração e Controle Emocional", "desc": "Controle a pressão com respiração, calma e economia de energia." },
+      "09": { "title": "Conduta e Mentalidade", "desc": "Respeito, constância, humildade e disciplina como aceleradores da evolução." }
+    }
+  },
+  "principles": {
+    "eyebrow": "Metodologia",
+    "title1": "Princípios",
+    "titleHighlight": "Fundamentais",
+    "items": {
+      "position": {
+        "title": "Posição antes da Finalização",
+        "desc": "Sem controle posicional, tentativas de finalização falham e expõem você. Domine a posição primeiro."
+      },
+      "technique": {
+        "title": "Técnica sobre Força",
+        "desc": "Jiu-Jitsu eficiente é economia de energia. Técnica bem aplicada requer pouca força."
+      },
+      "consistency": {
+        "title": "Constância e Paciência",
+        "desc": "Melhor treinar 3x por semana com consistência do que 6x em uma semana e faltar um mês."
+      }
+    }
+  },
+  "offer": {
+    "eyebrow": "Oferta de Lançamento",
+    "title1": "Invista uma vez.",
+    "titleHighlight": "Acesse para sempre.",
+    "subtitle": "Pagamento único, sem mensalidade. Todo o curso liberado na hora.",
+    "ribbon": "Acesso Vitalício",
+    "kicker": "Completo Digital · 9 módulos",
+    "name": "Curso Brazilian Jiu-Jitsu — Completo Digital",
+    "price": "29",
+    "cents": "90",
+    "currency": "R$",
+    "installments": "à vista · em até <strong>18x</strong> no cartão",
+    "features": {
+      "f1": "Acesso imediato aos 9 módulos completos",
+      "f2": "Vídeos em HD com técnicas detalhadas",
+      "f3": "Material de apoio em PDF para estudo offline",
+      "f4": "Comunidade exclusiva (fórum integrado)",
+      "f5": "Suporte via WhatsApp",
+      "f6": "Pagamento único — sem mensalidade"
+    },
+    "ctaLabel": "Garantir meu acesso agora",
+    "secure": "Pagamento seguro via PagBank",
+    "methods": {
+      "card": "Cartão",
+      "pix": "Pix",
+      "boleto": "Boleto",
+      "googlePay": "Google Pay",
+      "applePay": "Apple Pay"
+    },
+    "alreadyBought": "Já comprou?",
+    "loginLink": "Fazer login"
+  },
+  "faq": {
+    "eyebrow": "Perguntas frequentes",
+    "title1": "Dúvidas",
+    "titleHighlight": "rápidas",
+    "items": {
+      "q1": {
+        "q": "Como funciona o acesso ao curso?",
+        "a": "Após o pagamento aprovado, você recebe um e-mail de confirmação e o acesso é liberado automaticamente na área do aluno. É só fazer login e começar a estudar."
+      },
+      "q2": {
+        "q": "Por quanto tempo tenho acesso?",
+        "a": "Acesso vitalício. Você paga uma única vez e pode voltar ao conteúdo sempre que quiser, sem mensalidade."
+      },
+      "q3": {
+        "q": "Posso parcelar?",
+        "a": "Sim — no cartão de crédito, em até 18x com taxa de parcelamento por conta do comprador. Também aceitamos Pix, boleto, Google Pay, Apple Pay e saldo PagBank."
+      },
+      "q4": {
+        "q": "O pagamento é seguro?",
+        "a": "Sim. Todo o processamento é feito pelo PagBank (grupo UOL), com criptografia ponta-a-ponta. Nenhum dado de cartão passa pelos servidores da Zelo BJJ."
+      },
+      "q5": {
+        "q": "Preciso ter experiência prévia em Jiu-Jitsu?",
+        "a": "Não. O curso foi estruturado para quem está começando do zero. Se você já treina, vai usar o material como guia de referência e revisão."
+      },
+      "q6": {
+        "q": "Como entro em contato com o suporte?",
+        "a": "Pelo WhatsApp no botão flutuante do site ou direto em wa.me/5518981328589. Respondemos em horário comercial."
+      }
+    }
+  },
+  "cta": {
+    "title1": "Pronto para",
+    "titleHighlight": "começar",
+    "subtitle": "Clique abaixo para garantir seu acesso ou fale com a gente no WhatsApp.",
+    "buy": "Comprar agora · R$ 29,90",
+    "whatsapp": "Tirar dúvida no WhatsApp"
+  },
+  "footer": {
+    "login": "Entrar",
+    "faq": "FAQ",
+    "instagram": "Instagram",
+    "whatsapp": "WhatsApp",
+    "rights": "© 2026 Zelo BJJ. Todos os direitos reservados."
+  },
+  "whatsapp": {
+    "ariaLabel": "WhatsApp",
+    "message": "Olá! Quero saber mais sobre a Zelo BJJ"
+  }
+}
