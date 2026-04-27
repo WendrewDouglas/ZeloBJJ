@@ -128,9 +128,18 @@ export default function CourseEditPage({
   const expandAll = () => setExpandedModules(new Set(modules.map((m) => m.id)));
   const collapseAll = () => setExpandedModules(new Set());
 
-  const handleVideoUpdated = (lessonId: string, newPath: string | null) => {
+  const handleVideoUpdated = (lessonId: string, newBunnyVideoId: string | null) => {
     setLessons((prev) =>
-      prev.map((l) => (l.id === lessonId ? { ...l, storage_path: newPath, video_url: newPath ? null : l.video_url } : l))
+      prev.map((l) =>
+        l.id === lessonId
+          ? {
+              ...l,
+              bunny_video_id: newBunnyVideoId,
+              storage_path: newBunnyVideoId ? null : l.storage_path,
+              video_url: newBunnyVideoId ? null : l.video_url,
+            }
+          : l
+      )
     );
   };
 
@@ -287,8 +296,8 @@ export default function CourseEditPage({
                                 <LessonVideoUpload
                                   lessonId={lesson.id}
                                   lessonTitle={lesson.title}
-                                  initialStoragePath={lesson.storage_path}
-                                  onUpdated={(newPath) => handleVideoUpdated(lesson.id, newPath)}
+                                  initialBunnyVideoId={lesson.bunny_video_id}
+                                  onUpdated={(newId) => handleVideoUpdated(lesson.id, newId)}
                                 />
                               </div>
                             </div>

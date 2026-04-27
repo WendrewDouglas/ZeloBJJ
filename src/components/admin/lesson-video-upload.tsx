@@ -2,22 +2,31 @@
 
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import * as tus from "tus-js-client";
 import { createClient } from "@/lib/supabase/client";
 import { Upload, CheckCircle2, Loader2, Trash2, AlertCircle } from "lucide-react";
 
-const BUCKET = "course-videos";
-const MAX_MB = 1024;
+const MAX_MB = 5000;
+const CHUNK_SIZE = 50 * 1024 * 1024;
+const BUNNY_TUS_ENDPOINT = "https://video.bunnycdn.com/tusupload";
 
 type Props = {
   lessonId: string;
   lessonTitle: string;
-  initialStoragePath: string | null;
-  onUpdated?: (storagePath: string | null) => void;
+  initialBunnyVideoId: string | null;
+  onUpdated?: (bunnyVideoId: string | null) => void;
 };
 
-export function LessonVideoUpload({ lessonId, lessonTitle, initialStoragePath, onUpdated }: Props) {
+type CreateVideoResponse = {
+  libraryId: string;
+  videoId: string;
+  authorizationSignature: string;
+  authorizationExpire: number;
+};
+
+export function LessonVideoUpload({ lessonId, lessonTitle, initialBunnyVideoId, onUpdated }: Props) {
   const t = useTranslations("admin.videoUpload");
-  const [storagePath, setStoragePath] = useState(initialStoragePath);
+  const [bunnyVideoId, setBunnyVideoId] = useState(initialBunnyVideoId);
   const [progress, setProgress] = useState<number | null>(null);
   const [message, setMessage] = useState<{ type: "ok" | "error"; text: string } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -38,33 +47,68 @@ export function LessonVideoUpload({ lessonId, lessonTitle, initialStoragePath, o
       return;
     }
 
-    const supabase = createClient();
-    const ext = file.name.split(".").pop()?.toLowerCase() ?? "mp4";
-    const path = `${lessonId}/video.${ext}`;
-
     setProgress(0);
 
+    let auth: CreateVideoResponse;
     try {
-      const interval = setInterval(() => {
-        setProgress((p) => (p === null ? 5 : Math.min(p + 3, 90)));
-      }, 300);
-
-      const { error: upErr } = await supabase.storage
-        .from(BUCKET)
-        .upload(path, file, { upsert: true, contentType: file.type });
-
-      clearInterval(interval);
-
-      if (upErr) {
-        setProgress(null);
-        setMessage({ type: "error", text: t("errorUpload", { message: upErr.message }) });
-        return;
+      const res = await fetch("/api/admin/bunny/create-video", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lessonId, title: lessonTitle }),
+      });
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody.error || `HTTP ${res.status}`);
       }
+      auth = (await res.json()) as CreateVideoResponse;
+    } catch (err) {
+      setProgress(null);
+      setMessage({
+        type: "error",
+        text: t("errorUpload", { message: err instanceof Error ? err.message : "create-video failed" }),
+      });
+      return;
+    }
 
+    const previousVideoId = bunnyVideoId;
+
+    try {
+      await new Promise<void>((resolve, reject) => {
+        const upload = new tus.Upload(file, {
+          endpoint: BUNNY_TUS_ENDPOINT,
+          retryDelays: [0, 3000, 5000, 10000, 20000],
+          chunkSize: CHUNK_SIZE,
+          uploadDataDuringCreation: false,
+          removeFingerprintOnSuccess: true,
+          headers: {
+            AuthorizationSignature: auth.authorizationSignature,
+            AuthorizationExpire: String(auth.authorizationExpire),
+            VideoId: auth.videoId,
+            LibraryId: auth.libraryId,
+          },
+          metadata: {
+            filetype: file.type,
+            title: lessonTitle,
+          },
+          onError: (err) => reject(err),
+          onProgress: (bytesUploaded, bytesTotal) => {
+            setProgress(Math.round((bytesUploaded / bytesTotal) * 100));
+          },
+          onSuccess: () => resolve(),
+        });
+
+        upload.findPreviousUploads().then((prev) => {
+          if (prev.length) upload.resumeFromPreviousUpload(prev[0]);
+          upload.start();
+        });
+      });
+
+      const supabase = createClient();
       const { error: updErr } = await supabase
         .from("lessons")
         .update({
-          storage_path: path,
+          bunny_video_id: auth.videoId,
+          storage_path: null,
           video_url: null,
         })
         .eq("id", lessonId);
@@ -75,9 +119,17 @@ export function LessonVideoUpload({ lessonId, lessonTitle, initialStoragePath, o
         return;
       }
 
+      if (previousVideoId && previousVideoId !== auth.videoId) {
+        fetch("/api/admin/bunny/delete-video", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ videoId: previousVideoId }),
+        }).catch(() => undefined);
+      }
+
       setProgress(100);
-      setStoragePath(path);
-      onUpdated?.(path);
+      setBunnyVideoId(auth.videoId);
+      onUpdated?.(auth.videoId);
       setMessage({ type: "ok", text: t("successUpload") });
       setTimeout(() => setProgress(null), 1200);
     } catch (err) {
@@ -90,24 +142,41 @@ export function LessonVideoUpload({ lessonId, lessonTitle, initialStoragePath, o
   }
 
   async function handleRemove() {
-    if (!storagePath) return;
+    if (!bunnyVideoId) return;
     if (!confirm(t("removeConfirm", { title: lessonTitle }))) return;
 
+    const videoIdToDelete = bunnyVideoId;
     const supabase = createClient();
 
-    const { error: rmErr } = await supabase.storage.from(BUCKET).remove([storagePath]);
-    if (rmErr) {
-      setMessage({ type: "error", text: t("errorRemove", { message: rmErr.message }) });
+    const res = await fetch("/api/admin/bunny/delete-video", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ videoId: videoIdToDelete }),
+    });
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => ({}));
+      setMessage({
+        type: "error",
+        text: t("errorRemove", { message: errBody.error || `HTTP ${res.status}` }),
+      });
       return;
     }
 
-    await supabase.from("lessons").update({ storage_path: null }).eq("id", lessonId);
-    setStoragePath(null);
+    const { error: updErr } = await supabase
+      .from("lessons")
+      .update({ bunny_video_id: null })
+      .eq("id", lessonId);
+    if (updErr) {
+      setMessage({ type: "error", text: t("errorRemove", { message: updErr.message }) });
+      return;
+    }
+
+    setBunnyVideoId(null);
     onUpdated?.(null);
     setMessage({ type: "ok", text: t("successRemove") });
   }
 
-  const hasVideo = !!storagePath;
+  const hasVideo = !!bunnyVideoId;
   const isUploading = progress !== null && progress < 100;
 
   return (
