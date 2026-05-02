@@ -16,7 +16,7 @@ export function generateStaticParams() {
 
 interface Props {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ ref?: string }>;
+  searchParams: Promise<{ ref?: string; transaction_id?: string }>;
 }
 
 const ACTIVE_STATUSES = new Set(["paid", "active", "trial"]);
@@ -25,28 +25,40 @@ export default async function ThankYouPage({ params, searchParams }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const { ref } = await searchParams;
+  const { ref, transaction_id: transactionId } = await searchParams;
   const t = await getTranslations("thankYou");
   const localeTyped = (await getLocale()) as Locale;
 
   let status: string | null = null;
-  let validRef = false;
+  let validIdentifier: { kind: "ref" | "transaction_id"; value: string } | null = null;
 
   if (ref && parseReferenceId(ref)) {
-    validRef = true;
+    validIdentifier = { kind: "ref", value: ref };
     const supabase = createAdminClient();
     const { data } = await supabase
       .from("subscriptions")
       .select("status")
       .eq("pagbank_reference_id", ref)
       .maybeSingle();
-
     status = data?.status ?? null;
+  } else if (transactionId) {
+    validIdentifier = { kind: "transaction_id", value: transactionId };
+    const supabase = createAdminClient();
+    const { data } = await supabase
+      .from("subscriptions")
+      .select("status")
+      .or(
+        `pagbank_subscription_id.eq.${transactionId},pagbank_last_charge_id.eq.${transactionId}`
+      )
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    status = data?.status ?? null;
+  }
 
-    // Ja foi pago — manda direto pro dashboard com toast.
-    if (status && ACTIVE_STATUSES.has(status)) {
-      redirect({ href: "/dashboard?welcome=1", locale: localeTyped });
-    }
+  // Ja foi pago — manda direto pro dashboard com toast.
+  if (status && ACTIVE_STATUSES.has(status)) {
+    redirect({ href: "/dashboard?welcome=1", locale: localeTyped });
   }
 
   return (
@@ -69,8 +81,11 @@ export default async function ThankYouPage({ params, searchParams }: Props) {
               {t("subtitle")}
             </p>
 
-            {validRef ? (
-              <ThankYouPolling reference={ref!} initialStatus={status} />
+            {validIdentifier ? (
+              <ThankYouPolling
+                identifier={validIdentifier}
+                initialStatus={status}
+              />
             ) : (
               <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-6 text-sm text-gray-text">
                 <Loader2 className="mx-auto mb-3 h-5 w-5 animate-spin text-gold" />

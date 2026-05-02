@@ -10,14 +10,23 @@ const TIMEOUT_MS = 60_000;
 const ACTIVE_STATUSES = new Set(["paid", "active", "trial"]);
 const FAILED_STATUSES = new Set(["declined", "canceled", "expired", "suspended", "refunded"]);
 
+type Identifier =
+  | { kind: "ref"; value: string }
+  | { kind: "transaction_id"; value: string };
+
 interface Props {
-  reference: string;
+  identifier: Identifier;
   initialStatus: string | null;
 }
 
 type View = "polling" | "timeout" | "failed";
 
-export function ThankYouPolling({ reference, initialStatus }: Props) {
+function buildStatusUrl(identifier: Identifier): string {
+  const param = identifier.kind === "ref" ? "ref" : "transaction_id";
+  return `/api/checkout/status?${param}=${encodeURIComponent(identifier.value)}`;
+}
+
+export function ThankYouPolling({ identifier, initialStatus }: Props) {
   const t = useTranslations("thankYou");
   const router = useRouter();
   const [view, setView] = useState<View>(
@@ -34,15 +43,13 @@ export function ThankYouPolling({ reference, initialStatus }: Props) {
 
     let cancelled = false;
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    const statusUrl = buildStatusUrl(identifier);
 
     async function tick() {
       if (cancelled) return;
 
       try {
-        const res = await fetch(
-          `/api/checkout/status?ref=${encodeURIComponent(reference)}`,
-          { cache: "no-store" }
-        );
+        const res = await fetch(statusUrl, { cache: "no-store" });
         if (cancelled) return;
 
         if (res.ok) {
@@ -76,7 +83,7 @@ export function ThankYouPolling({ reference, initialStatus }: Props) {
       cancelled = true;
       if (timeoutId) clearTimeout(timeoutId);
     };
-  }, [reference, router, view]);
+  }, [identifier, router, view]);
 
   if (view === "polling") {
     return (
