@@ -29,8 +29,13 @@ export function SubscribeButton({ planSlug, planName, featured, size = "md", lab
       });
 
       if (res.status === 401) {
-        const next = encodeURIComponent(`/?comprar=${planSlug}`);
-        window.location.href = `/cadastro?redirect=${next}`;
+        // Persiste intencao de compra para que o login a retome automaticamente.
+        try {
+          window.localStorage.setItem("zelobjj:pending_purchase", planSlug);
+        } catch {
+          // Storage indisponivel (ex.: modo privado) — segue fluxo normal.
+        }
+        window.location.href = `/cadastro?next=checkout`;
         return;
       }
 

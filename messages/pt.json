@@ -239,6 +239,8 @@
       "errorTooShort": "A senha deve ter pelo menos 6 caracteres.",
       "successTitle": "Verifique seu e-mail",
       "successMessage": "Enviamos um link de confirmação para <strong>{email}</strong>. Clique no link para ativar sua conta.",
+      "checkoutHint": "Crie sua conta primeiro. Depois de confirmar o e-mail você é redirecionado para finalizar o pagamento.",
+      "checkoutNote": "Depois de confirmar o e-mail, faça login que vamos te levar direto para a página de pagamento.",
       "backToLogin": "Voltar para o login"
     },
     "recover": {
@@ -283,11 +285,20 @@
         "completed": "Aulas Concluídas",
         "progress": "Progresso Geral",
         "currentPlan": "Plano Atual",
-        "noPlan": "Nenhum"
+        "noPlan": "Nenhum",
+        "pendingPlan": "Em análise"
       },
       "noPlanTitle": "Você ainda não tem um plano ativo",
       "noPlanDesc": "Assine um plano para ter acesso aos cursos e conteúdos exclusivos.",
       "viewPlans": "Ver Planos",
+      "welcomeToast": "Acesso liberado!",
+      "welcomeToastDesc": "Sua compra foi confirmada. Hora de começar o treino.",
+      "firstLessonTitle": "Pronto para começar?",
+      "firstLessonDesc": "Comece pelo módulo 1 e siga a ordem das aulas para evoluir sem pular etapas.",
+      "firstLessonCta": "Começar pela primeira aula",
+      "paymentPendingTitle": "Pagamento em análise",
+      "paymentPendingDesc": "Recebemos seu pedido, mas o pagamento ainda não foi confirmado. Se você escolheu PIX ou boleto, finalize o pagamento — o acesso é liberado automaticamente assim que cair.",
+      "paymentPendingCta": "Finalizar pagamento",
       "actions": {
         "myCourses": "Meus Cursos",
         "myCoursesDesc": "Continue de onde parou nas suas aulas",
@@ -506,5 +517,17 @@
     "title": "Página não encontrada",
     "subtitle": "A página que você está procurando não existe.",
     "back": "Voltar ao início"
+  },
+  "thankYou": {
+    "title": "Recebemos seu pagamento",
+    "subtitle": "Estamos confirmando com a operadora. Em geral leva poucos segundos.",
+    "confirming": "Confirmando seu pagamento...",
+    "autoRedirect": "Você será redirecionado automaticamente assim que o acesso for liberado.",
+    "missingRef": "Não conseguimos identificar este pagamento. Aguarde alguns minutos e verifique seu e-mail — assim que confirmarmos, enviaremos a confirmação.",
+    "timeoutTitle": "Estamos confirmando",
+    "timeoutBody": "Sua confirmação está demorando um pouco mais do que o normal. Em alguns minutos você receberá um e-mail e o acesso será liberado. Não precisa ficar nesta tela — pode fechá-la com tranquilidade.",
+    "failedTitle": "Pagamento não aprovado",
+    "failedBody": "Não conseguimos confirmar seu pagamento. Você pode tentar novamente ou falar com a gente no WhatsApp.",
+    "whatsapp": "Falar no WhatsApp"
   }
 }

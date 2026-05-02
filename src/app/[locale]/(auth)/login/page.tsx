@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 
+const PENDING_PURCHASE_KEY = "zelobjj:pending_purchase";
+
 export default function LoginPage() {
   return (
     <Suspense fallback={<div className="flex items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-gold" /></div>}>
@@ -23,6 +25,7 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/dashboard";
+  const next = searchParams.get("next");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,6 +47,32 @@ function LoginForm() {
       setError(t("errorInvalid"));
       setLoading(false);
       return;
+    }
+
+    // Retoma intencao de compra: se o usuario chegou aqui via subscribe-button (next=checkout),
+    // dispara checkout direto e redireciona para o link PagBank em vez do dashboard.
+    if (next === "checkout") {
+      const planSlug = readPendingPurchase();
+      if (planSlug) {
+        try {
+          const checkoutRes = await fetch("/api/checkout", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ planSlug }),
+          });
+          if (checkoutRes.ok) {
+            const data = (await checkoutRes.json()) as { url?: string };
+            clearPendingPurchase();
+            if (data.url) {
+              window.location.href = data.url;
+              return;
+            }
+          }
+        } catch {
+          // Falhou — segue fluxo normal e cai no dashboard.
+        }
+        clearPendingPurchase();
+      }
     }
 
     router.push(redirect);
@@ -100,10 +129,29 @@ function LoginForm() {
 
       <p className="mt-6 text-center text-sm text-gray-text">
         {t("noAccount")}{" "}
-        <Link href="/cadastro" className="text-gold hover:underline">
+        <Link
+          href={next === "checkout" ? "/cadastro?next=checkout" : "/cadastro"}
+          className="text-gold hover:underline"
+        >
           {t("signupLink")}
         </Link>
       </p>
     </div>
   );
+}
+
+function readPendingPurchase(): string | null {
+  try {
+    return window.localStorage.getItem(PENDING_PURCHASE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function clearPendingPurchase(): void {
+  try {
+    window.localStorage.removeItem(PENDING_PURCHASE_KEY);
+  } catch {
+    // ignore
+  }
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter, Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -10,9 +11,21 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 
 export default function CadastroPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center"><Loader2 className="h-6 w-6 animate-spin text-gold" /></div>}>
+      <CadastroForm />
+    </Suspense>
+  );
+}
+
+function CadastroForm() {
   const t = useTranslations("auth.signup");
   const tLogin = useTranslations("auth.login");
   const router = useRouter();
+  const locale = useLocale();
+  const searchParams = useSearchParams();
+  const next = searchParams.get("next");
+
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,14 +51,16 @@ export default function CadastroPage() {
     setLoading(true);
 
     const supabase = createClient();
+    const localePrefix = locale === "pt" ? "" : `/${locale}`;
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           full_name: fullName,
+          locale,
         },
-        emailRedirectTo: `${window.location.origin}/callback`,
+        emailRedirectTo: `${window.location.origin}${localePrefix}/callback`,
       },
     });
 
@@ -57,9 +72,10 @@ export default function CadastroPage() {
 
     setSuccess(true);
     setLoading(false);
-    // Note: router used for type compatibility; success state takes over UI
     void router;
   }
+
+  const loginHref = next === "checkout" ? "/login?next=checkout" : "/login";
 
   if (success) {
     return (
@@ -71,7 +87,12 @@ export default function CadastroPage() {
             strong: (chunks) => <strong className="text-white">{chunks}</strong>,
           })}
         </p>
-        <Link href="/login">
+        {next === "checkout" && (
+          <p className="mb-6 rounded-2xl border border-gold/20 bg-gold/5 p-4 text-sm text-gray-text">
+            {t("checkoutNote")}
+          </p>
+        )}
+        <Link href={loginHref}>
           <Button variant="outline">{t("backToLogin")}</Button>
         </Link>
       </div>
@@ -82,6 +103,12 @@ export default function CadastroPage() {
     <div>
       <h2 className="mb-2 text-2xl font-bold text-white">{t("title")}</h2>
       <p className="mb-8 text-sm text-gray-text">{t("subtitle")}</p>
+
+      {next === "checkout" && (
+        <p className="mb-6 rounded-2xl border border-gold/20 bg-gold/5 p-4 text-sm text-gray-text">
+          {t("checkoutHint")}
+        </p>
+      )}
 
       <form onSubmit={handleSignUp} className="space-y-4">
         <div className="space-y-2">
@@ -144,7 +171,7 @@ export default function CadastroPage() {
 
       <p className="mt-6 text-center text-sm text-gray-text">
         {t("haveAccount")}{" "}
-        <Link href="/login" className="text-gold hover:underline">
+        <Link href={loginHref} className="text-gold hover:underline">
           {t("loginLink")}
         </Link>
       </p>

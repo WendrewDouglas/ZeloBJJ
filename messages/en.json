@@ -239,6 +239,8 @@
       "errorTooShort": "Password must be at least 6 characters.",
       "successTitle": "Check your email",
       "successMessage": "We sent a confirmation link to <strong>{email}</strong>. Click the link to activate your account.",
+      "checkoutHint": "Create your account first. After confirming your email, you'll be redirected to complete the payment.",
+      "checkoutNote": "After confirming your email, sign in and we'll take you straight to the payment page.",
       "backToLogin": "Back to sign in"
     },
     "recover": {
@@ -283,11 +285,20 @@
         "completed": "Completed Lessons",
         "progress": "Overall Progress",
         "currentPlan": "Current Plan",
-        "noPlan": "None"
+        "noPlan": "None",
+        "pendingPlan": "Pending"
       },
       "noPlanTitle": "You don't have an active plan yet",
       "noPlanDesc": "Subscribe to a plan to access courses and exclusive content.",
       "viewPlans": "View Plans",
+      "welcomeToast": "Access unlocked!",
+      "welcomeToastDesc": "Your purchase is confirmed. Time to start training.",
+      "firstLessonTitle": "Ready to start?",
+      "firstLessonDesc": "Begin with module 1 and follow the lesson order to progress without skipping steps.",
+      "firstLessonCta": "Start with the first lesson",
+      "paymentPendingTitle": "Payment under review",
+      "paymentPendingDesc": "We received your order, but the payment hasn't been confirmed yet. If you chose PIX or boleto, complete the payment — access is unlocked automatically as soon as it clears.",
+      "paymentPendingCta": "Complete payment",
       "actions": {
         "myCourses": "My Courses",
         "myCoursesDesc": "Pick up where you left off",
@@ -506,5 +517,17 @@
     "title": "Page not found",
     "subtitle": "The page you are looking for does not exist.",
     "back": "Back home"
+  },
+  "thankYou": {
+    "title": "We received your payment",
+    "subtitle": "We're confirming with the payment provider. It usually takes a few seconds.",
+    "confirming": "Confirming your payment...",
+    "autoRedirect": "You'll be redirected automatically as soon as access is unlocked.",
+    "missingRef": "We couldn't identify this payment. Please wait a few minutes and check your email — we'll send a confirmation as soon as we verify it.",
+    "timeoutTitle": "Still confirming",
+    "timeoutBody": "Your confirmation is taking longer than usual. Within a few minutes you'll get an email and access will be unlocked. You don't need to stay on this screen — feel free to close it.",
+    "failedTitle": "Payment not approved",
+    "failedBody": "We couldn't confirm your payment. You can try again or talk to us on WhatsApp.",
+    "whatsapp": "Talk on WhatsApp"
   }
 }

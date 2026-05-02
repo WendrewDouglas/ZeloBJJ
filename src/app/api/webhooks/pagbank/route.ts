@@ -7,6 +7,8 @@ import {
   verifyBasicAuth,
   verifyHmacSignature,
 } from "@/lib/pagbank";
+import { sendEmail } from "@/lib/email";
+import type { PaymentFailedReason } from "@/types/email";
 
 // Formato esperado do payload do PagBank.
 // Link de pagamento avulso (pag.ae) envia um payload com charges[] e customer.email.
@@ -35,6 +37,7 @@ const REVOKE_STATUSES = new Set([
   "refunded",
   "declined",
 ]);
+const PENDING_STATUSES = new Set(["pending", "pending_action", "in_analysis"]);
 
 export async function POST(request: Request) {
   const rawBody = await request.text();
@@ -82,14 +85,13 @@ export async function POST(request: Request) {
         entity_id: pagbankId,
         metadata: { reason: "no_user_match", reference, email, status },
       });
-      // Retornamos 200 para o PagBank nao reenviar indefinidamente; ficara no audit_logs para reprocessar manualmente.
       return NextResponse.json({ received: true, unattributed: true });
     }
 
     // 2) Plano unico ativo (no MVP atual ha apenas 1).
     const { data: plan } = await supabase
       .from("plans")
-      .select("id, is_lifetime")
+      .select("id, name, payment_link, is_lifetime")
       .eq("is_active", true)
       .order("sort_order", { ascending: true })
       .limit(1)
@@ -100,7 +102,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ received: true, ignored: true });
     }
 
-    // 3) Upsert subscription (uma por user+plan). No modelo vitalicio nao expira.
+    // 3) Carrega subscription anterior + perfil para detectar transicao e localizar e-mail.
+    const [{ data: previousSubscription }, { data: profile }] = await Promise.all([
+      supabase
+        .from("subscriptions")
+        .select("status")
+        .eq("user_id", userId)
+        .eq("plan_id", plan.id)
+        .maybeSingle(),
+      supabase
+        .from("profiles")
+        .select("email, full_name, locale")
+        .eq("id", userId)
+        .single(),
+    ]);
+
+    const previousStatus = previousSubscription?.status ?? null;
+
+    // 4) Upsert subscription (uma por user+plan). No modelo vitalicio nao expira.
     const paidAt = charge?.paid_at ?? (status === "paid" ? new Date().toISOString() : null);
 
     await supabase.from("subscriptions").upsert(
@@ -116,7 +135,7 @@ export async function POST(request: Request) {
       { onConflict: "user_id,plan_id" as never }
     );
 
-    // 4) Liberar/revogar acesso
+    // 5) Liberar/revogar acesso
     if (ACTIVE_STATUSES.has(status)) {
       const { data: courses } = await supabase
         .from("courses")
@@ -147,7 +166,19 @@ export async function POST(request: Request) {
       action: `pagbank.${status}`,
       entity_type: "pagbank_event",
       entity_id: pagbankId,
-      metadata: { status, reference, charge_id: charge?.id, email },
+      metadata: { status, reference, charge_id: charge?.id, email, previous_status: previousStatus },
+    });
+
+    // 6) E-mails — fire and forget; nunca quebra o webhook.
+    await dispatchTransactionalEmail({
+      supabase,
+      userId,
+      profile,
+      plan,
+      previousStatus,
+      currentStatus: status,
+      amountCents: charge?.amount?.value ?? null,
+      paidAt,
     });
 
     return NextResponse.json({ received: true });
@@ -174,5 +205,97 @@ async function resolveUserId(
     if (data?.id) return data.id;
   }
 
+  return null;
+}
+
+interface DispatchEmailArgs {
+  supabase: AdminClient;
+  userId: string;
+  profile: { email: string | null; full_name: string | null; locale: string | null } | null;
+  plan: { id: string; name: string; payment_link: string | null };
+  previousStatus: string | null;
+  currentStatus: string;
+  amountCents: number | null;
+  paidAt: string | null;
+}
+
+/**
+ * Decide qual e-mail transacional disparar para o aluno com base na transicao
+ * de status da subscription. Idempotencia/dedup eh feita pelo dispatcher
+ * (sendEmail) consultando email_logs antes de enviar.
+ */
+async function dispatchTransactionalEmail(args: DispatchEmailArgs): Promise<void> {
+  const { supabase, userId, profile, plan, previousStatus, currentStatus, amountCents, paidAt } = args;
+
+  if (!profile?.email) {
+    console.warn(`[webhook] sem e-mail para user ${userId}, pulando envio`);
+    return;
+  }
+
+  // Pagamento aprovado — so envia se eh transicao para active/paid (nao reenvia em retransmissoes do mesmo evento).
+  if (ACTIVE_STATUSES.has(currentStatus) && previousStatus !== currentStatus) {
+    await sendEmail({
+      supabase,
+      userId,
+      toEmail: profile.email,
+      locale: profile.locale,
+      template: "payment_approved",
+      params: {
+        locale: "pt", // sera sobrescrito pelo dispatcher com profile.locale
+        fullName: profile.full_name,
+        planName: plan.name,
+        amountCents,
+        paidAt,
+      },
+    });
+    return;
+  }
+
+  // Pendente — manda lembrete; dispatcher ja deduplica em 24h.
+  if (PENDING_STATUSES.has(currentStatus) && !ACTIVE_STATUSES.has(previousStatus ?? "")) {
+    await sendEmail({
+      supabase,
+      userId,
+      toEmail: profile.email,
+      locale: profile.locale,
+      template: "payment_pending",
+      params: {
+        locale: "pt",
+        fullName: profile.full_name,
+        planName: plan.name,
+        paymentLinkUrl: plan.payment_link,
+      },
+    });
+    return;
+  }
+
+  // Falha/cancelamento/estorno — uma variante por motivo, reenvio bloqueado por 1h por motivo.
+  if (REVOKE_STATUSES.has(currentStatus)) {
+    const variant = mapStatusToFailedReason(currentStatus);
+    if (!variant) return;
+    await sendEmail({
+      supabase,
+      userId,
+      toEmail: profile.email,
+      locale: profile.locale,
+      template: "payment_failed",
+      variant,
+      params: {
+        locale: "pt",
+        fullName: profile.full_name,
+        reason: variant,
+        retryUrl: plan.payment_link,
+      },
+    });
+    return;
+  }
+}
+
+function mapStatusToFailedReason(status: string): PaymentFailedReason | null {
+  if (status === "declined") return "declined";
+  if (status === "refunded") return "refunded";
+  if (status === "canceled" || status === "expired" || status === "suspended" || status === "overdue") {
+    return "canceled";
+  }
   return null;
 }

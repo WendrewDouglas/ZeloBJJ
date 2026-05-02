@@ -239,6 +239,8 @@
       "errorTooShort": "비밀번호는 최소 6자 이상이어야 합니다.",
       "successTitle": "이메일을 확인해 주세요",
       "successMessage": "<strong>{email}</strong> 로 확인 링크를 보냈습니다. 링크를 클릭하여 계정을 활성화하세요.",
+      "checkoutHint": "먼저 계정을 만들어 주세요. 이메일을 확인한 후 결제 페이지로 이동합니다.",
+      "checkoutNote": "이메일을 확인한 후 로그인하시면 곧바로 결제 페이지로 안내해 드립니다.",
       "backToLogin": "로그인으로 돌아가기"
     },
     "recover": {
@@ -283,11 +285,20 @@
         "completed": "완료한 수업",
         "progress": "전체 진행률",
         "currentPlan": "현재 플랜",
-        "noPlan": "없음"
+        "noPlan": "없음",
+        "pendingPlan": "확인 중"
       },
       "noPlanTitle": "활성 플랜이 없습니다",
       "noPlanDesc": "플랜을 구독하여 강의와 전용 콘텐츠에 접근하세요.",
       "viewPlans": "플랜 보기",
+      "welcomeToast": "접근이 활성화되었습니다!",
+      "welcomeToastDesc": "결제가 확인되었습니다. 학습을 시작할 시간입니다.",
+      "firstLessonTitle": "시작할 준비가 되셨나요?",
+      "firstLessonDesc": "모듈 1부터 시작하여 단계를 건너뛰지 않도록 강의 순서를 따르세요.",
+      "firstLessonCta": "첫 강의로 시작하기",
+      "paymentPendingTitle": "결제 확인 중",
+      "paymentPendingDesc": "주문을 접수했지만 결제가 아직 확인되지 않았습니다. PIX 또는 boleto를 선택하셨다면 결제를 완료해 주세요. 결제가 확인되는 즉시 접근이 자동으로 활성화됩니다.",
+      "paymentPendingCta": "결제 완료하기",
       "actions": {
         "myCourses": "내 강의",
         "myCoursesDesc": "이어서 학습하기",
@@ -506,5 +517,17 @@
     "title": "페이지를 찾을 수 없습니다",
     "subtitle": "찾으시는 페이지가 존재하지 않습니다.",
     "back": "홈으로 돌아가기"
+  },
+  "thankYou": {
+    "title": "결제를 접수했습니다",
+    "subtitle": "결제 회사와 확인 중입니다. 보통 몇 초가 걸립니다.",
+    "confirming": "결제를 확인하고 있습니다...",
+    "autoRedirect": "접근이 활성화되는 즉시 자동으로 이동됩니다.",
+    "missingRef": "이 결제를 식별할 수 없습니다. 몇 분 기다리신 후 이메일을 확인해 주세요. 확인이 되는 대로 안내 메일을 보내드립니다.",
+    "timeoutTitle": "여전히 확인 중",
+    "timeoutBody": "확인이 평소보다 오래 걸리고 있습니다. 몇 분 안에 이메일을 받으시고 접근이 활성화됩니다. 이 화면에 머무를 필요 없이 닫으셔도 됩니다.",
+    "failedTitle": "결제가 승인되지 않았습니다",
+    "failedBody": "결제를 확인할 수 없습니다. 다시 시도하시거나 WhatsApp으로 문의해 주세요.",
+    "whatsapp": "WhatsApp으로 문의"
   }
 }

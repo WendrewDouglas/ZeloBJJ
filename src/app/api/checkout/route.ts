@@ -39,6 +39,26 @@ export async function POST(request: Request) {
       .single();
 
     const reference = buildReferenceId(user.id, plan.slug);
+
+    // Cria/atualiza subscription como pending antes de mandar o usuario para o PagBank.
+    // Isso permite que /obrigado e /api/checkout/status encontrem o registro mesmo
+    // antes do primeiro webhook chegar, e elimina o "race condition" onde o aluno
+    // volta ao dashboard antes do PagBank notificar e ve "sem plano".
+    const { error: upsertError } = await supabase.from("subscriptions").upsert(
+      {
+        user_id: user.id,
+        plan_id: plan.id,
+        status: "pending",
+        pagbank_reference_id: reference,
+      },
+      { onConflict: "user_id,plan_id" }
+    );
+
+    if (upsertError) {
+      // Nao bloqueia o checkout — webhook ainda consegue criar a subscription depois.
+      console.error("[checkout] erro ao gravar subscription pending:", upsertError);
+    }
+
     const url = buildCheckoutUrl(plan.payment_link, reference, profile?.email ?? user.email);
 
     return NextResponse.json({ url });

@@ -64,6 +64,7 @@ export async function updateSession(
     "/recuperar-senha",
     "/redefinir-senha",
     "/callback",
+    "/obrigado",
   ];
   const isPublicPath =
     publicPaths.includes(pathNoLocale) ||

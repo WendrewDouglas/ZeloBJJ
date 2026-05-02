@@ -5,6 +5,7 @@ import { redirect } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getProfile } from "@/lib/auth";
 import { Sidebar } from "@/components/shared/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 export default async function MemberLayout({
   children,
@@ -25,6 +26,7 @@ export default async function MemberLayout({
       <main className="flex-1 overflow-auto">
         <div className="mx-auto max-w-6xl px-6 py-8">{children}</div>
       </main>
+      <Toaster position="top-right" richColors />
     </div>
   );
 }
