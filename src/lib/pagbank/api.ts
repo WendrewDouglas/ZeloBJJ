@@ -64,6 +64,11 @@ interface PagbankLink {
   media?: string;
 }
 
+function appendQueryParam(url: string, key: string, value: string): string {
+  const sep = url.includes("?") ? "&" : "?";
+  return `${url}${sep}${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+}
+
 /**
  * Cria uma sessao de Checkout hospedada no PagBank V4.
  *
@@ -87,13 +92,23 @@ export async function createPagbankCheckout(
     { type: "PIX" },
   ];
 
+  // PagBank /checkouts NAO adiciona automaticamente nenhum query param na redirect_url
+  // (diferente da aplicacao "Pagar com PagBank Deeplink" no painel). Como o /obrigado
+  // depende de um identificador para fazer polling do status, anexamos ?ref=<reference_id>
+  // explicitamente — assim a tela /obrigado consegue identificar o pagamento.
+  const redirectUrlWithRef = appendQueryParam(
+    input.redirectUrl,
+    "ref",
+    input.referenceId
+  );
+
   const body: Record<string, unknown> = {
     reference_id: input.referenceId,
     items: input.items,
     payment_methods: paymentMethods,
     notification_urls: [input.notificationUrl],
     payment_notification_urls: [input.paymentNotificationUrl],
-    redirect_url: input.redirectUrl,
+    redirect_url: redirectUrlWithRef,
   };
 
   if (input.customer) {
