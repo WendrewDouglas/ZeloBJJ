@@ -6,6 +6,7 @@ import {
   parseReferenceId,
   verifyBasicAuth,
   verifyHmacSignature,
+  verifyPagbankAuthenticity,
 } from "@/lib/pagbank";
 import { sendEmail } from "@/lib/email";
 import type { PaymentFailedReason } from "@/types/email";
@@ -43,18 +44,27 @@ export async function POST(request: Request) {
   const rawBody = await request.text();
   const headersList = await headers();
 
-  // 1) Validacao primaria: Basic Auth (URL do webhook cadastrada como https://user:pass@host/path).
-  const auth = headersList.get("authorization");
-  const basicOk = verifyBasicAuth(auth);
+  // 1) Validacao primaria do PagBank V4: SHA256(token + "-" + body) no header x-authenticity-token.
+  // Doc: https://developer.pagbank.com.br/reference/confirmar-autenticidade-da-notificacao
+  const authenticityToken = headersList.get("x-authenticity-token");
+  const authenticityOk = authenticityToken
+    ? verifyPagbankAuthenticity(rawBody, authenticityToken)
+    : false;
 
-  // 2) Fallback opcional: HMAC signature (caso futuramente configurado).
+  // 2) Fallback: Basic Auth (legado, caso webhook venha de cadastro antigo via aplicacao com user:pass).
+  const auth = headersList.get("authorization");
+  const basicOk = !authenticityOk ? verifyBasicAuth(auth) : false;
+
+  // 3) Fallback adicional: HMAC com secret compartilhado (caso futuramente configurado).
   const signature =
     headersList.get("x-payload-signature") ??
     headersList.get("x-pagbank-signature") ??
     headersList.get("x-hub-signature-256");
-  const hmacOk = signature ? verifyHmacSignature(rawBody, signature) : false;
+  const hmacOk = !authenticityOk && !basicOk && signature
+    ? verifyHmacSignature(rawBody, signature)
+    : false;
 
-  if (!basicOk && !hmacOk) {
+  if (!authenticityOk && !basicOk && !hmacOk) {
     console.warn("PagBank webhook: autenticacao invalida");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

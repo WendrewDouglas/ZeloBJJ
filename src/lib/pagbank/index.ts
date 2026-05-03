@@ -87,8 +87,65 @@ export function verifyBasicAuth(authHeader: string | null | undefined): boolean 
 }
 
 /**
+ * Verificacao oficial do PagBank V4 — webhooks (Order, Checkout, Assinaturas).
+ *
+ * Doc: https://developer.pagbank.com.br/reference/confirmar-autenticidade-da-notificacao
+ *
+ * Algoritmo:
+ *   sig = SHA-256( token + "-" + rawBody ).hex
+ * Header:
+ *   x-authenticity-token: <hex>
+ * Token:
+ *   process.env.PAGBANK_API_TOKEN (mesmo token usado para chamar /checkouts e /orders)
+ *
+ * Importante: rawBody precisa ser a string EXATA que o PagBank enviou — sem
+ * pretty-print, sem normalizacao. Nosso webhook ja le `await request.text()`
+ * antes de fazer JSON.parse, entao isso esta correto.
+ */
+export function verifyPagbankAuthenticity(
+  rawBody: string,
+  signatureHeader: string | null | undefined
+): boolean {
+  if (!signatureHeader) return false;
+
+  // Aceita producao (PAGBANK_API_TOKEN) e tambem sandbox (PAGBANK_SANDBOX_TOKEN)
+  // — o token usado pra criar o checkout determina qual assina o webhook.
+  const tokens = [
+    process.env.PAGBANK_API_TOKEN,
+    process.env.PAGBANK_SANDBOX_TOKEN,
+  ].filter((t): t is string => Boolean(t));
+
+  if (tokens.length === 0) return false;
+
+  const received = signatureHeader.trim().toLowerCase();
+
+  for (const token of tokens) {
+    const expected = crypto
+      .createHash("sha256")
+      .update(`${token}-${rawBody}`, "utf8")
+      .digest("hex")
+      .toLowerCase();
+
+    try {
+      if (
+        crypto.timingSafeEqual(
+          Buffer.from(expected, "hex"),
+          Buffer.from(received, "hex")
+        )
+      ) {
+        return true;
+      }
+    } catch {
+      continue;
+    }
+  }
+
+  return false;
+}
+
+/**
  * Fallback: HMAC-SHA256 com um secret compartilhado.
- * Mantido para caso alguma integracao futura (API de assinaturas) exija.
+ * Mantido caso alguma integracao futura precise (PagBank legacy, ou outros webhooks).
  */
 export function verifyHmacSignature(
   rawBody: string,

@@ -19,17 +19,34 @@ export interface PagbankCustomer {
   tax_id?: string;
 }
 
+export type PagbankPaymentMethodType = "CREDIT_CARD" | "DEBIT_CARD" | "BOLETO" | "PIX";
+
+export interface PagbankPaymentMethod {
+  type: PagbankPaymentMethodType;
+  /** Bandeiras aceitas (so para CREDIT_CARD/DEBIT_CARD). Se omitido, todas as bandeiras suportadas. */
+  brands?: string[];
+}
+
 export interface CreatePagbankCheckoutInput {
   /** Identificador interno nosso para correlacionar webhook (`USER_<uuid>__PLAN_<slug>`). */
   referenceId: string;
+  /**
+   * Se omitido, customer_modifiable=true (default) e o cliente preenche nome/email/CPF/telefone
+   * na propria tela do PagBank. Recomendado quando nao temos esses dados completos no nosso lado.
+   */
   customer?: PagbankCustomer;
   items: PagbankCheckoutItem[];
-  /** URL onde o PagBank notifica mudancas no checkout (ex.: criado, expirado). */
+  /** URL onde o PagBank notifica mudancas no checkout (ex.: criado, expirado). 5-100 chars. */
   notificationUrl: string;
-  /** URL onde o PagBank notifica mudancas no pagamento (paid, declined, refunded). */
+  /** URL onde o PagBank notifica mudancas no pagamento (paid, declined, refunded). 5-100 chars. */
   paymentNotificationUrl: string;
   /** URL onde o cliente eh redirecionado apos finalizar/cancelar o pagamento. */
   redirectUrl: string;
+  /**
+   * Meios de pagamento aceitos. Se omitido, usamos CREDIT_CARD + BOLETO + PIX por default
+   * (cobre praticamente todos os clientes BR).
+   */
+  paymentMethods?: PagbankPaymentMethod[];
 }
 
 export interface CreatePagbankCheckoutResult {
@@ -64,9 +81,16 @@ export async function createPagbankCheckout(
     throw new Error("PAGBANK_API_TOKEN nao configurado");
   }
 
+  const paymentMethods: PagbankPaymentMethod[] = input.paymentMethods ?? [
+    { type: "CREDIT_CARD" },
+    { type: "BOLETO" },
+    { type: "PIX" },
+  ];
+
   const body: Record<string, unknown> = {
     reference_id: input.referenceId,
     items: input.items,
+    payment_methods: paymentMethods,
     notification_urls: [input.notificationUrl],
     payment_notification_urls: [input.paymentNotificationUrl],
     redirect_url: input.redirectUrl,
