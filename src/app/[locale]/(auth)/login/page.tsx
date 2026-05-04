@@ -26,10 +26,13 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/dashboard";
   const next = searchParams.get("next");
+  const inboundError = searchParams.get("error");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(
+    inboundError === "invalid_link" ? t("errorInvalidLink") : ""
+  );
   const [loading, setLoading] = useState(false);
 
   async function handleLogin(e: React.FormEvent) {

@@ -3,16 +3,11 @@ export const dynamic = "force-dynamic";
 import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import { redirect } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { routing } from "@/i18n/routing";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { parseReferenceId } from "@/lib/pagbank";
 import { ThankYouPolling } from "@/components/public/thank-you-polling";
 import { SiteHeader } from "@/components/public/site-header";
 import { CheckCircle2, Loader2 } from "lucide-react";
-
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
 
 interface Props {
   params: Promise<{ locale: string }>;

@@ -102,34 +102,20 @@ export async function POST(request: Request) {
 
       const referenceId = `MANUAL_REGULARIZE_${Date.now()}_${userId.slice(0, 8)}`;
 
-      const { error: subError } = await supabase.from("subscriptions").upsert(
-        {
-          user_id: userId,
-          plan_id: plan.id,
-          status: "paid",
-          paid_at: paidAt,
-          pagbank_reference_id: referenceId,
-        },
-        { onConflict: "user_id,plan_id" }
-      );
-
-      if (subError) throw new Error(`subscription upsert failed: ${subError.message}`);
-      details.subscription = "upserted";
-
-      if (courses && courses.length > 0) {
-        const { error: enrError } = await supabase.from("enrollments").upsert(
-          courses.map((c) => ({
-            user_id: userId,
-            course_id: c.id,
-            plan_id: plan.id,
-            is_active: true,
-            expires_at: null,
-          })),
-          { onConflict: "user_id,course_id" }
-        );
-        if (enrError) throw new Error(`enrollments upsert failed: ${enrError.message}`);
-        details.enrollments = courses.length;
-      }
+      // Atomicamente: subscription paga + enrollments para todos os cursos publicados.
+      const { error: rpcError } = await supabase.rpc("sync_subscription_enrollments", {
+        p_user_id: userId,
+        p_plan_id: plan.id,
+        p_pagbank_subscription_id: null,
+        p_pagbank_reference_id: referenceId,
+        p_pagbank_last_charge_id: null,
+        p_status: "paid",
+        p_paid_at: paidAt,
+        p_grant_access: true,
+      });
+      if (rpcError) throw new Error(`sync_subscription_enrollments failed: ${rpcError.message}`);
+      details.subscription = "synced";
+      details.enrollments = courses?.length ?? 0;
 
       await supabase.from("audit_logs").insert({
         user_id: userId,
@@ -152,6 +138,10 @@ export async function POST(request: Request) {
           toEmail: profile.email,
           locale: profile.locale,
           template: "welcome",
+          // Gate de re-envio é o profile.welcome_email_sent_at acima.
+          // Bypass do dedup permite re-enviar com copy "active" caso o callback
+          // tenha enviado antes com copy "offer" (sem ter consolidado o flag).
+          dedupWindowSeconds: 0,
           params: {
             locale: "pt",
             fullName: profile.full_name,

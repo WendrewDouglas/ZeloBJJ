@@ -211,7 +211,8 @@
       "submit": "Sign in",
       "noAccount": "Don't have an account yet?",
       "signupLink": "Sign up",
-      "errorInvalid": "Incorrect email or password."
+      "errorInvalid": "Incorrect email or password.",
+      "errorInvalidLink": "Confirmation link invalid or expired. Sign in to continue."
     },
     "signup": {
       "title": "Create account",

@@ -211,7 +211,8 @@
       "submit": "Entrar",
       "noAccount": "Ainda não tem conta?",
       "signupLink": "Cadastre-se",
-      "errorInvalid": "E-mail ou senha incorretos."
+      "errorInvalid": "E-mail ou senha incorretos.",
+      "errorInvalidLink": "Link de confirmação inválido ou expirado. Faça login para continuar."
     },
     "signup": {
       "title": "Criar conta",

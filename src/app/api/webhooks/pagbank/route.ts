@@ -129,55 +129,55 @@ export async function POST(request: Request) {
 
     const previousStatus = previousSubscription?.status ?? null;
 
-    // 4) Upsert subscription (uma por user+plan). No modelo vitalicio nao expira.
+    // 4) Sincroniza subscription + enrollments numa transacao via RPC.
+    // Garante atomicidade: se enrollments falhar, subscription tambem nao commit.
     const paidAt = charge?.paid_at ?? (status === "paid" ? new Date().toISOString() : null);
+    const grantAccess = ACTIVE_STATUSES.has(status);
+    const revokeAccess = REVOKE_STATUSES.has(status);
 
-    await supabase.from("subscriptions").upsert(
-      {
-        user_id: userId,
-        plan_id: plan.id,
-        pagbank_subscription_id: pagbankId,
-        pagbank_reference_id: reference || null,
-        pagbank_last_charge_id: charge?.id ?? null,
-        status,
-        paid_at: paidAt,
-      },
-      { onConflict: "user_id,plan_id" as never }
-    );
-
-    // 5) Liberar/revogar acesso
-    if (ACTIVE_STATUSES.has(status)) {
-      const { data: courses } = await supabase
-        .from("courses")
-        .select("id")
-        .eq("is_published", true);
-
-      if (courses?.length) {
-        await supabase.from("enrollments").upsert(
-          courses.map((c) => ({
-            user_id: userId,
-            course_id: c.id,
-            plan_id: plan.id,
-            is_active: true,
-            expires_at: null,
-          })),
-          { onConflict: "user_id,course_id" }
-        );
+    if (grantAccess || revokeAccess) {
+      const { error: rpcError } = await supabase.rpc("sync_subscription_enrollments", {
+        p_user_id: userId,
+        p_plan_id: plan.id,
+        p_pagbank_subscription_id: pagbankId,
+        p_pagbank_reference_id: reference || null,
+        p_pagbank_last_charge_id: charge?.id ?? null,
+        p_status: status,
+        p_paid_at: paidAt,
+        p_grant_access: grantAccess,
+      });
+      if (rpcError) {
+        console.error("[webhook] sync_subscription_enrollments falhou:", rpcError);
+        // 500 forca PagBank a reenviar o webhook ate dar sucesso.
+        return NextResponse.json({ error: "sync_failed" }, { status: 500 });
       }
-    } else if (REVOKE_STATUSES.has(status)) {
-      await supabase
-        .from("enrollments")
-        .update({ is_active: false })
-        .eq("user_id", userId);
+    } else {
+      // Status pending/intermediario: so atualiza subscription, sem mexer enrollment.
+      await supabase.from("subscriptions").upsert(
+        {
+          user_id: userId,
+          plan_id: plan.id,
+          pagbank_subscription_id: pagbankId,
+          pagbank_reference_id: reference || null,
+          pagbank_last_charge_id: charge?.id ?? null,
+          status,
+          paid_at: paidAt,
+        },
+        { onConflict: "user_id,plan_id" as never }
+      );
     }
 
-    await supabase.from("audit_logs").insert({
-      user_id: userId,
-      action: `pagbank.${status}`,
-      entity_type: "pagbank_event",
-      entity_id: pagbankId,
-      metadata: { status, reference, charge_id: charge?.id, email, previous_status: previousStatus },
-    });
+    // Audit log: skip retransmissoes do mesmo status (PagBank reenvia em retry,
+    // gerando lixo no log). Loga so transicoes reais.
+    if (previousStatus !== status) {
+      await supabase.from("audit_logs").insert({
+        user_id: userId,
+        action: `pagbank.${status}`,
+        entity_type: "pagbank_event",
+        entity_id: pagbankId,
+        metadata: { status, reference, charge_id: charge?.id, email, previous_status: previousStatus },
+      });
+    }
 
     // 6) E-mails — fire and forget; nunca quebra o webhook.
     await dispatchTransactionalEmail({

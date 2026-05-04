@@ -23,11 +23,11 @@ export default async function LessonPage({ params }: Props) {
 
   const { data: enrollment } = await supabase
     .from("enrollments")
-    .select("*")
+    .select("id")
     .eq("user_id", user.id)
     .eq("course_id", courseId)
     .eq("is_active", true)
-    .single();
+    .maybeSingle();
 
   if (!enrollment) {
     redirect({ href: "/cursos", locale });
@@ -37,7 +37,7 @@ export default async function LessonPage({ params }: Props) {
     .from("lessons")
     .select("*, module:course_modules(*)")
     .eq("id", lessonId)
-    .single();
+    .maybeSingle();
 
   if (!lesson) {
     redirect({ href: `/cursos/${courseId}`, locale });
@@ -48,19 +48,22 @@ export default async function LessonPage({ params }: Props) {
     .select("*")
     .eq("user_id", user.id)
     .eq("lesson_id", lessonId)
-    .single();
+    .maybeSingle();
 
+  // Lista todas as aulas publicadas do curso, na ordem global (modulo, depois aula),
+  // pra navegacao prev/next cruzar fronteiras de modulos.
   const { data: allLessons } = await supabase
     .from("lessons")
-    .select("id, title, sort_order, module_id")
-    .eq("module_id", lesson.module_id)
+    .select("id, title, sort_order, module_id, course_modules!inner(sort_order, course_id)")
+    .eq("course_modules.course_id", courseId)
     .eq("is_published", true)
-    .order("sort_order");
+    .order("sort_order", { ascending: true, referencedTable: "course_modules" })
+    .order("sort_order", { ascending: true });
 
   const currentIndex = allLessons?.findIndex((l) => l.id === lessonId) ?? -1;
   const prevLesson = currentIndex > 0 ? allLessons![currentIndex - 1] : null;
   const nextLesson =
-    allLessons && currentIndex < allLessons.length - 1
+    allLessons && currentIndex >= 0 && currentIndex < allLessons.length - 1
       ? allLessons[currentIndex + 1]
       : null;
 
