@@ -157,9 +157,21 @@ export async function sendEmail<T extends EmailTemplate>(
     }
   }
 
+  let renderParams = params;
+  if (template === "welcome") {
+    const { count } = await supabase
+      .from("course_modules")
+      .select("id", { count: "exact", head: true })
+      .eq("is_published", true);
+    renderParams = {
+      ...(params as WelcomeTemplateParams),
+      moduleCount: count ?? undefined,
+    } as SendEmailParamsByTemplate[T];
+  }
+
   let render: EmailRender;
   try {
-    render = renderTemplate(template, effectiveLocale, params);
+    render = renderTemplate(template, effectiveLocale, renderParams);
   } catch (err) {
     console.error(`[email] erro ao renderizar template ${effectiveTemplate}:`, err);
     return { sent: false, reason: "render_failed" };

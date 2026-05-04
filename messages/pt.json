@@ -46,7 +46,7 @@
     "title1": "Aprenda",
     "titleHighlight": "Jiu-Jitsu Brasileiro",
     "title2": "do zero ao avançado",
-    "subtitle": "9 módulos estruturados, vídeo-aulas em HD e material de apoio. Pague uma única vez e estude no seu ritmo, quando e onde quiser.",
+    "subtitle": "{count} módulos estruturados, vídeo-aulas em HD e material de apoio. Pague uma única vez e estude no seu ritmo, quando e onde quiser.",
     "ctaPrimary": "Garantir meu acesso · R$ 69,90",
     "ctaSecondary": "Já sou aluno · Entrar",
     "trust": {
@@ -91,21 +91,10 @@
   },
   "modules": {
     "eyebrow": "Conteúdo do Curso",
-    "title1": "9 módulos, do",
+    "title1": "{count} módulos, do",
     "titleHighlight": "fundamento ao combate real",
     "subtitle": "Do conceito de base à mentalidade do lutador. Estudada nessa ordem para você não pular etapas nem revisitar o mesmo conteúdo várias vezes.",
-    "moduleLabel": "Módulo",
-    "items": {
-      "01": { "title": "Base e Postura", "desc": "Alicerce do Jiu-Jitsu. Postura, distribuição de peso e proteção corporal." },
-      "02": { "title": "Movimentação Corporal", "desc": "Ponte, fuga de quadril, giro, levantada técnica e ajustes de base." },
-      "03": { "title": "Hierarquia das Posições", "desc": "Costas, montada, controle lateral, passagem de guarda e progressão." },
-      "04": { "title": "Guarda: Conceito e Função", "desc": "Transforme a posição inferior em ataque com guarda fechada e aberta." },
-      "05": { "title": "Raspagens Básicas", "desc": "Inversão de posições com técnica: tesoura, gancho, desequilíbrio e timing." },
-      "06": { "title": "Finalizações Fundamentais", "desc": "Mata-leão, americana, armlock e triângulo com controle e posicionamento." },
-      "07": { "title": "Defesa e Sobrevivência", "desc": "Proteção, fechamento de espaço e inteligência tática sob pressão." },
-      "08": { "title": "Respiração e Controle Emocional", "desc": "Controle a pressão com respiração, calma e economia de energia." },
-      "09": { "title": "Conduta e Mentalidade", "desc": "Respeito, constância, humildade e disciplina como aceleradores da evolução." }
-    }
+    "moduleLabel": "Módulo"
   },
   "principles": {
     "eyebrow": "Metodologia",
@@ -132,14 +121,14 @@
     "titleHighlight": "Acesse para sempre.",
     "subtitle": "Pagamento único, sem mensalidade. Todo o curso liberado na hora.",
     "ribbon": "Acesso Vitalício",
-    "kicker": "Completo Digital · 9 módulos",
+    "kicker": "Completo Digital · {count} módulos",
     "name": "Curso Brazilian Jiu-Jitsu — Completo Digital",
     "price": "69",
     "cents": "90",
     "currency": "R$",
     "installments": "à vista · em até <strong>18x</strong> no cartão",
     "features": {
-      "f1": "Acesso imediato aos 9 módulos completos",
+      "f1": "Acesso imediato aos {count} módulos completos",
       "f2": "Vídeos em HD com técnicas detalhadas",
       "f3": "Material de apoio em PDF para estudo offline",
       "f4": "Comunidade exclusiva (fórum integrado)",

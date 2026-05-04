@@ -46,7 +46,7 @@
     "title1": "Learn",
     "titleHighlight": "Brazilian Jiu-Jitsu",
     "title2": "from beginner to advanced",
-    "subtitle": "9 structured modules, HD video lessons and study materials. Pay once and learn at your own pace, anytime, anywhere.",
+    "subtitle": "{count} structured modules, HD video lessons and study materials. Pay once and learn at your own pace, anytime, anywhere.",
     "ctaPrimary": "Get my access · R$ 69.90",
     "ctaSecondary": "I'm already a student · Sign in",
     "trust": {
@@ -91,21 +91,10 @@
   },
   "modules": {
     "eyebrow": "Course Content",
-    "title1": "9 modules, from",
+    "title1": "{count} modules, from",
     "titleHighlight": "fundamentals to real combat",
     "subtitle": "From the base concept to the fighter's mindset. Studied in this order so you don't skip steps or revisit the same content multiple times.",
-    "moduleLabel": "Module",
-    "items": {
-      "01": { "title": "Base and Posture", "desc": "Foundation of Jiu-Jitsu. Posture, weight distribution and body protection." },
-      "02": { "title": "Body Movement", "desc": "Bridge, hip escape, turn, technical stand-up and base adjustments." },
-      "03": { "title": "Position Hierarchy", "desc": "Back, mount, side control, guard pass and progression." },
-      "04": { "title": "Guard: Concept and Function", "desc": "Turn the bottom position into attack with closed and open guard." },
-      "05": { "title": "Basic Sweeps", "desc": "Position reversal with technique: scissor, hook, off-balancing and timing." },
-      "06": { "title": "Fundamental Submissions", "desc": "Rear-naked choke, americana, armlock and triangle with control and positioning." },
-      "07": { "title": "Defense and Survival", "desc": "Protection, closing space and tactical intelligence under pressure." },
-      "08": { "title": "Breathing and Emotional Control", "desc": "Manage pressure with breathing, calm and energy economy." },
-      "09": { "title": "Conduct and Mindset", "desc": "Respect, consistency, humility and discipline as accelerators of evolution." }
-    }
+    "moduleLabel": "Module"
   },
   "principles": {
     "eyebrow": "Methodology",
@@ -132,14 +121,14 @@
     "titleHighlight": "Access forever.",
     "subtitle": "One-time payment, no monthly fees. The full course unlocked instantly.",
     "ribbon": "Lifetime Access",
-    "kicker": "Complete Digital · 9 modules",
+    "kicker": "Complete Digital · {count} modules",
     "name": "Brazilian Jiu-Jitsu Course — Complete Digital",
     "price": "69",
     "cents": "90",
     "currency": "R$",
     "installments": "lump sum · or up to <strong>18x</strong> on credit card",
     "features": {
-      "f1": "Instant access to all 9 complete modules",
+      "f1": "Instant access to all {count} complete modules",
       "f2": "HD videos with detailed techniques",
       "f3": "PDF support material for offline study",
       "f4": "Exclusive community (integrated forum)",

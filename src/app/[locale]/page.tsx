@@ -16,15 +16,26 @@ import {
   BookOpen,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import { routing } from "@/i18n/routing";
+import { routing, type Locale } from "@/i18n/routing";
 import { SubscribeButton } from "@/components/public/subscribe-button";
 import { SiteHeader } from "@/components/public/site-header";
+import { createPublicClient } from "@/lib/supabase/public";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-const moduleIds = ["01", "02", "03", "04", "05", "06", "07", "08", "09"] as const;
+export const revalidate = 3600;
+
+type ModuleI18nEntry = { title: string; desc: string };
+type ModuleI18n = Partial<Record<Locale, ModuleI18nEntry>>;
+type LandingModule = {
+  id: string;
+  sort_order: number;
+  title: string;
+  landing_i18n: ModuleI18n | null;
+};
+
 const forWhomItems = [
   { key: "beginners" as const, icon: GraduationCap },
   { key: "whiteBlue" as const, icon: Zap },
@@ -44,12 +55,6 @@ const trustItems = [
 const featureKeys = ["f1", "f2", "f3", "f4", "f5", "f6"] as const;
 const faqIds = ["q1", "q2", "q3", "q4", "q5", "q6"] as const;
 const paymentMethods = ["card", "pix", "boleto", "googlePay", "applePay"] as const;
-const statKeys = [
-  { key: "modules" as const, value: "9" },
-  { key: "techniques" as const, value: "50+" },
-  { key: "videos" as const, value: "HD" },
-  { key: "lifetime" as const, value: "∞" },
-];
 
 export default async function Home({
   params,
@@ -63,6 +68,22 @@ export default async function Home({
   const offerName = t("offer.name");
   const whatsappMessage = encodeURIComponent(t("whatsapp.message"));
   const whatsappHref = `https://wa.me/5518981328589?text=${whatsappMessage}`;
+
+  const supabase = createPublicClient();
+  const { data: rawModules } = await supabase
+    .from("course_modules")
+    .select("id, sort_order, title, landing_i18n")
+    .eq("is_published", true)
+    .order("sort_order");
+  const modules: LandingModule[] = (rawModules ?? []) as LandingModule[];
+  const moduleCount = modules.length;
+  const activeLocale = locale as Locale;
+  const statKeys = [
+    { key: "modules" as const, value: String(moduleCount) },
+    { key: "techniques" as const, value: "50+" },
+    { key: "videos" as const, value: "HD" },
+    { key: "lifetime" as const, value: "∞" },
+  ];
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">
@@ -94,7 +115,7 @@ export default async function Home({
             <br className="hidden md:block" /> {t("hero.title2")}
           </h1>
           <p className="mx-auto mb-10 max-w-2xl text-pretty text-base text-gray-text md:text-lg">
-            {t("hero.subtitle")}
+            {t("hero.subtitle", { count: moduleCount })}
           </p>
 
           <div className="mx-auto flex max-w-md flex-col items-stretch gap-3">
@@ -206,7 +227,7 @@ export default async function Home({
               {t("modules.eyebrow")}
             </span>
             <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-              {t("modules.title1")}{" "}
+              {t("modules.title1", { count: moduleCount })}{" "}
               <span className="gradient-gold">{t("modules.titleHighlight")}</span>
             </h2>
             <p className="mx-auto max-w-xl text-gray-text">
@@ -214,26 +235,32 @@ export default async function Home({
             </p>
           </div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {moduleIds.map((n) => (
-              <div
-                key={n}
-                className="group relative overflow-hidden rounded-2xl border border-white/5 bg-dark-lighter/60 p-6 transition-all hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_10px_40px_-10px_rgba(197,160,40,0.3)]"
-              >
-                <div className="absolute -right-6 -top-6 text-7xl font-black text-gold/5 transition-colors group-hover:text-gold/10">
-                  {n}
+            {modules.map((m, idx) => {
+              const num = String(idx + 1).padStart(2, "0");
+              const i18n =
+                m.landing_i18n?.[activeLocale] ??
+                m.landing_i18n?.pt ?? { title: m.title, desc: "" };
+              return (
+                <div
+                  key={m.id}
+                  className="group relative overflow-hidden rounded-2xl border border-white/5 bg-dark-lighter/60 p-6 transition-all hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_10px_40px_-10px_rgba(197,160,40,0.3)]"
+                >
+                  <div className="absolute -right-6 -top-6 text-7xl font-black text-gold/5 transition-colors group-hover:text-gold/10">
+                    {num}
+                  </div>
+                  <span className="relative mb-3 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gold">
+                    <PlayCircle className="h-3.5 w-3.5" />
+                    {t("modules.moduleLabel")} {num}
+                  </span>
+                  <h3 className="relative mb-2 text-lg font-bold text-white">
+                    {i18n.title}
+                  </h3>
+                  <p className="relative text-sm leading-relaxed text-gray-text">
+                    {i18n.desc}
+                  </p>
                 </div>
-                <span className="relative mb-3 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gold">
-                  <PlayCircle className="h-3.5 w-3.5" />
-                  {t("modules.moduleLabel")} {n}
-                </span>
-                <h3 className="relative mb-2 text-lg font-bold text-white">
-                  {t(`modules.items.${n}.title`)}
-                </h3>
-                <p className="relative text-sm leading-relaxed text-gray-text">
-                  {t(`modules.items.${n}.desc`)}
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -296,7 +323,7 @@ export default async function Home({
 
             <div className="mb-8 text-center">
               <p className="mb-2 text-xs uppercase tracking-widest text-gold">
-                {t("offer.kicker")}
+                {t("offer.kicker", { count: moduleCount })}
               </p>
               <h3 className="mb-6 text-xl font-bold md:text-2xl">{offerName}</h3>
               <div className="flex items-baseline justify-center gap-1">
@@ -326,7 +353,11 @@ export default async function Home({
                   className="flex items-start gap-2.5 text-sm text-gray-text"
                 >
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-                  <span>{t(`offer.features.${key}`)}</span>
+                  <span>
+                    {key === "f1"
+                      ? t("offer.features.f1", { count: moduleCount })
+                      : t(`offer.features.${key}`)}
+                  </span>
                 </li>
               ))}
             </ul>
