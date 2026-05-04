@@ -9,6 +9,7 @@ import {
   verifyPagbankAuthenticity,
 } from "@/lib/pagbank";
 import { sendEmail } from "@/lib/email";
+import { notifyAdmin } from "@/lib/email/admin-alert";
 import type { PaymentFailedReason } from "@/types/email";
 
 // Formato esperado do payload do PagBank.
@@ -148,6 +149,26 @@ export async function POST(request: Request) {
       });
       if (rpcError) {
         console.error("[webhook] sync_subscription_enrollments falhou:", rpcError);
+        await notifyAdmin(
+          supabase,
+          "Webhook PagBank falhou no sync_subscription_enrollments",
+          [
+            `user_id: ${userId}`,
+            `plan_id: ${plan.id}`,
+            `pagbank_id: ${pagbankId ?? "(null)"}`,
+            `reference: ${reference || "(none)"}`,
+            `status: ${status}`,
+            `previous_status: ${previousStatus ?? "(none)"}`,
+            `email: ${email ?? "(none)"}`,
+            ``,
+            `Erro: ${rpcError.message ?? JSON.stringify(rpcError)}`,
+            ``,
+            `PagBank vai re-tentar automaticamente. Se persistir, verificar:`,
+            `1) RLS/permissoes da RPC sync_subscription_enrollments`,
+            `2) Constraints de subscriptions/enrollments`,
+            `3) Logs em https://vercel.com/wendrews-projects-06ff1b06/zelobjj`,
+          ].join("\n")
+        );
         // 500 forca PagBank a reenviar o webhook ate dar sucesso.
         return NextResponse.json({ error: "sync_failed" }, { status: 500 });
       }
