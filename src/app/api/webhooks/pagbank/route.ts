@@ -70,14 +70,63 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const supabase = createAdminClient();
+  const contentType = headersList.get("content-type") ?? null;
+
   let payload: PagbankWebhookPayload;
   try {
     payload = JSON.parse(rawBody);
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  } catch (parseErr) {
+    // Body inesperado mas auth OK — algum formato que ainda nao mapeamos.
+    // Logamos, alertamos e devolvemos 500 pra forcar o PagBank a re-tentar,
+    // dando janela para deploy de fix antes da fila de retry expirar.
+    const bodyPreview = rawBody.length > 1000 ? rawBody.slice(0, 1000) + "...(truncado)" : rawBody;
+    const errMsg = parseErr instanceof Error ? parseErr.message : String(parseErr);
+    console.error("[webhook] body invalido (auth OK)", {
+      content_type: contentType,
+      content_length: rawBody.length,
+      parse_error: errMsg,
+      body_preview: bodyPreview,
+    });
+    try {
+      await supabase.from("audit_logs").insert({
+        action: "pagbank.webhook.unparseable",
+        entity_type: "pagbank_event",
+        entity_id: null,
+        metadata: {
+          content_type: contentType,
+          content_length: rawBody.length,
+          parse_error: errMsg,
+          body_preview: bodyPreview,
+          auth_method: authenticityOk ? "x-authenticity-token" : basicOk ? "basic" : "hmac",
+        },
+      });
+    } catch (logErr) {
+      console.error("[webhook] falha ao gravar audit_log unparseable:", logErr);
+    }
+    await notifyAdmin(
+      supabase,
+      "Webhook PagBank com body invalido (auth OK)",
+      [
+        `O PagBank entregou uma notificacao com auth valida, mas o body nao parseou como JSON.`,
+        ``,
+        `content-type: ${contentType ?? "(none)"}`,
+        `content-length: ${rawBody.length}`,
+        `auth_method: ${authenticityOk ? "x-authenticity-token" : basicOk ? "basic" : "hmac"}`,
+        `parse_error: ${errMsg}`,
+        ``,
+        `body_preview (primeiros 1000 chars):`,
+        bodyPreview,
+        ``,
+        `Acoes:`,
+        `1) Conferir audit_logs (action=pagbank.webhook.unparseable) para histórico completo.`,
+        `2) Se for application/x-www-form-urlencoded, ajustar route.ts para suportar o formato.`,
+        `3) Webhook respondeu 500 — PagBank vai re-tentar; se subir fix em breve, evento se recupera.`,
+      ].join("\n")
+    );
+    return NextResponse.json({ error: "Unparseable body" }, { status: 500 });
   }
 
-  const supabase = createAdminClient();
   const pagbankId = payload.id ?? null;
   const reference = payload.reference_id ?? "";
   const email = payload.customer?.email?.toLowerCase() ?? null;
@@ -279,6 +328,27 @@ async function dispatchTransactionalEmail(args: DispatchEmailArgs): Promise<void
         paidAt,
       },
     });
+
+    // Notifica operadores (icone verde) — uma venda confirmada chegou.
+    const valor =
+      amountCents != null
+        ? `R$ ${(amountCents / 100).toFixed(2).replace(".", ",")}`
+        : "(nao informado)";
+    await notifyAdmin(
+      supabase,
+      `Nova venda confirmada — ${profile.full_name ?? profile.email}`,
+      [
+        `Aluno: ${profile.full_name ?? "(sem nome)"}`,
+        `E-mail: ${profile.email}`,
+        `Plano: ${plan.name}`,
+        `Valor: ${valor}`,
+        `Pago em: ${paidAt ?? "(nao informado)"}`,
+        `Status: ${currentStatus}`,
+        ``,
+        `user_id: ${userId}`,
+      ].join("\n"),
+      { kind: "sale" }
+    );
     return;
   }
 
