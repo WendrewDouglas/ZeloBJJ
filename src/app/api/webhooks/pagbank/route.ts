@@ -72,6 +72,19 @@ export async function POST(request: Request) {
 
   const supabase = createAdminClient();
   const contentType = headersList.get("content-type") ?? null;
+  const authMethod = authenticityOk ? "x-authenticity-token" : basicOk ? "basic" : "hmac";
+
+  // Legacy PagSeguro NPI (v2/v3) — formato form-encoded com notificationCode.
+  // Algumas contas tem a "URL de Notificacao" configurada no painel antigo
+  // (https://pagseguro.uol.com.br/preferences/notification.jhtml) que envia
+  // em paralelo as notificacoes do PagBank V4 (JSON). O V4 ja processa as
+  // vendas; essas legacy sao duplicatas. Ack 200 pra parar retry storm.
+  const isFormEncoded = (contentType ?? "")
+    .toLowerCase()
+    .includes("application/x-www-form-urlencoded");
+  if (isFormEncoded && rawBody.includes("notificationCode=")) {
+    return handleLegacyNpi(supabase, rawBody, contentType, authMethod);
+  }
 
   let payload: PagbankWebhookPayload;
   try {
@@ -98,7 +111,7 @@ export async function POST(request: Request) {
           content_length: rawBody.length,
           parse_error: errMsg,
           body_preview: bodyPreview,
-          auth_method: authenticityOk ? "x-authenticity-token" : basicOk ? "basic" : "hmac",
+          auth_method: authMethod,
         },
       });
     } catch (logErr) {
@@ -112,7 +125,7 @@ export async function POST(request: Request) {
         ``,
         `content-type: ${contentType ?? "(none)"}`,
         `content-length: ${rawBody.length}`,
-        `auth_method: ${authenticityOk ? "x-authenticity-token" : basicOk ? "basic" : "hmac"}`,
+        `auth_method: ${authMethod}`,
         `parse_error: ${errMsg}`,
         ``,
         `body_preview (primeiros 1000 chars):`,
@@ -390,6 +403,88 @@ async function dispatchTransactionalEmail(args: DispatchEmailArgs): Promise<void
     });
     return;
   }
+}
+
+/**
+ * Trata notificacoes legacy PagSeguro NPI (v2/v3) — body form-encoded com
+ * `notificationCode=XXX&notificationType=transaction`. Para o caso atual,
+ * apenas reconhecemos com 200 (V4 ja processa as vendas) e auditamos.
+ * Alerta admin no maximo 1x/24h pra nao spammar.
+ */
+async function handleLegacyNpi(
+  supabase: AdminClient,
+  rawBody: string,
+  contentType: string | null,
+  authMethod: string
+): Promise<NextResponse> {
+  const params = new URLSearchParams(rawBody);
+  const notificationCode = params.get("notificationCode");
+  const notificationType = params.get("notificationType");
+
+  try {
+    await supabase.from("audit_logs").insert({
+      action: "pagbank.legacy_npi.received",
+      entity_type: "pagbank_event",
+      entity_id: notificationCode,
+      metadata: {
+        notification_type: notificationType,
+        auth_method: authMethod,
+        content_type: contentType,
+      },
+    });
+  } catch (logErr) {
+    console.error("[webhook] falha ao gravar audit_log legacy_npi:", logErr);
+  }
+
+  // Dedup do alerta: 1x a cada 24h via audit_logs.
+  try {
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const { data: recentAlert } = await supabase
+      .from("audit_logs")
+      .select("id")
+      .eq("action", "pagbank.legacy_npi.alert_sent")
+      .gte("created_at", since)
+      .limit(1)
+      .maybeSingle();
+
+    if (!recentAlert) {
+      await notifyAdmin(
+        supabase,
+        "Notificacoes legacy NPI sendo enviadas em paralelo ao V4",
+        [
+          `O webhook recebeu uma notificacao no formato legacy PagSeguro (v2/v3).`,
+          ``,
+          `notificationCode: ${notificationCode ?? "(none)"}`,
+          `notificationType: ${notificationType ?? "(none)"}`,
+          `content-type: ${contentType ?? "(none)"}`,
+          `auth_method: ${authMethod}`,
+          ``,
+          `Diagnostico:`,
+          `As vendas ja sao processadas corretamente pelo webhook V4 (JSON).`,
+          `Estas notificacoes legacy vem do painel antigo da PagSeguro UOL e`,
+          `sao duplicatas. O webhook agora responde 200 para parar os retries.`,
+          ``,
+          `Para parar de receber:`,
+          `1) Acessar https://pagseguro.uol.com.br/preferences/notification.jhtml`,
+          `   (painel antigo PagSeguro UOL, com a mesma conta do PagBank).`,
+          `2) Apagar a URL configurada em "URL de Notificacao" (NPI).`,
+          `3) Salvar. As notificacoes V4 (JSON) continuam funcionando normalmente.`,
+          ``,
+          `Proximos alertas desse tipo ficam suprimidos por 24h.`,
+        ].join("\n")
+      );
+      await supabase.from("audit_logs").insert({
+        action: "pagbank.legacy_npi.alert_sent",
+        entity_type: "pagbank_event",
+        entity_id: notificationCode,
+        metadata: { notification_type: notificationType },
+      });
+    }
+  } catch (alertErr) {
+    console.error("[webhook] falha ao alertar sobre legacy NPI:", alertErr);
+  }
+
+  return NextResponse.json({ received: true, kind: "legacy_npi" });
 }
 
 function mapStatusToFailedReason(status: string): PaymentFailedReason | null {
