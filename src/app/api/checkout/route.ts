@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { buildCheckoutUrl, buildReferenceId } from "@/lib/pagbank";
+import { buildReferenceId } from "@/lib/pagbank";
+import { createPagbankCheckout } from "@/lib/pagbank/api";
+
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://zelobjj.com.br";
 
 export async function POST(request: Request) {
   try {
@@ -20,21 +23,21 @@ export async function POST(request: Request) {
 
     const { data: plan } = await supabase
       .from("plans")
-      .select("id, slug, payment_link")
+      .select("id, slug, name, price_monthly")
       .eq("slug", planSlug)
       .eq("is_active", true)
       .single();
 
-    if (!plan?.payment_link) {
+    if (!plan?.price_monthly) {
       return NextResponse.json(
-        { error: "Plano sem link de pagamento configurado" },
+        { error: "Plano sem valor configurado" },
         { status: 503 }
       );
     }
 
     const { data: profile } = await supabase
       .from("profiles")
-      .select("email")
+      .select("email, full_name")
       .eq("id", user.id)
       .single();
 
@@ -85,14 +88,36 @@ export async function POST(request: Request) {
       }
     }
 
-    const url = buildCheckoutUrl(plan.payment_link, reference, profile?.email ?? user.email);
+    // V4 hosted checkout: cria order com reference_id e notification_urls.
+    // Substitui o antigo link estatico pag.ae, que so disparava NPI legacy e gerava
+    // vendas orfas (webhook V4 nao chegava). Doc: api.pagseguro.com/checkouts.
+    const unitAmount = Math.round(Number(plan.price_monthly) * 100);
+    const buyerEmail = profile?.email ?? user.email;
 
-    return NextResponse.json({ url });
+    const checkout = await createPagbankCheckout({
+      referenceId: reference,
+      items: [
+        {
+          name: plan.name,
+          quantity: 1,
+          unit_amount: unitAmount,
+        },
+      ],
+      customer: buyerEmail
+        ? {
+            name: profile?.full_name?.trim() || buyerEmail.split("@")[0],
+            email: buyerEmail,
+          }
+        : undefined,
+      notificationUrl: `${APP_URL}/api/webhooks/pagbank`,
+      paymentNotificationUrl: `${APP_URL}/api/webhooks/pagbank`,
+      redirectUrl: `${APP_URL}/obrigado`,
+    });
+
+    return NextResponse.json({ url: checkout.payUrl });
   } catch (error) {
     console.error("Checkout error:", error);
-    return NextResponse.json(
-      { error: "Erro ao gerar link de pagamento" },
-      { status: 500 }
-    );
+    const message = error instanceof Error ? error.message : "Erro ao gerar link de pagamento";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
